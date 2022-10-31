@@ -91,4 +91,8 @@ public class Storage {
         Collections.sort(newStorage, comparators.get(key));
         return newStorage;
     }
+
+    public ArrayList getStorage(){
+        return storage;
+    }
 }
