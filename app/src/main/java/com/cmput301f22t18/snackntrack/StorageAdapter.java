@@ -8,7 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private ArrayList<Ingredient> localDataSet;
@@ -40,7 +43,23 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getTextView().setText(localDataSet.get(position).getDescription());
+        holder.getDescriptionTextView().setText(localDataSet.get(position).getDescription());
+        holder.getLocationTextView().setText(localDataSet.get(position).getLocation());
+        holder.getCategoryTextView().setText(localDataSet.get(position).getCategory());
+        String amountUnit = localDataSet.get(position).getAmount() + " " +
+                localDataSet.get(position).getUnit();
+        holder.getAmountUnitTextView().setText(amountUnit);
+        Date bbf = localDataSet.
+                get(position).
+                getBestBeforeDate();
+        LocalDate date = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            date = bbf.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+        String dateText = "Best Before: " + date.toString();
+        holder.
+                getBestBeforeDateTextView().
+                setText(dateText);
     }
 
     @Override
@@ -52,17 +71,40 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
      * Provide a reference to the Frame Layout of each row
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final TextView descriptionTextView;
+        private final TextView locationTextView;
+        private final TextView categoryTextView;
+        private final TextView amountUnitTextView;
+        private final TextView bestBeforeDateTextView;
 
         public ViewHolder(View view) {
             super(view);
-            // Define click listener for the ViewHolder's View
 
-            textView = view.findViewById(R.id.ingredient_description_text_view);
+            descriptionTextView = view.findViewById(R.id.ingredient_description_text_view);
+            locationTextView = view.findViewById(R.id.ingredient_location_text_view);
+            categoryTextView = view.findViewById(R.id.ingredient_category_text_view);
+            amountUnitTextView = view.findViewById(R.id.ingredient_amount_unit_text_view);
+            bestBeforeDateTextView = view.findViewById(R.id.ingredient_best_before_date_text_view);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getDescriptionTextView() {
+            return descriptionTextView;
+        }
+
+        public TextView getLocationTextView() {
+            return locationTextView;
+        }
+
+        public TextView getAmountUnitTextView() {
+            return amountUnitTextView;
+        }
+
+        public TextView getCategoryTextView() {
+            return categoryTextView;
+        }
+
+        public TextView getBestBeforeDateTextView() {
+            return bestBeforeDateTextView;
         }
     }
 }
