@@ -13,6 +13,9 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class represents the Storage Adapter for the Storage Activity Recyler View
+ */
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private ArrayList<Ingredient> localDataSet;
 
@@ -41,6 +44,11 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    /**
+     * Bind the View Holder to the Adapter
+     * @param holder the View Holder
+     * @param position the position in the List
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.getDescriptionTextView().setText(localDataSet.get(position).getDescription());
@@ -62,13 +70,17 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
                 setText(dateText);
     }
 
+    /**
+     * Get the number of items
+     * @return the number of items
+     */
     @Override
     public int getItemCount() {
         return localDataSet.size();
     }
 
     /**
-     * Provide a reference to the Frame Layout of each row
+     * Provide a reference to the Card View of each item
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView descriptionTextView;
@@ -87,22 +99,42 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             bestBeforeDateTextView = view.findViewById(R.id.ingredient_best_before_date_text_view);
         }
 
+        /**
+         * Get Description Text View
+         * @return Description Text View
+         */
         public TextView getDescriptionTextView() {
             return descriptionTextView;
         }
 
+        /**
+         * Get Location Text View
+         * @return Location Text View
+         */
         public TextView getLocationTextView() {
             return locationTextView;
         }
 
+        /**
+         * Get Amount + Unit Text View
+         * @return Amount + Unit Text View
+         */
         public TextView getAmountUnitTextView() {
             return amountUnitTextView;
         }
 
+        /**
+         * Get Category Text View
+         * @return Category Text View
+         */
         public TextView getCategoryTextView() {
             return categoryTextView;
         }
 
+        /**
+         * Get Best Before Date Text View
+         * @return Best Before Date Text View
+         */
         public TextView getBestBeforeDateTextView() {
             return bestBeforeDateTextView;
         }
