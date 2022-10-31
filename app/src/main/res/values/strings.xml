@@ -5,4 +5,35 @@
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_ingredient_title">Add Ingredients</string>
+    <string name="description_edit_text_title">Description</string>
+    <string name="amount_edit_text_title">Amount</string>
+    <string name="unit_edit_text_title">Unit</string>
+    <string name="location_spinner_title">Location</string>
+    <string name="category_spinner_title">Category</string>
+    <string name="best_before_text_view">31/10/2022</string>
+    <string name="best_before_title">Best Before Date</string>
+    <string-array name="units_array">
+        <item>kilogram</item>
+        <item>litre</item>
+        <item>shaker</item>
+        <item>pack</item>
+        <item>box</item>
+    </string-array>
+    <string-array name="ingredient_categories_array">
+        <item>Spice</item>
+        <item>Dairy</item>
+        <item>Bakery</item>
+        <item>Meat</item>
+        <item>Vegetable</item>
+        <item>Fruit</item>
+    </string-array>
+    <string-array name="ingredient_location_array">
+        <item>Cupboard</item>
+        <item>Counter-top</item>
+        <item>Fridge</item>
+        <item>Pantry</item>
+    </string-array>
 </resources>
