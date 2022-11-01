@@ -2,6 +2,7 @@ package com.cmput301f22t18.snackntrack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +28,7 @@ public class StorageTest {
         storage = new Storage();
         // Ingredient consists of desc, location, unit, category, amount, best before date
         Ingredient ingredient = new Ingredient("Spam", "Pantry", "pieces", "Meat", 1, new Date(2022-1900, 12, 31));
-        storage.add(ingredient);
-
+        storage.addIngredient(ingredient);
     }
 
     /**
@@ -37,9 +37,30 @@ public class StorageTest {
      */
     @Test
     public void testSort() {
-        //Ingredient newIngredient = new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27));
-        //storage.add(newIngredient);
-        // incomplete
+        ArrayList<Ingredient> list;
+        // Add new Ingredient to storage (storage already has 1 ingredient)
+        storage.addIngredient(new Ingredient("Carrots", "Fridge", "pieces", "Produce", 3, new Date(2024-1900, 11, 27)));
+
+        // Sort by Description (order: Carrots, Spam)
+        storage.sort("Description");
+        list = storage.getStorageList();
+        assertEquals("Carrots", list.get(0).getDescription()); // True if first ingredient's description is Carrots
+
+        // Sort by Best Before date (Spam, Carrots)
+        storage.sort("Best Before");
+        list = storage.getStorageList();
+        assertEquals("Spam", list.get(0).getDescription()); // True if first ingredient's description is Spam
+
+        // Sort by Location (Carrots, Spam)
+        storage.sort("Location");
+        list = storage.getStorageList();
+        assertEquals("Carrots", list.get(0).getDescription()); // True if first ingredient's description is Carrots
+
+        // Sort by Category (Spam, Carrots)
+        storage.sort("Category");
+        list = storage.getStorageList();
+        assertEquals("Spam", list.get(0).getDescription()); // True if first ingredient's description is Spam
+
     }
 
     /**
@@ -69,18 +90,26 @@ public class StorageTest {
     }
 
     /**
+     * Instantiate new ingredient but do not add to storage, try to delete it (get assertion error)
+     */
+    @Test
+    public void testDeleteNonexistentIngredient() {
+        Ingredient notInStorage = new Ingredient("Chocolate", "Pantry", "pieces", "Candy", 1, new Date(2024-1900, 12, 31));
+        assertThrows(IllegalArgumentException.class, () -> {
+                storage.deleteIngredient(notInStorage);} );
+    }
+
+    /**
      * Get ArrayList from storage object and check if contents of list are correct
      */
     @Test
     public void testGetStorageList() {
-        //incomplete
+        storage.addIngredient(new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27)));
+        storage.sort("Best Before"); // Sort storage by Best Before date so Spam comes first ?
+        ArrayList<Ingredient> list = storage.getStorageList();
+        assertEquals(2, list.size()); // True if 2 items in list
+        assertEquals("Spam", list.get(0).getDescription()); // True if "Spam" is description of 1st item in list
+        assertEquals("Potato", list.get(1).getDescription()); // True if "Potato" is description of 2nd item in list
     }
 
-    /**
-     * Need to write tests for Storage:
-     * testSort
-     * testAddIngredient
-     * testDeleteIngredient
-     * testGetStorageList
-     */
 }
