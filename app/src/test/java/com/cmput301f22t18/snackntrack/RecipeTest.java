@@ -12,12 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-
-/**
  * Unit tests for RecipeList class
  * @author Purnapushkala Hariharan
  * @version 1
@@ -73,7 +67,6 @@ public class RecipeTest {
         Ingredient notPresent = new Ingredient("Cream", "Diary", "gram", "Diary", 5, new Date(2024, 11, 31));
         assertThrows(IllegalArgumentException.class, () -> {
             recipe.deleteIngredient(notPresent);} );
-
     }
     /**
      * Get the recipe object title and check if contents are correct
