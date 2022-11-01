@@ -75,7 +75,7 @@ public class RecipeListTest{
         recipeList.addRecipe(recipe);
         Recipe recipe1 = new Recipe();
         recipe1.addIngredient(new Ingredient("Bread", "Pantry", "pieces", "Bread", 2, new Date(2024-1900, 11, 27)));
-        recipe1.setRecipe("Sandwich",2,2,"lunch","I don't like it too fried", recipe.// Non existent recipe in the recipe list
+        recipe1.setRecipe("Sandwich",2,2,"lunch","I don't like it too fried", recipe.getRecipeIngredients());// Non existent recipe in the recipe lis
         assertThrows( IllegalArgumentException.class, ()->{recipeList.deleteRecipe(recipe1);}); // What is the error?
         recipeList.deleteRecipe(recipe);// Existing recipe
 
