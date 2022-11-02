@@ -67,47 +67,53 @@ public class IngredientTest {
      * Check if description is consistent with the changed description
      */
     public void testSetDescription() {
-        ingredient.setDescription("Potato");
-        assertEquals("Potato", ingredient.getDescription());
+        String newDescription = "Potato";
+        ingredient.setDescription(newDescription);
+        assertEquals(newDescription, ingredient.getDescription());
     }
 
     /**
      * Check if location is consistent with the changed location
      */
     public void testSetLocation() {
-        ingredient.setLocation("Fridge");
-        assertEquals("Pantry", ingredient.getLocation());
+        String newLocation = "Fridge";
+        ingredient.setLocation(newLocation);
+        assertEquals(newLocation, ingredient.getLocation());
     }
 
     /**
      * Check if unit is consistent with the changed unit
      */
     public void testSetUnit() {
-        ingredient.setUnit("pieces");
-        assertEquals("pieces", ingredient.getUnit());
+        String newUnit = "Potato";
+        ingredient.setUnit(newUnit);
+        assertEquals(newUnit, ingredient.getUnit());
     }
 
     /**
      * Check if category is consistent with the changed category
      */
     public void testSetCategory() {
-        ingredient.setCategory("Produce");
-        assertEquals("Meat", ingredient.getCategory());
+        String newCategory = "Meat";
+        ingredient.setCategory(newCategory);
+        assertEquals(newCategory, ingredient.getCategory());
     }
 
     /**
      * Check if amount is consistent with the changed amount
      */
     public void testSetAmount() {
-        ingredient.setAmount(2);
-        assertEquals(2, ingredient.getAmount());
+        int newAmount = 2;
+        ingredient.setAmount(newAmount);
+        assertEquals(newAmount, ingredient.getAmount());
     }
 
     /**
      * Check if best before date is consistent with the changed date
      */
     public void testSetBestBeforeDate() {
-        ingredient.setBestBeforeDate(new Date(2022-1900, 11, 30));
-        assertEquals(0, ingredient.getBestBeforeDate().compareTo(new Date(2022-1900, 11, 30)));
+        Date newBestBeforeDate = new Date(2022-1900, 11, 30);
+        ingredient.setBestBeforeDate(newBestBeforeDate);
+        assertEquals(0, ingredient.getBestBeforeDate().compareTo(newBestBeforeDate));
     }
 }
