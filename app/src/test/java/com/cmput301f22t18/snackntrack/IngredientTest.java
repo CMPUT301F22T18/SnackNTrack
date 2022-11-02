@@ -59,8 +59,8 @@ public class IngredientTest {
     /**
      * Check if best before date is consistent with the entered date
      */
-    public void testGetDate() {
-        assertEquals(0, ingredient.getDate().compareTo(new Date(2022-1900, 12, 31)));
+    public void testGetBestBeforeDate() {
+        assertEquals(0, ingredient.getBestBeforeDate().compareTo(new Date(2022-1900, 12, 31)));
     }
 
     /**
@@ -106,8 +106,8 @@ public class IngredientTest {
     /**
      * Check if best before date is consistent with the changed date
      */
-    public void testSetDate() {
-        ingredient.setDate(new Date(2022-1900, 11, 30));
-        assertEquals(0, ingredient.getDate().compareTo(new Date(2022-1900, 11, 30)));
+    public void testSetBestBeforeDate() {
+        ingredient.setBestBeforeDate(new Date(2022-1900, 11, 30));
+        assertEquals(0, ingredient.getBestBeforeDate().compareTo(new Date(2022-1900, 11, 30)));
     }
 }
