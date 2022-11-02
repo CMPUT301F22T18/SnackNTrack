@@ -112,4 +112,33 @@ public class StorageTest {
         assertEquals("Potato", list.get(1).getDescription()); // True if "Potato" is description of 2nd item in list
     }
 
+    @Test
+    public void testGetCount() {
+        int initialCount = storage.getStorageList().size();
+        assertEquals(initialCount, storage.getCount()); // True if 1 ingredient in storage
+        Ingredient newIngredient = new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27));
+        storage.addIngredient(newIngredient);
+        assertEquals(initialCount + 1, storage.getCount()); // True if 2 ingredients in storage
+        storage.deleteIngredient(newIngredient);
+        assertEquals(initialCount, storage.getCount()); // True if 1 ingredient in storage
+        storage.deleteIngredient(storage.getStorageList().get(0)); // Delete first ingredient from storage
+        assertEquals(initialCount - 1, storage.getCount()); // True if no ingredients in storage
+    }
+
+    @Test
+    public void testClearStorage() {
+        storage.addIngredient(new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27)));
+        assertEquals(2, storage.getCount());
+        storage.clearStorage();
+        assertEquals(0, storage.getCount());
+    }
+
+    @Test
+    public void testSetIngredient() {
+        int initialCount = storage.getCount();
+        storage.setIngredient(0, new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27)));
+        assertEquals(1, initialCount); // True if storage still has same amount of ingredients, i.e. 1
+        assertEquals("Potato", storage.getStorageList().get(0).getDescription()); // True if first ingredient description is "Potato"
+        assertFalse("Spam", storage.getStorageList().get(0).getDescription()); // True if first ingredient desc no longer "Spam"
+    }
 }
