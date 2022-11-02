@@ -81,7 +81,7 @@ public class RecipeListTest{
 
     }
     public void testSort() {
-        // what categories - breakfast lunch dinner??
+        // TODO after halfway checkpoint
     }
 
 }
