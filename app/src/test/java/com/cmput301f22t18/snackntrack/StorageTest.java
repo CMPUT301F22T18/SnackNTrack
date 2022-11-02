@@ -77,10 +77,10 @@ public class StorageTest {
     }
 
     /**
-     * Select ingredient in storage, delete it, and check if successfully deleted from storage
+     * Select ingredient object in storage, delete it, and check if successfully deleted from storage
      */
     @Test
-    public void testDeleteIngredient() {
+    public void testDeleteIngredientByIngredient() {
         // Select first ingredient in storage
         Ingredient toDelete = (Ingredient) storage.getStorageList().get(0);
         storage.deleteIngredient(toDelete);
@@ -90,13 +90,14 @@ public class StorageTest {
     }
 
     /**
-     * Instantiate new ingredient but do not add to storage, try to delete it (get assertion error)
+     * Test deleting ingredient by index of ingredient (rather than ingredient object)
      */
     @Test
-    public void testDeleteNonexistentIngredient() {
-        Ingredient notInStorage = new Ingredient("Chocolate", "Pantry", "pieces", "Candy", 1, new Date(2024-1900, 12, 31));
-        assertThrows(IllegalArgumentException.class, () -> {
-                storage.deleteIngredient(notInStorage);} );
+    public void testDeleteIngredientByInt() {
+        storage.deleteIngredient(0);
+        ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
+        assertEquals(0, list.size()); // True if there are no items inside list
+        assertFalse(toDelete, list[0]); // True if deleted ingredient != first element of list
     }
 
     /**
