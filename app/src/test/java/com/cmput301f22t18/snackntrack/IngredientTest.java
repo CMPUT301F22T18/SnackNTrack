@@ -6,7 +6,7 @@ import org.junit.Before;
 
 import java.util.Date;
 
-public class IngredientTest { //TODO: Ask if we need to check for setters
+public class IngredientTest {
 
     /**
      * This variable stores the ingredient object used in testing
@@ -18,7 +18,7 @@ public class IngredientTest { //TODO: Ask if we need to check for setters
      */
     @Before
     public void createMockIngredient() {
-        ingredient = new Ingredient("Spam", "Pantry", "pieces", "Meat", 1, new Date(2022-1900, 12, 31));
+        ingredient = new Ingredient("Spam", "Pantry", "cans", "Meat", 1, new Date(2022-1900, 12, 31));
     }
 
     /**
@@ -39,7 +39,7 @@ public class IngredientTest { //TODO: Ask if we need to check for setters
      * Check if unit is consistent with the entered unit
      */
     public void testGetUnit() {
-        assertEquals("pieces", ingredient.getUnit());
+        assertEquals("cans", ingredient.getUnit());
     }
 
     /**
@@ -61,5 +61,53 @@ public class IngredientTest { //TODO: Ask if we need to check for setters
      */
     public void testGetDate() {
         assertEquals(0, ingredient.getDate().compareTo(new Date(2022-1900, 12, 31)));
+    }
+
+    /**
+     * Check if description is consistent with the changed description
+     */
+    public void testSetDescription() {
+        ingredient.setDescription("Potato");
+        assertEquals("Potato", ingredient.getDescription());
+    }
+
+    /**
+     * Check if location is consistent with the changed location
+     */
+    public void testSetLocation() {
+        ingredient.setLocation("Fridge");
+        assertEquals("Pantry", ingredient.getLocation());
+    }
+
+    /**
+     * Check if unit is consistent with the changed unit
+     */
+    public void testSetUnit() {
+        ingredient.setUnit("pieces");
+        assertEquals("pieces", ingredient.getUnit());
+    }
+
+    /**
+     * Check if category is consistent with the changed category
+     */
+    public void testSetCategory() {
+        ingredient.setCategory("Produce");
+        assertEquals("Meat", ingredient.getCategory());
+    }
+
+    /**
+     * Check if amount is consistent with the changed amount
+     */
+    public void testSetAmount() {
+        ingredient.setAmount(2);
+        assertEquals(2, ingredient.getAmount());
+    }
+
+    /**
+     * Check if best before date is consistent with the changed date
+     */
+    public void testSetDate() {
+        ingredient.setDate(new Date(2022-1900, 11, 30));
+        assertEquals(0, ingredient.getDate().compareTo(new Date(2022-1900, 11, 30)));
     }
 }
