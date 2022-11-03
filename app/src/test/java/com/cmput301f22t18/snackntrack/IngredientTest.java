@@ -6,6 +6,11 @@ import org.junit.Before;
 
 import java.util.Date;
 
+/**
+ * Unit tests for Ingredient class
+ * @author Mark Maligalig
+ * @version 1
+ */
 public class IngredientTest {
 
     /**
