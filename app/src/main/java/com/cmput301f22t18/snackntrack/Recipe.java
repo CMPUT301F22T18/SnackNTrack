@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * recipeIngredients {@link ArrayList}
  *
  * @author SCWinter259
- * @version 1.0.0
+ * @version 1.0.1
  * @see Ingredient
  */
 public class Recipe {
@@ -30,6 +30,41 @@ public class Recipe {
     public Recipe() {
         this.recipeIngredients = new ArrayList<Ingredient>();
     }
+
+    /**
+     * Setter for title attribute
+     * @param title title for Recipe
+     * @since 1.0.1
+     */
+    public void setTitle(String title) {this.title = title;}
+
+    /**
+     * Setter for prepTime attribute
+     * @param prepTime preparation time for Recipe
+     * @since 1.0.1
+     */
+    public void setPrepTime(int prepTime) {this.prepTime = prepTime;}
+
+    /**
+     * Setter for comments attribute
+     * @param comments comments for Recipe
+     * @since 1.0.1
+     */
+    public void setComments(String comments) {this.comments = comments;}
+
+    /**
+     * Setter for servings attribute
+     * @param servings number of servings for Recipe
+     * @since 1.0.1
+     */
+    public void setServings(int servings) {this.servings = servings;}
+
+    /**
+     * Setter for category attribute
+     * @param category category of the Recipe
+     * @since 1.0.1
+     */
+    public void setCategory(String category) {this.category = category;}
 
     /**
      * This method returns the title from the class Recipe
