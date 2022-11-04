@@ -1,50 +1,56 @@
 package com.cmput301f22t18.snackntrack;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListAdapter.OnNoteListener {
-    FloatingActionButton fab;
-    RecyclerView recyclerView;
-    RecipeList recipeList;
-    RecipeListAdapter recipeListAdapter;
-
-    // for testing
-//    ArrayList<Recipe> testList;
+public class RecipeListActivity extends AppCompatActivity {
+    private RecipeList recipeList;
+    private RecipeListAdapter recipeListAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
-        // for testing
-//        testList = new ArrayList<>();
-//        Recipe recipe = new Recipe();
-//        recipe.setTitle("Milk");
-//        recipe.setCategory("Liquid");
-//        recipe.setServings(3);
-//        recipe.setPrepTime(0);
-//        testList.add(recipe);
-        // end test
-
-        fab = findViewById(R.id.recipe_list_action_button);
-        recyclerView = findViewById(R.id.recipe_list);
-        recipeListAdapter = new RecipeListAdapter(this, recipeList.getRecipeList(), this); //recipeList.getRecipeList()  // testList
+        recipeList = new RecipeList();
+        insertTestRecipes();
+        recipeListAdapter = new RecipeListAdapter(recipeList);
+        recyclerView = this.findViewById(R.id.recipe_list_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext()));
+
+        FloatingActionButton fab = findViewById(R.id.add_recipe_fab);
+        fab.show();
+        fab.setOnClickListener(view -> {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragment_container_view, AddRecipeFragment.class, null)
+                        .addToBackStack("AddRecipe")
+                        .commit();
+
+            }
+        });
+
 
     }
 
-    @Override
-    public void onNoteClick(int position) {
-        //TODO: bring us to a fragment that shows recipe info
+    private void insertTestRecipes() {
+        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
+        in1.add(new Ingredient("Bread", "pieces", "Wheat", 2));
+        recipeList.addRecipe(new Recipe("Sandwich", 5, "no comment", 1, "Lunch", in1));
+
+        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
+        in2.add(new Ingredient("A", "pieces", "C", 2));
+        recipeList.addRecipe(new Recipe("Soup", 20, "no comment", 1, "Dinner", in2));
     }
 }

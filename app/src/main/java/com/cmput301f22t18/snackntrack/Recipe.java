@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * recipeIngredients {@link ArrayList}
  *
  * @author SCWinter259
- * @version 1.0.1
+ * @version 1.0.0
  * @see Ingredient
  */
 public class Recipe {
@@ -31,40 +31,34 @@ public class Recipe {
         this.recipeIngredients = new ArrayList<Ingredient>();
     }
 
-    /**
-     * Setter for title attribute
-     * @param title title for Recipe
-     * @since 1.0.1
-     */
-    public void setTitle(String title) {this.title = title;}
+    public Recipe(String title, int prepTime, String comments, int servings, String category, ArrayList<Ingredient> recipeIngredients) {
+        this.title = title;
+        this.prepTime = prepTime;
+        this.comments = comments;
+        this.servings = servings;
+        this.category = category;
+        this.recipeIngredients = recipeIngredients;
+    }
 
-    /**
-     * Setter for prepTime attribute
-     * @param prepTime preparation time for Recipe
-     * @since 1.0.1
-     */
-    public void setPrepTime(int prepTime) {this.prepTime = prepTime;}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    /**
-     * Setter for comments attribute
-     * @param comments comments for Recipe
-     * @since 1.0.1
-     */
-    public void setComments(String comments) {this.comments = comments;}
+    public void setPrepTime(int prepTime) {
+        this.prepTime = prepTime;
+    }
 
-    /**
-     * Setter for servings attribute
-     * @param servings number of servings for Recipe
-     * @since 1.0.1
-     */
-    public void setServings(int servings) {this.servings = servings;}
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
-    /**
-     * Setter for category attribute
-     * @param category category of the Recipe
-     * @since 1.0.1
-     */
-    public void setCategory(String category) {this.category = category;}
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     /**
      * This method returns the title from the class Recipe

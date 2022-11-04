@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/recipe_image_constraint_layout"
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/recipe_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    tools:layout_editor_absoluteY="22dp"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/recipe_text_constraint_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toRightOf="@id/recipe_image_constraint_layout">
+
+                <TextView
+                    android:id="@+id/recipe_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/recipe_category_text_view"/>
+
+                <TextView
+                    android:id="@+id/recipe_category_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/recipe_title_text_view"
+                    app:layout_constraintBottom_toTopOf="@id/recipe_prep_time_servings_constraint_layout"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/recipe_prep_time_servings_constraint_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/recipe_category_text_view">
+
+                    <ImageView
+                        android:id="@+id/prep_time_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:srcCompat="@android:drawable/ic_menu_recent_history"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/recipe_prep_time_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time"
+                        app:layout_constraintLeft_toRightOf="@id/prep_time_image"/>
+
+                    <ImageView
+                        android:id="@+id/servings_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:paddingLeft="10dp"
+                        app:layout_constraintLeft_toRightOf="@id/recipe_prep_time_text_view"
+                        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+
+                    <TextView
+                        android:id="@+id/recipe_servings_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Servings"
+                        app:layout_constraintLeft_toRightOf="@id/servings_image"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
