@@ -2,14 +2,12 @@ package com.cmput301f22t18.snackntrack;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,13 +26,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.Contract;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -282,7 +276,7 @@ public class AddIngredientFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "location");
                     requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Location").
-                            add(AddEditLocationFragment.class, bundle, "Add Location").commit();
+                            add(AddEditCustomValueFragment.class, bundle, "Add Location").commit();
 
                 }
             }
@@ -299,7 +293,7 @@ public class AddIngredientFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "unit");
                     requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Unit").
-                            add(AddEditLocationFragment.class, bundle, "Add Unit").commit();
+                            add(AddEditCustomValueFragment.class, bundle, "Add Unit").commit();
 
                 }
             }
@@ -318,7 +312,7 @@ public class AddIngredientFragment extends Fragment {
                     requireActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .addToBackStack("Add Category").
-                            add(AddEditLocationFragment.class, bundle, "Add Category")
+                            add(AddEditCustomValueFragment.class, bundle, "Add Category")
                             .commit();
 
                 }
