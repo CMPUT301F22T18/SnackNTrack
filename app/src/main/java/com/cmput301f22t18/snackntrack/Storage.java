@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -10,7 +11,7 @@ import java.util.Hashtable;
  * @author Duc Ho
  * @version 1.0.0
  */
-public class Storage {
+public class Storage implements Serializable {
     private final ArrayList<Ingredient> storage; // Ingredient Storage
     // Comparators
     private final IngredientDescriptionComparator idc = new IngredientDescriptionComparator();

@@ -85,6 +85,60 @@ public class RecipeTest {
         assertEquals(0, list.size()); // True if there are no items inside list
     }
     /**
+     * Set the recipe object title and check if contents are correct
+     */
+    @Test
+    public void testSetTitle() {
+        String newTitle = "Cake";
+        recipe.setTitle(newTitle );
+        assertEquals(newTitle ,recipe.getTitle());
+    }
+    /**
+     * Set the recipe object prep time and check if contents are correct
+     */
+    @Test
+    public void testSetPrepTime() {
+        int newPrepTime = 3;
+        recipe.setPrepTime(newPrepTime);
+        assertEquals(newPrepTime ,recipe.getPrepTime());
+    }
+    /**
+     * Set the recipe object servings number and check if contents are correct
+     */
+    @Test
+    public void testSetServings() {
+        int newServings = 2;
+        recipe.setServings(newServings);
+        assertEquals(newServings ,recipe.getServings());
+    }
+    /**
+     * Set the recipe object comments and check if contents are correct
+     */
+    @Test
+    public void testSetComments() {
+        String newComments = "Cake";
+        recipe.setComments(newComments);
+        assertEquals(newComments ,recipe.getComments());
+    }
+    /**
+     * Set the recipe object Category and check if contents are correct
+     */
+    @Test
+    public void testSetCategory() {
+        String newCategory = "Snack";
+        recipe.setCategory(newCategory);
+        assertEquals(newCategory ,recipe.getCategory());
+    }
+    /**
+     * Set the recipe object title and check if contents are correct
+     */
+    @Test
+    public void testSetPhoto() {
+        String newPhoto = "https://unsplash.com/photos/kPxsqUGneXQ";
+        recipe.setPhotoURL(newPhoto);
+        assertEquals(newPhoto ,recipe.getPhotoURL());
+    }
+    /**
      * Get the recipe object title and check if contents are correct
      */
     @Test
@@ -124,8 +178,7 @@ public class RecipeTest {
      */
     @Test
     public void testGetPhoto() {
-        assertEquals("https://unsplash.com/photos/rQX9eVpSFz8", recipe.getPhotoURL());  // How to do??
+        assertEquals("https://unsplash.com/photos/rQX9eVpSFz8", recipe.getPhotoURL());
     }
-
 
 }
