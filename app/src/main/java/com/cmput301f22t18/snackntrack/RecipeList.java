@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @see Recipe
  */
-public class RecipeList {
+public class RecipeList implements Serializable {
     private final ArrayList<Recipe> recipeList;
 
     /**
