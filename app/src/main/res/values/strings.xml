@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Snack\'N\'Track!</string>
     <string name="ingredient_description">Ingredient Description</string>
     <string name="ingredient_location">Location</string>
     <string name="ingredient_category">Category</string>
@@ -49,4 +49,12 @@
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_button">Cancel</string>
+    <string name="login">Log in</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+<!--    <string name="default_web_client_id">-->
+<!--        274455879293-jeiebm0c9gb4pi8ndbvdu7ogv3p4idd2.apps.googleusercontent.com-->
+<!--    </string>-->
 </resources>
