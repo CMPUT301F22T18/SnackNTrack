@@ -95,13 +95,25 @@ public class AddIngredientFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("location", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                // We use a String here, but any type that can be put in a Bundle is supported
-                String result = bundle.getString("new_location");
-                location_adapter.insert(result, location_adapter.getCount() - 1);
-            }
+        getParentFragmentManager().setFragmentResultListener("location", this,
+                (requestKey, bundle) -> {
+            // We use a String here, but any type that can be put in a Bundle is supported
+            String result = bundle.getString("new_item");
+            location_adapter.insert(result, location_adapter.getCount() - 1);
+        });
+
+        getParentFragmentManager().setFragmentResultListener("unit", this,
+                (requestKey, bundle) -> {
+            // We use a String here, but any type that can be put in a Bundle is supported
+            String result = bundle.getString("new_item");
+            unit_adapter.insert(result, unit_adapter.getCount() - 1);
+        });
+
+        getParentFragmentManager().setFragmentResultListener("category", this,
+                (requestKey, bundle) -> {
+            // We use a String here, but any type that can be put in a Bundle is supported
+            String result = bundle.getString("new_item");
+            category_adapter.insert(result, category_adapter.getCount() - 1);
         });
 
         units = new ArrayList<>
@@ -213,6 +225,9 @@ public class AddIngredientFragment extends Fragment {
             Log.d("DEBUG", "Cannot parse");
             return;
         }
+        location = locationSpinner.getSelectedItem().toString();
+        unit = unitSpinner.getSelectedItem().toString();
+        category = categorySpinner.getSelectedItem().toString();
         Log.d("DEBUG", location);
         Log.d("DEBUG", unit);
         Ingredient ingredient = new Ingredient(description, location,
@@ -264,9 +279,10 @@ public class AddIngredientFragment extends Fragment {
                 if (position != location_adapter.getCount() - 1)
                     onItemSelectedLocation(parent, view, position, id);
                 else {
-
-                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Location").
-                            add(AddEditLocationFragment.class, new Bundle(), "Add Location").commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "location");
+                    requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Location").
+                            add(AddEditLocationFragment.class, bundle, "Add Location").commit();
 
                 }
             }
@@ -277,7 +293,15 @@ public class AddIngredientFragment extends Fragment {
         unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                onItemSelectedUnit(parent, view, position, id);
+                if (position != unit_adapter.getCount() - 1)
+                    onItemSelectedUnit(parent, view, position, id);
+                else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "unit");
+                    requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Unit").
+                            add(AddEditLocationFragment.class, bundle, "Add Unit").commit();
+
+                }
             }
 
             @Override
@@ -286,7 +310,18 @@ public class AddIngredientFragment extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                onItemSelectedCategory(parent, view, position, id);
+                if (position != category_adapter.getCount() - 1)
+                    onItemSelectedCategory(parent, view, position, id);
+                else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "category");
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("Add Category").
+                            add(AddEditLocationFragment.class, bundle, "Add Category")
+                            .commit();
+
+                }
             }
 
             @Override

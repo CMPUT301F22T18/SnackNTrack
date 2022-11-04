@@ -42,7 +42,7 @@
     </string-array>
     <string name="add_a_recipe">add a recipe</string>
     <string name="recipe_image_view">Recipe Image View</string>
-    <string name="add_edit_your_location">Add / Edit your Location</string>
+    <string name="add_edit_your_location">Add / Edit your </string>
     <string name="location_label">Location</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>

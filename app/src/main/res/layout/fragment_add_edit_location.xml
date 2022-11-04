@@ -5,6 +5,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/add_item_title"
         android:text="@string/add_edit_your_location"
         android:textStyle="bold"
         android:textSize="24sp"/>
