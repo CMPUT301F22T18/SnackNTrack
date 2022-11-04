@@ -81,7 +81,7 @@ public class AddIngredientFragment extends Fragment {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         storage = (Storage) getArguments().getSerializable("storage");
-        Log.d("DEBUG", storage.getStorage().get(0).toString());
+        Log.d("DEBUG", storage.getStorageList().get(0).toString());
     }
 
     @Override
