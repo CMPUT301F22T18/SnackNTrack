@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public class StorageActivity extends AppCompatActivity {
@@ -33,9 +34,12 @@ public class StorageActivity extends AppCompatActivity {
         fab.show();
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("storage", (Serializable) storage);
+
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .add(R.id.fragment_container_view, AddIngredientFragment.class, null)
+                        .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)
                         .addToBackStack("AddIngredient")
                         .commit();
 

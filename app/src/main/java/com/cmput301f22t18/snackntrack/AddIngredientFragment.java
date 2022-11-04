@@ -1,5 +1,8 @@
 package com.cmput301f22t18.snackntrack;
 
+
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,15 +12,26 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class AddIngredientFragment extends Fragment {
@@ -32,9 +46,16 @@ public class AddIngredientFragment extends Fragment {
     // private String mParam2;
 
     FloatingActionButton floatingActionButton;
-    Spinner unit, location, category;
+    Spinner unitSpinner, locationSpinner, categorySpinner;
     ImageButton pickBestBeforeButton;
-    Button cancel, add;
+    Button cancelButton, addButton;
+
+    String description, location, unit, category;
+    Date bestBefore;
+    int amount;
+    Storage storage;
+
+    EditText descriptionEditText, amountEditText, bestBeforeEditText;
 
     public AddIngredientFragment() {
         // Required empty public constructor
@@ -46,7 +67,7 @@ public class AddIngredientFragment extends Fragment {
 
      * @return A new instance of fragment AddEditIngredient.
      */
-    // TODO: Add paramete to AddIngredient to reuse as Edit Ingredient
+    // TODO: Add parameter to AddIngredient to reuse as Edit Ingredient
     public static AddIngredientFragment newInstance() {
         //Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
@@ -58,11 +79,9 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /* if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
-
+        assert getArguments() != null;
+        storage = (Storage) getArguments().getSerializable("storage");
+        Log.d("DEBUG", storage.getStorage().get(0).toString());
     }
 
     @Override
@@ -75,11 +94,132 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupUI(view);
+        initSpinner(view);
         ImageButton imageButton = view.findViewById(R.id.back_button);
+        descriptionEditText = view.findViewById(R.id.description_edit_text);
+        amountEditText = view.findViewById(R.id.amount_edit_text);
+        bestBeforeEditText = view.findViewById(R.id.best_before_date);
+
         floatingActionButton = getActivity().findViewById(R.id.add_ingredient_fab);
-        location = view.findViewById(R.id.location_spinner);
-        unit = view.findViewById(R.id.unit_spinner);
-        category = view.findViewById(R.id.category_spinner);
+        pickBestBeforeButton = view.findViewById(R.id.date_picker_button);
+        pickBestBeforeButton.setOnClickListener(v -> {
+            DialogFragment newFragment = new DatePickerFragment();
+            newFragment.show(getChildFragmentManager(), "datePicker");
+
+        });
+
+        cancelButton = view.findViewById(R.id.cancel_add_ingredient_button);
+        addButton = view.findViewById(R.id.add_ingredient_button);
+
+        imageButton.setOnClickListener(v -> goBack());
+
+        cancelButton.setOnClickListener(v -> goBack());
+        addButton.setOnClickListener(v -> addIngredient());
+
+        // Set FAB to hide
+        floatingActionButton.hide();
+
+
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
+    }
+
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
+
+    public void onItemSelectedLocation(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        location = (String) parent.getItemAtPosition(pos);
+    }
+
+    public void onItemSelectedUnit(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        unit = (String) parent.getItemAtPosition(pos);
+    }
+
+    public void onItemSelectedCategory(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        category = (String) parent.getItemAtPosition(pos);
+    }
+
+    public void addIngredient(){
+        if (!inputValidate()) {
+            Log.i("DEBUG", "Cannot add empty!");
+            return;
+        }
+        description = descriptionEditText.getText().toString();
+        amount = Integer.parseInt(amountEditText.getText().toString());
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA);
+            bestBefore = df.parse(bestBeforeEditText.getText().toString());
+
+        }
+        catch (Exception e) {
+            Log.d("Debug", bestBeforeEditText.getText().toString());
+            Log.d("DEBUG", "Cannot parse");
+            return;
+        }
+        Log.d("DEBUG", location);
+        Log.d("DEBUG", unit);
+        Ingredient ingredient = new Ingredient(description, location,
+                unit, category, amount, bestBefore);
+        Log.d("DEBUG", ingredient.toString());
+        storage.addIngredient(ingredient);
+        Log.i("DEBUG", "Added Ingredient!");
+        requireActivity().getSupportFragmentManager().popBackStackImmediate();
+
+    }
+
+    public void goBack() {
+        Log.i("Debug", "Pressed Back!");
+        floatingActionButton.show();
+        requireActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    public boolean inputValidate() {
+        if (Objects.equals(descriptionEditText.getText().toString(), "")) return false;
+        if (Objects.equals(unit, "")) return false;
+        if (Objects.equals(category, "")) return false;
+        if (Objects.equals(amountEditText.getText().toString(), "")) return false;
+        return true;
+    }
+
+    public void initSpinner(View view) {
+        locationSpinner = view.findViewById(R.id.location_spinner);
+        unitSpinner = view.findViewById(R.id.unit_spinner);
+        categorySpinner = view.findViewById(R.id.category_spinner);
 
         ArrayAdapter<CharSequence> unit_adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.units_array, android.R.layout.simple_spinner_item);
@@ -94,32 +234,42 @@ public class AddIngredientFragment extends Fragment {
         location_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        unit.setAdapter(unit_adapter);
-        location.setAdapter(location_adapter);
-        category.setAdapter(category_adapter);
+        unitSpinner.setAdapter(unit_adapter);
+        locationSpinner.setAdapter(location_adapter);
+        categorySpinner.setAdapter(category_adapter);
 
-        pickBestBeforeButton = view.findViewById(R.id.date_picker_button);
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onItemSelectedLocation(parent, view, position, id);
+            }
 
-        pickBestBeforeButton.setOnClickListener(v -> {
-            DialogFragment newFragment = new DatePickerFragment();
-            newFragment.show(getChildFragmentManager(), "datePicker");
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
         });
+        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onItemSelectedUnit(parent, view, position, id);
+            }
 
-        cancel = view.findViewById(R.id.cancel_add_ingredient_button);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        imageButton.setOnClickListener(v -> goBack());
+            }
+        });
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onItemSelectedCategory(parent, view, position, id);
+            }
 
-        cancel.setOnClickListener(v -> goBack());
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        // Set FAB to hide
-
-        floatingActionButton.hide();
-    }
-
-    public void goBack() {
-        Log.i("Debug", "Pressed Back!");
-        floatingActionButton.show();
-        requireActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        });
     }
 }
