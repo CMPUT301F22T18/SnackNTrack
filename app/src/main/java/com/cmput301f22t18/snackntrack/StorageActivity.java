@@ -30,16 +30,15 @@ public class StorageActivity extends AppCompatActivity {
                 new LinearLayoutManager(getApplicationContext()));
 
         FloatingActionButton fab = findViewById(R.id.add_ingredient_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (savedInstanceState == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .add(R.id.fragment_container_view, AddIngredientFragment.class, null)
-                            .addToBackStack("AddIngredient")
-                            .commit();
-                }
+        fab.show();
+        fab.setOnClickListener(view -> {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragment_container_view, AddIngredientFragment.class, null)
+                        .addToBackStack("AddIngredient")
+                        .commit();
+
             }
         });
     }
