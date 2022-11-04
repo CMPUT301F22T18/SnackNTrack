@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,18 +23,24 @@ public class RecipeTest {
      * Runs before all test cases; creates a mock RecipeList object with 1 Recipe
      */
     @Before
-    public Recipe createMockRecipe() {
-        Recipe recipe = new Recipe();
-        // Recipe List consists of arraylist of recipes which is a array list of ingrediants
-        recipe.addIngredient(new Ingredient("Carrots", "Fridge", "pieces", "Produce", 3, new Date(2024-1900, 11, 27)));
-        recipe.setRecipe("Fried Rice",2,2,"breakfast","I don't like peas in it", recipe.getRecipeIngredients()); // How to test fro photo
-        return recipe;
+    public void createMockRecipe() {
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
+        recipe = new Recipe(
+                "Fried Rice",
+                2, "I don't like peas in it", 2,
+                "breakfast", new ArrayList<Ingredient>(),
+                "https://unsplash.com/photos/rQX9eVpSFz8");
+        // Recipe List consists of arraylist of recipes which is a array list of ingredients
+        recipe.addIngredient(new Ingredient(
+                "Carrots", "Fridge", "pieces", "Produce",
+                3, c.getTime()));
     }
     /**
      * Add an ingredient to recipe and check if successfully in recipe
      */
     @Test
-    void testAddIngrediants() {
+    public void testAddIngredients() {
         // Add a new Ingredient to storage (note that storage already has 1 Ingredient)
         Ingredient newIngredient = new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27));
         recipe.addIngredient(newIngredient);
@@ -46,8 +53,13 @@ public class RecipeTest {
      * Get ArrayList from Recipe object and check if contents of list are correct
      */
     @Test
-    public void testGetRecipeIngrediants() {
-        Ingredient newIngredient = new Ingredient("Lettuce", "Pantry", "pieces", "Produce", 5, new Date(2023-1900, 7, 27));
+    public void testGetRecipeIngredients() {
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
+        Ingredient newIngredient = new Ingredient(
+                "Lettuce", "Pantry",
+                "pieces", "Produce", 5,
+                c.getTime());
         recipe.addIngredient(newIngredient);
         ArrayList<Ingredient> list = recipe.getRecipeIngredients(); // Get the ArrayList inside storage
         assertEquals(2, list.size()); // True if there are 2 items inside list
@@ -58,22 +70,26 @@ public class RecipeTest {
      * Select ingredient in recipe, delete it, and check if successfully deleted from recipe
      */
     @Test
-    void testDeleteIngrediant(){
+    public void testDeleteIngredient(){
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
         Ingredient delete = (Ingredient) recipe.getRecipeIngredients().get(0); ;
         recipe.deleteIngredient(delete);
-        // Recipe List consists of arraylist of recipes which is a array list of ingrediants
+        // Recipe List consists of arraylist of recipes which is a array list of ingredients
         ArrayList<Ingredient> list = recipe.getRecipeIngredients();
         assertEquals(0, list.size()); // True if there are no items inside list
-        Ingredient notPresent = new Ingredient("Cream", "Diary", "gram", "Diary", 5, new Date(2024, 11, 31));
-        assertThrows(IllegalArgumentException.class, () -> {
-            recipe.deleteIngredient(notPresent);} );
+        Ingredient notPresent = new Ingredient(
+                "Cream", "Cupboard", "gram",
+                "Dairy", 5, c.getTime());
+        recipe.deleteIngredient(notPresent);
+        assertEquals(0, list.size()); // True if there are no items inside list
     }
     /**
      * Get the recipe object title and check if contents are correct
      */
     @Test
     public void testGetTitle() {
-        assertEquals("Fried rice", recipe.getTitle());
+        assertEquals("Fried Rice", recipe.getTitle());
     }
     /**
      * Get the recipe object prep time and check if contents are correct
@@ -108,7 +124,7 @@ public class RecipeTest {
      */
     @Test
     public void testGetPhoto() {
-        assertEquals(photo, recipe.getPhoto());  // How to do??
+        assertEquals("https://unsplash.com/photos/rQX9eVpSFz8", recipe.getPhotoURL());  // How to do??
     }
 
 
