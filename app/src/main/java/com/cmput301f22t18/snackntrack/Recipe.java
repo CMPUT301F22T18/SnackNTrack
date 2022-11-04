@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * @version 1.0.1
  * @see Ingredient
  */
-public class Recipe {
+public class Recipe implements Serializable {
     private String title;
     private int prepTime;
     private String comments;
