@@ -5,10 +5,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -69,6 +72,17 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ImageButton imageButton = view.findViewById(R.id.back_button);
+        floatingActionButton = getActivity().findViewById(R.id.add_recipe_fab);
+        RecyclerView recyclerView = getActivity().findViewById(R.id.recipe_list_recycler_view);
+        imageButton.setOnClickListener(v -> {
+            Log.i("Debug", "Pressed Back!");
+            floatingActionButton.show();
+            recyclerView.setVisibility(View.VISIBLE);
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+        });
 
+        // Set FAB to hide
+        floatingActionButton.hide();
     }
 }

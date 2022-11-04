@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,6 +33,7 @@ public class RecipeListActivity extends AppCompatActivity {
         fab.show();
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {
+                recyclerView.setVisibility(View.GONE);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .add(R.id.fragment_container_view, AddRecipeFragment.class, null)
