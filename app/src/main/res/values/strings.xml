@@ -47,5 +47,7 @@
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_button">Cancel</string>
->>>>>>> 187b4d811d19cf4cb7e447c5e57a896da2581c54
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    >>>>>>> 187b4d811d19cf4cb7e447c5e57a896da2581c54
 </resources>

@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * @author Mark Maligalig
@@ -38,10 +40,13 @@ public class RecipeListActivity extends AppCompatActivity {
         fab.show();
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recipeList", (Serializable) recipeList);
+
                 recyclerView.setVisibility(View.GONE);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .add(R.id.fragment_container_view, AddRecipeFragment.class, null)
+                        .add(R.id.fragment_container_view, AddRecipeFragment.class, bundle)
                         .addToBackStack("AddRecipe")
                         .commit();
 

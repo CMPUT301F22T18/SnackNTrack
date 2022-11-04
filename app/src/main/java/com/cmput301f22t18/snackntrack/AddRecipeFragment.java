@@ -16,9 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -46,9 +48,11 @@ public class AddRecipeFragment extends Fragment {
     ImageButton backButton;
     Spinner categorySpinner;
     EditText titleEditText, commentsEditText, servingsEditText, prepTimeEditText;
-    String title, category, comments;
+    String title, category, comments, photoURL;
     int prepTime, servings;
     ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
+    RecipeList recipeList;
+    Recipe recipe;
 
 
     private ArrayList<String> categories = new ArrayList<>();
@@ -76,10 +80,8 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // if (getArguments() != null) {
-        //     mParam1 = getArguments().getString(ARG_PARAM1);
-        //     mParam2 = getArguments().getString(ARG_PARAM2);
-        // }
+        assert getArguments() != null;
+        recipeList = (RecipeList) getArguments().getSerializable("recipeList");
     }
 
     @Override
@@ -87,6 +89,8 @@ public class AddRecipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_edit_recipe, container, false);
+
+        recipe = new Recipe(); // TODO: Change this when user edits recipe
 
         // Adjust spinner
         categorySpinner = view.findViewById(R.id.category_spinner);
@@ -118,28 +122,24 @@ public class AddRecipeFragment extends Fragment {
 
         addIngredientButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            //bundle.putString();
-            requireActivity().
-                    getSupportFragmentManager().
-                    beginTransaction().
-                    addToBackStack("AddIngredientToRecipe").
-                    add(AddIngredientFragment.class, bundle, null).
-                    commit();
+            bundle.putSerializable("recipe", (Serializable) recipe);
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack("Add Ingredient To Recipe")
+                    .add(R.id.fragment_container_view, AddIngredientToRecipeFragment.class, bundle)
+                    .commit();
         });
 
         backButton.setOnClickListener(v -> {
             Log.i("Debug", "Pressed Back!");
-            floatingActionButton.show();
-            recyclerView.setVisibility(View.VISIBLE);
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            returnToLastScreen();
         });
 
         addRecipeButton.setOnClickListener(v -> {
             Log.i("Debug", "Pressed add recipe!");
-            floatingActionButton.show();
-            recyclerView.setVisibility(View.VISIBLE);
             addRecipe();
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
         });
 
         // Set FAB to hide
@@ -147,10 +147,42 @@ public class AddRecipeFragment extends Fragment {
     }
 
     public void addRecipe() {
-        title = titleEditText.getText().toString();
-        comments = commentsEditText.getText().toString();
-        category = categorySpinner.getSelectedItem().toString();
-        servings = Integer.parseInt(servingsEditText.getText().toString());
-        prepTime = Integer.parseInt(prepTimeEditText.getText().toString());
+        if (!validateInput()) {
+            Toast.makeText(getActivity(), "Fields cannot be empty!", Toast.LENGTH_LONG).show();
+        }
+        else {
+            title = titleEditText.getText().toString();
+            comments = commentsEditText.getText().toString();
+            category = categorySpinner.getSelectedItem().toString();
+            servings = Integer.parseInt(servingsEditText.getText().toString());
+            prepTime = Integer.parseInt(prepTimeEditText.getText().toString());
+            // photoURL =
+            recipe.setTitle(title);
+            recipe.setComments(comments);
+            recipe.setCategory(category);
+            recipe.setServings(servings);
+            recipe.setPrepTime(prepTime);
+            // recipe.setPhotoURL(photoURL);
+            recipeList.addRecipe(recipe); // TODO: Change when user edits
+            returnToLastScreen();
+        }
+    }
+
+    public boolean validateInput() {
+        boolean allFieldsFilled = true;
+        if (titleEditText.getText().toString().equals("") ||
+                servingsEditText.getText().toString().equals("") ||
+                commentsEditText.getText().toString().equals("") ||
+                servingsEditText.getText().toString().equals("") ||
+                prepTimeEditText.getText().toString().equals("")) {
+            allFieldsFilled = false;
+        }
+        return allFieldsFilled;
+    }
+
+    public void returnToLastScreen() {
+        floatingActionButton.show();
+        recyclerView.setVisibility(View.VISIBLE);
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 }
