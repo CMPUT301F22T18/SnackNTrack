@@ -213,8 +213,7 @@ public class AddIngredientFragment extends Fragment {
         if (Objects.equals(descriptionEditText.getText().toString(), "")) return false;
         if (Objects.equals(unit, "")) return false;
         if (Objects.equals(category, "")) return false;
-        if (Objects.equals(amountEditText.getText().toString(), "")) return false;
-        return true;
+        return !Objects.equals(amountEditText.getText().toString(), "");
     }
 
     public void initSpinner(View view) {
@@ -246,9 +245,7 @@ public class AddIngredientFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
         unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -257,9 +254,7 @@ public class AddIngredientFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -268,9 +263,7 @@ public class AddIngredientFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 }
