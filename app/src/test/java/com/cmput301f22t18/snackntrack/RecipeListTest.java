@@ -33,7 +33,6 @@ public class RecipeListTest{
         recipeList.addRecipe(mockRecipe());
         return recipeList;
     }
-
     public Recipe mockRecipe() {
         Recipe recipe = new Recipe();
         // Recipe List consists of arraylist of recipes which is a array list of ingrediants
@@ -41,19 +40,23 @@ public class RecipeListTest{
         recipe.setRecipe("Fried Rice",2,2,"breakfast","I don't like peas in it", recipe.getRecipeIngredients()); // How to test fro photo
         return recipe;
     }
+
     /**
-     * Get ArrayList from RecipeList object and check if contents of list are correct
+     * Get ArrayList from RecipeList object and check if contents of list are correct.
      */
     @Test
     public void testGetRecipeList() {
-        RecipeList.sort("Best Before"); // Sort storage by Best Before date so Spam comes first ?
+        recipeList.sort("Best Before"); // Sort storage by Best Before date so Spam comes first ?
         ArrayList<Recipe> list = recipeList.getRecipeList();
         assertEquals(1, list.size()); // True if 2 items in list
         assertEquals("Carrot", list.get(0).getTitle()); // True if "Spam" is description of 1st item in list
     }
-    @Test
-    void testaddRecipe() {
 
+    /**
+     * Add an recipe to recipeList and check if successfully in recipeList
+     */
+    @Test
+    void testAddRecipe() {
         RecipeList recipeList = createMockRecipeList();
         assertEquals(1, recipeList.getRecipeList().size());
         Recipe recipe = new Recipe();
@@ -61,12 +64,15 @@ public class RecipeListTest{
         recipe.addIngredient(new Ingredient("Potatoes", "Fridge", "pieces", "Produce", 3, new Date(2024-1900, 11, 27)));
         recipe.setRecipe("Pancakes",2,2,"breakfast","I don't like it too fried", recipe.getRecipeIngredients()); // H
         recipeList.addRecipe(recipe);
-        assertEquals(2, recipeList.getRecipeList().size()));
+        assertEquals(2, recipeList.getRecipeList().size());
         assertTrue(recipeList.getRecipeList().contains(recipe));
     }
-    @Test
 
-    void testdeleteRecipe(){
+    /**
+     * Delete an recipe to recipeList if present and check if successfully in recipeList
+     */
+    @Test
+    public void testDeleteRecipe(){
         RecipeList recipeList = createMockRecipeList();
         Recipe recipe = new Recipe();
         // Recipe List consists of arraylist of recipes which is a array list of ingrediants
@@ -80,6 +86,8 @@ public class RecipeListTest{
         recipeList.deleteRecipe(recipe);// Existing recipe
 
     }
+
+    @Test
     public void testSort() {
         // TODO after halfway checkpoint
     }
