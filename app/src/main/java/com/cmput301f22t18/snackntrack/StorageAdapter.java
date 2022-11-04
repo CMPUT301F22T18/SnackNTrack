@@ -1,13 +1,19 @@
 package com.cmput301f22t18.snackntrack;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -18,15 +24,47 @@ import java.util.Date;
  */
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private ArrayList<Ingredient> localDataSet;
+    private final OnItemLongClickListener listener;
 
+
+    public interface OnItemLongClickListener {
+        void onClick(Ingredient item);
+    }
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param storage The Storage containing the data to be populated
      * by RecyclerView.
      */
-    public StorageAdapter(Storage storage) {
+    public StorageAdapter(Storage storage, FragmentManager fm,
+                          LifecycleOwner owner,
+                          ArrayList<String> unit_list, ArrayList<String> location_list,
+                          ArrayList<String> category_list) {
         localDataSet = storage.getStorageList();
+        listener = item -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("item", (Serializable) item);
+            int pos = localDataSet.indexOf(item);
+            bundle.putInt("position", pos);
+            bundle.putSerializable("storage", (Serializable) storage);
+            bundle.putStringArrayList("units", unit_list);
+            bundle.putStringArrayList("locations", location_list);
+            bundle.putStringArrayList("categories", category_list);
+            bundle.putString("function", "Edit");
+            fm.setFragmentResultListener("editIngredient", owner,
+                    (requestKey, result) -> {
+                        Ingredient new_item = (Ingredient) result.getSerializable("new_item");
+                        storage.setIngredient(pos, new_item);
+                        localDataSet.set(pos, new_item);
+                        notifyItemChanged(pos);
+                    });
+            fm.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)
+                    .addToBackStack("AddIngredient")
+                    .commit();
+
+        };
     }
 
     /**
@@ -68,7 +106,12 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
         holder.
                 getBestBeforeDateTextView().
                 setText(dateText);
+        holder.bind(localDataSet.get(position), listener);
     }
+
+
+
+
 
     /**
      * Get the number of items
@@ -97,6 +140,13 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             categoryTextView = view.findViewById(R.id.ingredient_category_text_view);
             amountUnitTextView = view.findViewById(R.id.ingredient_amount_unit_text_view);
             bestBeforeDateTextView = view.findViewById(R.id.ingredient_best_before_date_text_view);
+        }
+
+        public void bind(final Ingredient item, final OnItemLongClickListener listener) {
+            itemView.setOnLongClickListener(v -> {
+                listener.onClick(item);
+                return true;
+            });
         }
 
         /**

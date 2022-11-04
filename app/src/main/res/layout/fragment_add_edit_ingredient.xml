@@ -35,6 +35,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:text="@string/add_ingredient_title"
             android:id="@+id/add_ingredient_fragment_title_text_view"
             />

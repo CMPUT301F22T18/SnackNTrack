@@ -1,6 +1,7 @@
 package com.cmput301f22t18.snackntrack;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,12 +11,16 @@ import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public class StorageActivity extends AppCompatActivity {
     private Storage storage;
     private StorageAdapter storageAdapter;
     private RecyclerView recyclerView;
+    private ArrayList<String> unit_list, location_list, category_list;
     FloatingActionButton fab;
 
     @Override
@@ -24,11 +29,22 @@ public class StorageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_storage);
         storage = new Storage();
         initStorage();
-        storageAdapter = new StorageAdapter(storage);
+
+        unit_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
+        location_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
+        category_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
+
+        storageAdapter = new StorageAdapter(storage, getSupportFragmentManager(), this,
+                unit_list, location_list, category_list);
         recyclerView = this.findViewById(R.id.storage_recycler_view);
         recyclerView.setAdapter(storageAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
+
+
 
         fab = findViewById(R.id.add_ingredient_fab);
         fab.show();
@@ -36,7 +52,9 @@ public class StorageActivity extends AppCompatActivity {
             if (savedInstanceState == null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("storage", (Serializable) storage);
-
+                bundle.putStringArrayList("units", unit_list);
+                bundle.putStringArrayList("locations", location_list);
+                bundle.putStringArrayList("categories", category_list);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)

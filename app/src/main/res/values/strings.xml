@@ -5,7 +5,7 @@
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
-    <string name="add_ingredient_title">Add Ingredients</string>
+    <string name="add_ingredient_title">Add Ingredient</string>
     <string name="description_edit_text_title">Description</string>
     <string name="amount_edit_text_title">Amount</string>
     <string name="unit_edit_text_title">Unit</string>
