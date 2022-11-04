@@ -19,7 +19,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     RecipeListAdapter recipeListAdapter;
 
     // for testing
-    ArrayList<Recipe> testList;
+//    ArrayList<Recipe> testList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,35 +27,24 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
         setContentView(R.layout.activity_recipe_list);
 
         // for testing
-        testList = new ArrayList<>();
-        Recipe recipe = new Recipe();
-        recipe.setTitle("Milk");
-        testList.add(recipe);
+//        testList = new ArrayList<>();
+//        Recipe recipe = new Recipe();
+//        recipe.setTitle("Milk");
+//        recipe.setCategory("Liquid");
+//        recipe.setServings(3);
+//        recipe.setPrepTime(0);
+//        testList.add(recipe);
         // end test
 
         fab = findViewById(R.id.recipe_list_action_button);
         recyclerView = findViewById(R.id.recipe_list);
-        recipeListAdapter = new RecipeListAdapter(this, recipeList.getRecipeList(), this);
+        recipeListAdapter = new RecipeListAdapter(this, recipeList.getRecipeList(), this); //recipeList.getRecipeList()  // testList
         recyclerView.setAdapter(recipeListAdapter);
 
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                // implement this if we want to swipe the item
-//            }
-//        });
-//
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
     public void onNoteClick(int position) {
-        Toast toast = Toast.makeText(getApplicationContext(), "This is a toast", Toast.LENGTH_SHORT);
-        toast.show();
+        //TODO: bring us to a fragment that shows recipe info
     }
 }
