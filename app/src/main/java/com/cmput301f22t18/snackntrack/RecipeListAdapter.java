@@ -108,6 +108,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         Recipe recipe = recipeArrayList.get(position);
         holder.recipeTitle.setText(recipe.getTitle());
         holder.recipeCategory.setText(recipe.getCategory());
+
         // TODO: Change prep time representation of Recipe class, for now we'll assume prep time is in minutes
         String prepTimeString = recipe.getPrepTime() + " mins";
         holder.recipePrepTime.setText(prepTimeString);
@@ -128,4 +129,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public interface OnNoteListener {
         void onNoteClick(int position);
     }
+
 }
+

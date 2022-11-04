@@ -1,6 +1,5 @@
 package com.cmput301f22t18.snackntrack;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +21,11 @@ public class RecipeListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
+
 
         recipeList = new RecipeList();
         insertTestRecipes();
@@ -66,4 +65,6 @@ public class RecipeListActivity extends AppCompatActivity {
         recipeList.addRecipe(new Recipe("Soup", 10, "none", 2, "Dinner", in2, null));
 
     }
+    
+    // TOOD: Add onNoteClick, OnItemClickListener, etc to edit recipe...
 }

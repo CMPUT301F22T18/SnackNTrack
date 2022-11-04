@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AddIngredientFragment"
+    tools:context=".AddEditIngredientFragment"
     android:background="@color/white"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,6 +35,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:text="@string/add_ingredient_title"
             android:id="@+id/add_ingredient_fragment_title_text_view"
             />
