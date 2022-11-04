@@ -7,13 +7,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.Serializable;
 import java.util.Date;
 
 public class StorageActivity extends AppCompatActivity {
     private Storage storage;
     private StorageAdapter storageAdapter;
     private RecyclerView recyclerView;
-
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,22 @@ public class StorageActivity extends AppCompatActivity {
         recyclerView.setAdapter(storageAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
+
+        fab = findViewById(R.id.add_ingredient_fab);
+        fab.show();
+        fab.setOnClickListener(view -> {
+            if (savedInstanceState == null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("storage", (Serializable) storage);
+
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)
+                        .addToBackStack("AddIngredient")
+                        .commit();
+
+            }
+        });
     }
 
     private void initStorage() {
