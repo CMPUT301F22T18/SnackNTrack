@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -83,11 +84,17 @@ public class StorageTest {
      */
     @Test
     public void testDeleteIngredientByIngredient() {
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
+        Ingredient newIngredient = new Ingredient(
+                "Carrots", "Fridge", "pieces",
+                "Produce", 3, c.getTime());
+        storage.addIngredient(newIngredient);
         // Select first ingredient in storage
         Ingredient toDelete = (Ingredient) storage.getStorageList().get(0);
         storage.deleteIngredient(toDelete);
         ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
-        assertEquals(0, list.size()); // True if there are no items inside list
+        assertEquals(1, list.size()); // True if there are only 1 items inside list
         assertNotEquals(toDelete, list.get(0)); // True if deleted ingredient != first element of list
     }
 
@@ -96,10 +103,16 @@ public class StorageTest {
      */
     @Test
     public void testDeleteIngredientByInt() {
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
+        Ingredient newIngredient = new Ingredient(
+                "Carrots", "Fridge", "pieces",
+                "Produce", 3, c.getTime());
+        storage.addIngredient(newIngredient);
         Ingredient toDelete = (Ingredient) storage.getStorageList().get(0);
         storage.deleteIngredient(0);
         ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
-        assertEquals(0, list.size()); // True if there are no items inside list
+        assertEquals(1, list.size()); // True if there are only 1 items inside list
         assertNotEquals(toDelete, list.get(0)); // True if deleted ingredient != first element of list
     }
 
