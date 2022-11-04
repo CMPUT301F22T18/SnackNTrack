@@ -15,6 +15,10 @@
     <string name="category_spinner_title">Category</string>
     <string name="best_before_text_view">31/10/2022</string>
     <string name="best_before_title">Best Before Date</string>
+    <string name="add_text">Add</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="go_back_button">Go Back Button</string>
+    <string name="date_picker">Date Picker</string>
     <string-array name="units_array">
         <item>kilogram</item>
         <item>litre</item>
