@@ -2,11 +2,13 @@ package com.cmput301f22t18.snackntrack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -73,7 +75,7 @@ public class StorageTest {
         storage.addIngredient(newIngredient);
         ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
         assertEquals(2, list.size()); // True if there are 2 items inside list
-        assertEquals(list[1], newIngredient); // True if second ingredient in storage is newIngredient
+        assertEquals(list.get(1), newIngredient); // True if second ingredient in storage is newIngredient
     }
 
     /**
@@ -86,7 +88,7 @@ public class StorageTest {
         storage.deleteIngredient(toDelete);
         ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
         assertEquals(0, list.size()); // True if there are no items inside list
-        assertFalse(toDelete, list[0]); // True if deleted ingredient != first element of list
+        assertNotEquals(toDelete, list.get(0)); // True if deleted ingredient != first element of list
     }
 
     /**
@@ -94,10 +96,11 @@ public class StorageTest {
      */
     @Test
     public void testDeleteIngredientByInt() {
+        Ingredient toDelete = (Ingredient) storage.getStorageList().get(0);
         storage.deleteIngredient(0);
         ArrayList<Ingredient> list = storage.getStorageList(); // Get the ArrayList inside storage
         assertEquals(0, list.size()); // True if there are no items inside list
-        assertFalse(toDelete, list[0]); // True if deleted ingredient != first element of list
+        assertNotEquals(toDelete, list.get(0)); // True if deleted ingredient != first element of list
     }
 
     /**
@@ -140,6 +143,6 @@ public class StorageTest {
         storage.setIngredient(0, new Ingredient("Potato", "Pantry", "pieces", "Produce", 3, new Date(2023-1900, 7, 27)));
         assertEquals(1, initialCount); // True if storage still has same amount of ingredients, i.e. 1
         assertEquals("Potato", storage.getStorageList().get(0).getDescription()); // True if first ingredient description is "Potato"
-        assertFalse("Spam", storage.getStorageList().get(0).getDescription()); // True if first ingredient desc no longer "Spam"
+        assertNotEquals("Spam", storage.getStorageList().get(0).getDescription()); // True if first ingredient desc no longer "Spam"
     }
 }

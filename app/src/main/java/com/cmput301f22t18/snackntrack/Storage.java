@@ -19,10 +19,10 @@ public class Storage {
     private final IngredientBBDComparator ibc = new IngredientBBDComparator();
     private final Dictionary<String, IngredientComparator> comparators =
             new Hashtable<String, IngredientComparator>() {{
-                put("description", idc);
-                put("location", ilc);
-                put("category", icc);
-                put("best before date", ibc);
+                put("Description", idc);
+                put("Location", ilc);
+                put("Category", icc);
+                put("Best Before", ibc);
             }};
     /**
      * Construct an empty storage
@@ -90,7 +90,7 @@ public class Storage {
         return newStorage;
     }
 
-    public ArrayList getStorageList(){
+    public ArrayList<Ingredient> getStorageList(){
         return storage;
     }
 }
