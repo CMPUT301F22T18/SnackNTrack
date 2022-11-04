@@ -29,6 +29,8 @@ public class RecipeList {
         return this.recipeList;
     }
 
+    public int getSize() {return this.recipeList.size();}
+
     /**
      * This method sorts the recipeList in the order specified by sortBy
      * @param sortBy - an order indicator
