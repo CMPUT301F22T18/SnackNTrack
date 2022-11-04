@@ -5,4 +5,6 @@
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="add_a_recipe">add a recipe</string>
+    <string name="recipe_image_view">Recipe Image View</string>
 </resources>
