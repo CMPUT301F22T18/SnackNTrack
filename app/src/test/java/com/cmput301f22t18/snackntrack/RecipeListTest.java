@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import static org.junit.Assert.*;
 
@@ -27,17 +28,23 @@ public class RecipeListTest{
      * Runs before all test cases; creates a mock RecipeList object with 1 Recipe
      */
     @Before
-    public RecipeList createMockRecipeList() {
-        RecipeList recipeList = new RecipeList();
+    public void createMockRecipeList() {
+        recipeList = new RecipeList();
         // Recipe List consists of arraylist of recipes which is a array list of ingrediants
         recipeList.addRecipe(mockRecipe());
-        return recipeList;
     }
     public Recipe mockRecipe() {
-        Recipe recipe = new Recipe();
-        // Recipe List consists of arraylist of recipes which is a array list of ingrediants
-        recipe.addIngredient(new Ingredient("Carrots", "Fridge", "pieces", "Produce", 3, new Date(2024-1900, 11, 27)));
-        recipe.setRecipe("Fried Rice",2,2,"breakfast","I don't like peas in it", recipe.getRecipeIngredients()); // How to test fro photo
+        Calendar c = Calendar.getInstance();
+        c.set(2024, 11, 25);
+        Recipe recipe = new Recipe(
+                "Fried Rice",
+                2, "I don't like peas in it", 2,
+                "breakfast", new ArrayList<Ingredient>(),
+                "https://unsplash.com/photos/rQX9eVpSFz8");
+        // Recipe List consists of arraylist of recipes which is a array list of ingredients
+        recipe.addIngredient(new Ingredient(
+                "Carrots", "Fridge", "pieces", "Produce",
+                3, c.getTime()));
         return recipe;
     }
 
@@ -46,23 +53,28 @@ public class RecipeListTest{
      */
     @Test
     public void testGetRecipeList() {
-        recipeList.sort("Best Before"); // Sort storage by Best Before date so Spam comes first ?
-        ArrayList<Recipe> list = recipeList.getRecipeList();
-        assertEquals(1, list.size()); // True if 2 items in list
-        assertEquals("Carrot", list.get(0).getTitle()); // True if "Spam" is description of 1st item in list
+        assertEquals(1, recipeList.getSize()); // True if 2 items in list
+        assertEquals("Fried Rice", recipeList.getRecipeList().get(0).getTitle());
+        // True if "Spam" is description of 1st item in list
     }
 
     /**
      * Add an recipe to recipeList and check if successfully in recipeList
      */
     @Test
-    void testAddRecipe() {
-        RecipeList recipeList = createMockRecipeList();
+    public void testAddRecipe() {
         assertEquals(1, recipeList.getRecipeList().size());
-        Recipe recipe = new Recipe();
+        Recipe recipe = new Recipe("Pancakes",
+                2,
+                "I don't like it too fried",
+                2,
+                "breakfast", new ArrayList<Ingredient>(),
+                "https://unsplash.com/photos/gf9777gaYjs");
         // Recipe List consists of arraylist of recipes which is a array list of ingrediants
-        recipe.addIngredient(new Ingredient("Potatoes", "Fridge", "pieces", "Produce", 3, new Date(2024-1900, 11, 27)));
-        recipe.setRecipe("Pancakes",2,2,"breakfast","I don't like it too fried", recipe.getRecipeIngredients()); // H
+        recipe.addIngredient(
+                new Ingredient("Potatoes", "Fridge",
+                        "pieces", "Produce", 3,
+                        new Date(2024-1900, 11, 27)));
         recipeList.addRecipe(recipe);
         assertEquals(2, recipeList.getRecipeList().size());
         assertTrue(recipeList.getRecipeList().contains(recipe));
@@ -73,23 +85,36 @@ public class RecipeListTest{
      */
     @Test
     public void testDeleteRecipe(){
-        RecipeList recipeList = createMockRecipeList();
-        Recipe recipe = new Recipe();
+        Recipe recipe = new Recipe("Toast",
+                2,
+                "I don't like it too fried",
+                2,
+                "lunch", new ArrayList<Ingredient>(),
+                "https://unsplash.com/photos/gf9777gaYjs");
         // Recipe List consists of arraylist of recipes which is a array list of ingrediants
-        recipe.addIngredient(new Ingredient("Bread", "Pantry", "pieces", "Bread", 2, new Date(2024-1900, 11, 27)));
-        recipe.setRecipe("Toast",2,2,"lunch","I don't like it too fried", recipe.getRecipeIngredients()); // H
+        recipe.addIngredient(
+                new Ingredient("Bread", "Pantry", "pieces",
+                        "Bakery", 2, new Date(2024-1900, 11, 27)));
         recipeList.addRecipe(recipe);
-        Recipe recipe1 = new Recipe();
-        recipe1.addIngredient(new Ingredient("Bread", "Pantry", "pieces", "Bread", 2, new Date(2024-1900, 11, 27)));
-        recipe1.setRecipe("Sandwich",2,2,"lunch","I don't like it too fried", recipe.getRecipeIngredients());// Non existent recipe in the recipe lis
-        assertThrows( IllegalArgumentException.class, ()->{recipeList.deleteRecipe(recipe1);}); // What is the error?
+        Recipe recipe1 = new Recipe("Sandwich",
+                2,
+                "I don't like it too fried",
+                2,
+                "lunch", new ArrayList<Ingredient>(),
+                "https://unsplash.com/photos/U0PiIS4Uvkc");
+        recipe1.addIngredient(new Ingredient(
+                "Bread", "Pantry",
+                "pieces", "Bakery", 2,
+                new Date(2024-1900, 11, 27)));
+        recipeList.deleteRecipe(recipe1);
+        assertEquals(recipeList.getSize(), 2);
         recipeList.deleteRecipe(recipe);// Existing recipe
-
+        assertEquals(recipeList.getSize(), 1);
     }
 
     @Test
     public void testSort() {
-        // TODO after halfway checkpoint
+        // TODO: sort Recipes based on title, category, number of servings, preparation time
     }
 
 }
