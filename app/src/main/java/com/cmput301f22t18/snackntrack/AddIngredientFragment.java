@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,25 +26,20 @@ import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.Contract;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
 public class AddIngredientFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    // private static final String ARG_PARAM1 = "param1";
-    // private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    // private String mParam1;
-    // private String mParam2;
 
     FloatingActionButton floatingActionButton;
     Spinner unitSpinner, locationSpinner, categorySpinner;
@@ -57,6 +53,12 @@ public class AddIngredientFragment extends Fragment {
 
     EditText descriptionEditText, amountEditText, bestBeforeEditText;
 
+    ArrayList<CharSequence> units;
+    ArrayList locations;
+    ArrayList<CharSequence> categories;
+
+    ArrayAdapter<CharSequence> unit_adapter, location_adapter, category_adapter;
+
     public AddIngredientFragment() {
         // Required empty public constructor
     }
@@ -68,11 +70,9 @@ public class AddIngredientFragment extends Fragment {
      * @return A new instance of fragment AddEditIngredient.
      */
     // TODO: Add parameter to AddIngredient to reuse as Edit Ingredient
+    @NonNull
+    @Contract(" -> new")
     public static AddIngredientFragment newInstance() {
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
         return new AddIngredientFragment();
     }
 
@@ -85,7 +85,7 @@ public class AddIngredientFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_edit_ingredient, container, false);
@@ -94,8 +94,30 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        getParentFragmentManager().setFragmentResultListener("location", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                // We use a String here, but any type that can be put in a Bundle is supported
+                String result = bundle.getString("new_location");
+                location_adapter.insert(result, location_adapter.getCount() - 1);
+            }
+        });
+
+        units = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
+        locations = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
+        categories = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
+
         setupUI(view);
+        locationSpinner = view.findViewById(R.id.location_spinner);
+        unitSpinner = view.findViewById(R.id.unit_spinner);
+        categorySpinner = view.findViewById(R.id.category_spinner);
+
         initSpinner(view);
+
         ImageButton imageButton = view.findViewById(R.id.back_button);
         descriptionEditText = view.findViewById(R.id.description_edit_text);
         amountEditText = view.findViewById(R.id.amount_edit_text);
@@ -123,7 +145,7 @@ public class AddIngredientFragment extends Fragment {
 
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    public static void hideSoftKeyboard(@NonNull Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
@@ -141,7 +163,7 @@ public class AddIngredientFragment extends Fragment {
         if (!(view instanceof EditText)) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(getActivity());
+                    hideSoftKeyboard(requireActivity());
                     return false;
                 }
             });
@@ -156,19 +178,19 @@ public class AddIngredientFragment extends Fragment {
         }
     }
 
-    public void onItemSelectedLocation(AdapterView<?> parent, View view,
-                               int pos, long id) {
+    public void onItemSelectedLocation(@NonNull AdapterView<?> parent, View view,
+                                       int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         location = (String) parent.getItemAtPosition(pos);
     }
 
-    public void onItemSelectedUnit(AdapterView<?> parent, View view,
-                                       int pos, long id) {
+    public void onItemSelectedUnit(@NonNull AdapterView<?> parent, View view,
+                                   int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         unit = (String) parent.getItemAtPosition(pos);
     }
 
-    public void onItemSelectedCategory(AdapterView<?> parent, View view,
+    public void onItemSelectedCategory(@NonNull AdapterView<?> parent, View view,
                                        int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         category = (String) parent.getItemAtPosition(pos);
@@ -217,18 +239,16 @@ public class AddIngredientFragment extends Fragment {
     }
 
     public void initSpinner(View view) {
-        locationSpinner = view.findViewById(R.id.location_spinner);
-        unitSpinner = view.findViewById(R.id.unit_spinner);
-        categorySpinner = view.findViewById(R.id.category_spinner);
 
-        ArrayAdapter<CharSequence> unit_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.units_array, android.R.layout.simple_spinner_item);
 
-        ArrayAdapter<CharSequence> location_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.ingredient_locations_array, android.R.layout.simple_spinner_item);
 
-        ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.ingredient_categories_array, android.R.layout.simple_spinner_item);
+
+        unit_adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, units);
+        location_adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, locations);
+        category_adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, categories);
 
         unit_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         location_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -241,7 +261,14 @@ public class AddIngredientFragment extends Fragment {
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                onItemSelectedLocation(parent, view, position, id);
+                if (position != location_adapter.getCount() - 1)
+                    onItemSelectedLocation(parent, view, position, id);
+                else {
+
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Location").
+                            add(AddEditLocationFragment.class, new Bundle(), "Add Location").commit();
+
+                }
             }
 
             @Override

@@ -14,7 +14,6 @@
     <string name="best_before_text_view" />
     <string name="best_before_title">Best Before Date</string>
     <string name="add_text">Add</string>
-    <string name="cancel_text">Cancel</string>
     <string name="go_back_button">Go Back Button</string>
     <string name="date_picker">Date Picker</string>
     <string-array name="units_array">
@@ -23,6 +22,7 @@
         <item>shaker</item>
         <item>pack</item>
         <item>box</item>
+        <item>Others</item>
     </string-array>
     <string-array name="ingredient_categories_array">
         <item>Spice</item>
@@ -31,13 +31,20 @@
         <item>Meat</item>
         <item>Vegetable</item>
         <item>Fruit</item>
+        <item>Others</item>
     </string-array>
     <string-array name="ingredient_locations_array">
         <item>Cupboard</item>
         <item>Counter-top</item>
         <item>Fridge</item>
         <item>Pantry</item>
+        <item>Others</item>
     </string-array>
     <string name="add_a_recipe">add a recipe</string>
     <string name="recipe_image_view">Recipe Image View</string>
+    <string name="add_edit_your_location">Add / Edit your Location</string>
+    <string name="location_label">Location</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_button">Cancel</string>
 </resources>
