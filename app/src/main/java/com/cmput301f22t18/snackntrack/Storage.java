@@ -1,9 +1,7 @@
 package com.cmput301f22t18.snackntrack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -90,5 +88,9 @@ public class Storage {
         ArrayList<Ingredient> newStorage = storage;
         Collections.sort(newStorage, comparators.get(key));
         return newStorage;
+    }
+
+    public ArrayList getStorageList(){
+        return storage;
     }
 }
