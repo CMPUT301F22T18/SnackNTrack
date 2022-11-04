@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * recipeIngredients {@link ArrayList}
  *
  * @author SCWinter259
- * @version 1.0.0
+ * @version 1.0.1
  * @see Ingredient
  */
 public class Recipe {
@@ -22,6 +22,7 @@ public class Recipe {
     private int servings;
     private String category;
     private ArrayList<Ingredient> recipeIngredients;
+    private String photoURL;
 
     /**
      * This method is a constructor for the class Recipe
@@ -30,6 +31,81 @@ public class Recipe {
     public Recipe() {
         this.recipeIngredients = new ArrayList<Ingredient>();
     }
+
+    /**
+     * This method is a constructor for the class Recipe
+     * @param title title for Recipe
+     * @param prepTime preparation time for Recipe
+     * @param comments comments for Recipe
+     * @param servings number of servings for Recipe
+     * @param category category of Recipe
+     * @param recipeIngredients list of ingredients for recipe
+     * @param photoURL photo URL for Recipe
+     */
+    public Recipe(String title, int prepTime,
+                  String comments, int servings, String category,
+                  ArrayList<Ingredient> recipeIngredients, String photoURL) {
+        this.title = title;
+        this.prepTime = prepTime;
+        this.comments = comments;
+        this.servings = servings;
+        this.category = category;
+        this.recipeIngredients = recipeIngredients;
+        this.photoURL = photoURL;
+    }
+
+    /**
+     * Setter for title attribute
+     * @param title title for Recipe
+     * @since 1.0.1
+     */
+    public void setTitle(String title) {this.title = title;}
+
+    /**
+     * Setter for prepTime attribute
+     * @param prepTime preparation time for Recipe
+     * @since 1.0.1
+     */
+    public void setPrepTime(int prepTime) {this.prepTime = prepTime;}
+
+    /**
+     * Setter for comments attribute
+     * @param comments comments for Recipe
+     * @since 1.0.1
+     */
+    public void setComments(String comments) {this.comments = comments;}
+
+    /**
+     * Setter for servings attribute
+     * @param servings number of servings for Recipe
+     * @since 1.0.1
+     */
+    public void setServings(int servings) {this.servings = servings;}
+
+    /**
+     * Setter for list of ingredients
+     * @param recipeIngredients
+     */
+    public void setRecipeIngredients(ArrayList<Ingredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    /**
+     * Setter for photo URL
+     * @param photoURL
+     */
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    /**
+     * Setter for category attribute
+     * @param category category of the Recipe
+     * @since 1.0.1
+     */
+
+
+    public void setCategory(String category) {this.category = category;}
 
     /**
      * This method returns the title from the class Recipe
@@ -74,6 +150,14 @@ public class Recipe {
      */
     public String getCategory() {
         return this.category;
+    }
+
+    /**
+     * This method returns the photoURL from the class Recipe
+     * @return photoURL
+     */
+    public String getPhotoURL() {
+        return photoURL;
     }
 
     /**
