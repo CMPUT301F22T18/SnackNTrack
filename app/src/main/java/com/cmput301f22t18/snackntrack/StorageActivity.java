@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class StorageActivity extends AppCompatActivity {
     private Storage storage;
@@ -86,6 +87,8 @@ public class StorageActivity extends AppCompatActivity {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Log.d(TAG, document.getId() + " => " + document.getData());
                     Map<String, Object> map = document.getData();
+                    assert user != null;
+                    if (!Objects.equals(user.getEmail(), document.get("email").toString())) continue;
                     ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) map.get("storage");
                     for (HashMap<String, Object> o : list) {
                         Timestamp timestamp = (Timestamp) o.get("bestBeforeDate");
