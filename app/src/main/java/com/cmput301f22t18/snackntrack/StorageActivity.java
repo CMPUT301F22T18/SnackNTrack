@@ -1,19 +1,16 @@
 package com.cmput301f22t18.snackntrack;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 
 public class StorageActivity extends AppCompatActivity {
@@ -57,7 +54,7 @@ public class StorageActivity extends AppCompatActivity {
                 bundle.putStringArrayList("categories", category_list);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)
+                        .add(R.id.fragment_container_view, AddEditIngredientFragment.class, bundle)
                         .addToBackStack("AddIngredient")
                         .commit();
 

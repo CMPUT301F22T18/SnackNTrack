@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,7 +58,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
                     });
             fm.beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, AddIngredientFragment.class, bundle)
+                    .add(R.id.fragment_container_view, AddEditIngredientFragment.class, bundle)
                     .addToBackStack("AddIngredient")
                     .commit();
 

@@ -30,12 +30,11 @@ import org.jetbrains.annotations.Contract;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class AddIngredientFragment extends Fragment {
+public class AddEditIngredientFragment extends Fragment {
 
     FloatingActionButton floatingActionButton;
     Spinner unitSpinner, locationSpinner, categorySpinner;
@@ -55,7 +54,7 @@ public class AddIngredientFragment extends Fragment {
 
     ArrayAdapter<String> unit_adapter, location_adapter, category_adapter;
 
-    public AddIngredientFragment() {
+    public AddEditIngredientFragment() {
         // Required empty public constructor
     }
 
@@ -68,8 +67,8 @@ public class AddIngredientFragment extends Fragment {
     // TODO: Add parameter to AddIngredient to reuse as Edit Ingredient
     @NonNull
     @Contract(" -> new")
-    public static AddIngredientFragment newInstance() {
-        return new AddIngredientFragment();
+    public static AddEditIngredientFragment newInstance() {
+        return new AddEditIngredientFragment();
     }
 
     @Override
