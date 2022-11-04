@@ -91,7 +91,7 @@ public class RecipeListTest{
                 2,
                 "lunch", new ArrayList<Ingredient>(),
                 "https://unsplash.com/photos/gf9777gaYjs");
-        // Recipe List consists of arraylist of recipes which is a array list of ingrediants
+        // Recipe List consists of arraylist of recipes which is a array list of ingredients
         recipe.addIngredient(
                 new Ingredient("Bread", "Pantry", "pieces",
                         "Bakery", 2, new Date(2024-1900, 11, 27)));
