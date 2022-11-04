@@ -3,6 +3,7 @@ package com.cmput301f22t18.snackntrack;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 
@@ -29,6 +30,7 @@ public class IngredientTest {
     /**
      * Check if description is consistent with the entered description
      */
+    @Test
     public void testGetDescription() {
         assertEquals("Spam", ingredient.getDescription());
     }
@@ -36,6 +38,7 @@ public class IngredientTest {
     /**
      * Check if location is consistent with the entered location
      */
+    @Test
     public void testGetLocation() {
         assertEquals("Pantry", ingredient.getLocation());
     }
@@ -43,6 +46,7 @@ public class IngredientTest {
     /**
      * Check if unit is consistent with the entered unit
      */
+    @Test
     public void testGetUnit() {
         assertEquals("cans", ingredient.getUnit());
     }
@@ -50,6 +54,7 @@ public class IngredientTest {
     /**
      * Check if category is consistent with the entered category
      */
+    @Test
     public void testGetCategory() {
         assertEquals("Meat", ingredient.getCategory());
     }
@@ -57,6 +62,7 @@ public class IngredientTest {
     /**
      * Check if amount is consistent with the entered amount
      */
+    @Test
     public void testGetAmount() {
         assertEquals(1, ingredient.getAmount());
     }
@@ -64,6 +70,7 @@ public class IngredientTest {
     /**
      * Check if best before date is consistent with the entered date
      */
+    @Test
     public void testGetBestBeforeDate() {
         assertEquals(0, ingredient.getBestBeforeDate().compareTo(new Date(2022-1900, 12, 31)));
     }
@@ -71,6 +78,7 @@ public class IngredientTest {
     /**
      * Check if description is consistent with the changed description
      */
+    @Test
     public void testSetDescription() {
         String newDescription = "Potato";
         ingredient.setDescription(newDescription);
@@ -80,6 +88,7 @@ public class IngredientTest {
     /**
      * Check if location is consistent with the changed location
      */
+    @Test
     public void testSetLocation() {
         String newLocation = "Fridge";
         ingredient.setLocation(newLocation);
@@ -89,6 +98,7 @@ public class IngredientTest {
     /**
      * Check if unit is consistent with the changed unit
      */
+    @Test
     public void testSetUnit() {
         String newUnit = "Potato";
         ingredient.setUnit(newUnit);
@@ -98,6 +108,7 @@ public class IngredientTest {
     /**
      * Check if category is consistent with the changed category
      */
+    @Test
     public void testSetCategory() {
         String newCategory = "Meat";
         ingredient.setCategory(newCategory);
@@ -107,6 +118,7 @@ public class IngredientTest {
     /**
      * Check if amount is consistent with the changed amount
      */
+    @Test
     public void testSetAmount() {
         int newAmount = 2;
         ingredient.setAmount(newAmount);
@@ -116,6 +128,7 @@ public class IngredientTest {
     /**
      * Check if best before date is consistent with the changed date
      */
+    @Test
     public void testSetBestBeforeDate() {
         Date newBestBeforeDate = new Date(2022-1900, 11, 30);
         ingredient.setBestBeforeDate(newBestBeforeDate);
