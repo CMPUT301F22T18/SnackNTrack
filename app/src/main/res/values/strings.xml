@@ -13,7 +13,7 @@
     <string name="unit_edit_text_title">Unit</string>
     <string name="location_spinner_title">Location</string>
     <string name="category_spinner_title">Category</string>
-    <string name="best_before_text_view">31/10/2022</string>
+    <string name="best_before_text_view" />
     <string name="best_before_title">Best Before Date</string>
     <string name="add_text">Add</string>
     <string name="cancel_text">Cancel</string>
@@ -34,7 +34,7 @@
         <item>Vegetable</item>
         <item>Fruit</item>
     </string-array>
-    <string-array name="ingredient_location_array">
+    <string-array name="ingredient_locations_array">
         <item>Cupboard</item>
         <item>Counter-top</item>
         <item>Fridge</item>

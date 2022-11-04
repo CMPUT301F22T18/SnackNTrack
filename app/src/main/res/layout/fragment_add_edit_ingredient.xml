@@ -123,13 +123,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/amount_edit_text"
-                app:layout_constraintRight_toLeftOf="@id/units_spinner"
+                app:layout_constraintRight_toLeftOf="@id/unit_spinner"
                 />
 
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/units_spinner"
+                android:id="@+id/unit_spinner"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
