@@ -2,6 +2,7 @@ package com.cmput301f22t18.snackntrack;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * @version 1
  * @since 1
  */
-public class Ingredient {
+public class Ingredient implements Serializable {
     private String description, location, unit, category;
     private int amount;
     private Date bestBeforeDate;

@@ -16,7 +16,7 @@ public class StorageActivity extends AppCompatActivity {
     private Storage storage;
     private StorageAdapter storageAdapter;
     private RecyclerView recyclerView;
-
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class StorageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
 
-        FloatingActionButton fab = findViewById(R.id.add_ingredient_fab);
+        fab = findViewById(R.id.add_ingredient_fab);
         fab.show();
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {

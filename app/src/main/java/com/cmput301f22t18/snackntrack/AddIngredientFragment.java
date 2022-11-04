@@ -198,6 +198,7 @@ public class AddIngredientFragment extends Fragment {
         Log.d("DEBUG", ingredient.toString());
         storage.addIngredient(ingredient);
         Log.i("DEBUG", "Added Ingredient!");
+        floatingActionButton.show();
         requireActivity().getSupportFragmentManager().popBackStackImmediate();
 
     }
