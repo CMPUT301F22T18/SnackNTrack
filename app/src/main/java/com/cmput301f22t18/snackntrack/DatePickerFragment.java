@@ -37,7 +37,7 @@ public class DatePickerFragment extends DialogFragment
         calendar.set(year, month, day);
 
         TextView calendarText = getParentFragment().getView().findViewById(R.id.best_before_date);
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA);
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd", Locale.CANADA);
         calendarText.setText(df.format(calendar.getTime()));
 
 

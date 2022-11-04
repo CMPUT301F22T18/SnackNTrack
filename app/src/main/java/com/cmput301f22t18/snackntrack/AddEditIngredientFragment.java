@@ -21,39 +21,40 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.Contract;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class AddIngredientFragment extends Fragment {
+public class AddEditIngredientFragment extends Fragment {
 
     FloatingActionButton floatingActionButton;
     Spinner unitSpinner, locationSpinner, categorySpinner;
     ImageButton pickBestBeforeButton;
     Button cancelButton, addButton;
 
-    String description, location, unit, category;
+    String description, location, unit, category, function;
     Date bestBefore;
     int amount;
+    int index;
     Storage storage;
+    Ingredient item;
 
     EditText descriptionEditText, amountEditText, bestBeforeEditText;
 
-    ArrayList<CharSequence> units;
-    ArrayList locations;
-    ArrayList<CharSequence> categories;
+    ArrayList<String> units, locations, categories;
 
-    ArrayAdapter<CharSequence> unit_adapter, location_adapter, category_adapter;
+    ArrayAdapter<String> unit_adapter, location_adapter, category_adapter;
 
-    public AddIngredientFragment() {
+    public AddEditIngredientFragment() {
         // Required empty public constructor
     }
 
@@ -66,8 +67,8 @@ public class AddIngredientFragment extends Fragment {
     // TODO: Add parameter to AddIngredient to reuse as Edit Ingredient
     @NonNull
     @Contract(" -> new")
-    public static AddIngredientFragment newInstance() {
-        return new AddIngredientFragment();
+    public static AddEditIngredientFragment newInstance() {
+        return new AddEditIngredientFragment();
     }
 
     @Override
@@ -75,7 +76,16 @@ public class AddIngredientFragment extends Fragment {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         storage = (Storage) getArguments().getSerializable("storage");
+        item = (Ingredient) getArguments().getSerializable("item");
+        index = getArguments().getInt("position");
+        if (item != null)
+            Log.d("DEBUG", item.toString());
+        units = getArguments().getStringArrayList("units");
+        locations = getArguments().getStringArrayList("locations");
+        categories = getArguments().getStringArrayList("categories");
+        function = getArguments().getString("function");
         Log.d("DEBUG", storage.getStorageList().get(0).toString());
+
     }
 
     @Override
@@ -91,31 +101,24 @@ public class AddIngredientFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener("location", this,
                 (requestKey, bundle) -> {
-            // We use a String here, but any type that can be put in a Bundle is supported
             String result = bundle.getString("new_item");
-            location_adapter.insert(result, location_adapter.getCount() - 1);
+            locations.add(locations.size() - 1, result);
+            location_adapter.notifyDataSetChanged();
         });
 
         getParentFragmentManager().setFragmentResultListener("unit", this,
                 (requestKey, bundle) -> {
-            // We use a String here, but any type that can be put in a Bundle is supported
             String result = bundle.getString("new_item");
-            unit_adapter.insert(result, unit_adapter.getCount() - 1);
+            units.add(units.size() - 1, result);
+            unit_adapter.notifyDataSetChanged();
         });
 
         getParentFragmentManager().setFragmentResultListener("category", this,
                 (requestKey, bundle) -> {
-            // We use a String here, but any type that can be put in a Bundle is supported
             String result = bundle.getString("new_item");
-            category_adapter.insert(result, category_adapter.getCount() - 1);
+            categories.add(categories.size() - 1,result);
+            category_adapter.notifyDataSetChanged();
         });
-
-        units = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
-        locations = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
-        categories = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
 
         setupUI(view);
         locationSpinner = view.findViewById(R.id.location_spinner);
@@ -129,7 +132,17 @@ public class AddIngredientFragment extends Fragment {
         amountEditText = view.findViewById(R.id.amount_edit_text);
         bestBeforeEditText = view.findViewById(R.id.best_before_date);
 
-        floatingActionButton = getActivity().findViewById(R.id.add_ingredient_fab);
+        if (item != null) {
+            descriptionEditText.setText(item.getDescription());
+            amountEditText.setText(String.format(Locale.CANADA, "%d", item.getAmount()));
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd", Locale.CANADA);
+            bestBeforeEditText.setText(df.format(item.getBestBeforeDate()));
+            locationSpinner.setSelection(location_adapter.getPosition(item.getLocation()));
+            unitSpinner.setSelection(unit_adapter.getPosition(item.getUnit()));
+            categorySpinner.setSelection(category_adapter.getPosition(item.getCategory()));
+        }
+
+        floatingActionButton = requireActivity().findViewById(R.id.add_ingredient_fab);
         pickBestBeforeButton = view.findViewById(R.id.date_picker_button);
         pickBestBeforeButton.setOnClickListener(v -> {
             DialogFragment newFragment = new DatePickerFragment();
@@ -139,7 +152,12 @@ public class AddIngredientFragment extends Fragment {
 
         cancelButton = view.findViewById(R.id.cancel_add_ingredient_button);
         addButton = view.findViewById(R.id.add_ingredient_button);
-
+        if (function != null) {
+            addButton.setText(function);
+            TextView title = view.findViewById(R.id.add_ingredient_fragment_title_text_view);
+            String newTitle = function + " Ingredient";
+            title.setText(newTitle);
+        }
         imageButton.setOnClickListener(v -> goBack());
 
         cancelButton.setOnClickListener(v -> goBack());
@@ -227,8 +245,17 @@ public class AddIngredientFragment extends Fragment {
         Ingredient ingredient = new Ingredient(description, location,
                 unit, category, amount, bestBefore);
         Log.d("DEBUG", ingredient.toString());
-        storage.addIngredient(ingredient);
-        Log.i("DEBUG", "Added Ingredient!");
+        if (item == null) {
+            storage.addIngredient(ingredient);
+            Log.i("DEBUG", "Added Ingredient!");
+        }
+        else {
+            Bundle result = new Bundle();
+            result.putSerializable("new_item", ingredient);
+            requireActivity().getSupportFragmentManager()
+                    .setFragmentResult("editIngredient", result);
+            Log.i("DEBUG", "Edited Ingredient!");
+        }
         floatingActionButton.show();
         requireActivity().getSupportFragmentManager().popBackStackImmediate();
 
@@ -248,9 +275,6 @@ public class AddIngredientFragment extends Fragment {
     }
 
     public void initSpinner(View view) {
-
-
-
 
         unit_adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, units);
@@ -275,8 +299,11 @@ public class AddIngredientFragment extends Fragment {
                 else {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "location");
-                    requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Location").
-                            add(AddEditCustomValueFragment.class, bundle, "Add Location").commit();
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("Add Location").
+                            add(AddEditCustomValueFragment.class, bundle, "Add Location")
+                            .commit();
 
                 }
             }
@@ -292,8 +319,10 @@ public class AddIngredientFragment extends Fragment {
                 else {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "unit");
-                    requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Unit").
-                            add(AddEditCustomValueFragment.class, bundle, "Add Unit").commit();
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction().addToBackStack("Add Unit").
+                            add(AddEditCustomValueFragment.class, bundle, "Add Unit")
+                            .commit();
 
                 }
             }
