@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "219096991126",
+    "project_id": "snackntrack-85447",
+    "storage_bucket": "snackntrack-85447.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219096991126:android:c2a3854a4369e3e5cb09b7",
+        "android_client_info": {
+          "package_name": "com.cmput301f22t18.snackntrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219096991126-oetkjobfbqfgvhi4riacfi5cj138f6kc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cmput301f22t18.snackntrack",
+            "certificate_hash": "0ce955c33e1655798aaeb6454b3dfec996c09b07"
+          }
+        },
+        {
+          "client_id": "219096991126-41l1ga2u3j6t9gaupuen02kofk2mc193.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-e6z-1dDhh0CQA1EcmNUVveAi6RtG9h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219096991126-41l1ga2u3j6t9gaupuen02kofk2mc193.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
