@@ -25,7 +25,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
-
+        recipeList = new RecipeList();
         // for testing
 //        testList = new ArrayList<>();
 //        Recipe recipe = new Recipe();
