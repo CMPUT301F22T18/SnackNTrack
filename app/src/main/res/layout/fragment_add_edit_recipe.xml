@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Recipe"
+            android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@id/back_button"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -140,13 +141,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Category"
+                android:paddingLeft="64dp"
                 app:layout_constraintLeft_toRightOf="@id/servings_edit_text"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <Spinner
                 android:id="@+id/category_spinner"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@id/category_spinner_title"
                 app:layout_constraintRight_toRightOf="parent"
@@ -155,18 +157,19 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/add_ingredient_button"
+            android:id="@+id/add_ingredient_to_recipe_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Ingredient"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/servings_category_row"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/add_ingredient_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/add_ingredient_button"
+            app:layout_constraintTop_toBottomOf="@id/add_ingredient_to_recipe_button"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <TextView
@@ -185,6 +188,14 @@
             android:inputType="text"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/comments_edit_text_title"/>
+
+        <Button
+            android:id="@+id/add_recipe_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add recipe"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/comments_edit_text"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

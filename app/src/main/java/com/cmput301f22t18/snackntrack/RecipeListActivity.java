@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,11 +11,15 @@ import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-
+/**
+ * @author Mark Maligalig
+ */
 public class RecipeListActivity extends AppCompatActivity {
     private RecipeList recipeList;
     private RecipeListAdapter recipeListAdapter;
     private RecyclerView recyclerView;
+    private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +28,13 @@ public class RecipeListActivity extends AppCompatActivity {
 
         recipeList = new RecipeList();
         insertTestRecipes();
-        recipeListAdapter = new RecipeListAdapter(recipeList);
+        recipeListAdapter = new RecipeListAdapter(this, recipeList.getRecipeList(), null);
         recyclerView = this.findViewById(R.id.recipe_list_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
 
-        FloatingActionButton fab = findViewById(R.id.add_recipe_fab);
+        fab = findViewById(R.id.add_recipe_fab);
         fab.show();
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {
@@ -49,10 +54,11 @@ public class RecipeListActivity extends AppCompatActivity {
     private void insertTestRecipes() {
         ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
         in1.add(new Ingredient("Bread", "pieces", "Wheat", 2));
-        recipeList.addRecipe(new Recipe("Sandwich", 5, "no comment", 1, "Lunch", in1));
+        recipeList.addRecipe(new Recipe("Sandwich", 5, "none", 1, "Lunch", in1, null));
 
         ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
         in2.add(new Ingredient("A", "pieces", "C", 2));
-        recipeList.addRecipe(new Recipe("Soup", 20, "no comment", 1, "Dinner", in2));
+        recipeList.addRecipe(new Recipe("Soup", 10, "none", 2, "Dinner", in2, null));
+
     }
 }

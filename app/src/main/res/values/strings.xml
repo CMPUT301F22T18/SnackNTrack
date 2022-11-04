@@ -1,5 +1,51 @@
 <resources>
     <string name="app_name">My Application</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ingredient_description">Ingredient Description</string>
+    <string name="ingredient_location">Location</string>
+    <string name="ingredient_category">Category</string>
+    <string name="ingredient_best_before_date">Best Before Date</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="add_ingredient_title">Add Ingredients</string>
+    <string name="description_edit_text_title">Description</string>
+    <string name="amount_edit_text_title">Amount</string>
+    <string name="unit_edit_text_title">Unit</string>
+    <string name="location_spinner_title">Location</string>
+    <string name="category_spinner_title">Category</string>
+    <string name="best_before_text_view" />
+    <string name="best_before_title">Best Before Date</string>
+    <string name="add_text">Add</string>
+    <string name="go_back_button">Go Back Button</string>
+    <string name="date_picker">Date Picker</string>
+    <string-array name="units_array">
+        <item>kilogram</item>
+        <item>litre</item>
+        <item>shaker</item>
+        <item>pack</item>
+        <item>box</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="ingredient_categories_array">
+        <item>Spice</item>
+        <item>Dairy</item>
+        <item>Bakery</item>
+        <item>Meat</item>
+        <item>Vegetable</item>
+        <item>Fruit</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="ingredient_locations_array">
+        <item>Cupboard</item>
+        <item>Counter-top</item>
+        <item>Fridge</item>
+        <item>Pantry</item>
+        <item>Others</item>
+    </string-array>
+    <string name="add_a_recipe">add a recipe</string>
+    <string name="recipe_image_view">Recipe Image View</string>
+    <string name="add_edit_your_location">Add / Edit your </string>
+    <string name="location_label">Location</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_button">Cancel</string>
+>>>>>>> 187b4d811d19cf4cb7e447c5e57a896da2581c54
 </resources>

@@ -22,6 +22,7 @@ public class Recipe {
     private int servings;
     private String category;
     private ArrayList<Ingredient> recipeIngredients;
+    private String photoURL;
 
     /**
      * This method is a constructor for the class Recipe
@@ -31,18 +32,36 @@ public class Recipe {
         this.recipeIngredients = new ArrayList<Ingredient>();
     }
 
-    public Recipe(String title, int prepTime, String comments, int servings, String category, ArrayList<Ingredient> recipeIngredients) {
+    /**
+     * This method is a constructor for the class Recipe
+     * @param title title for Recipe
+     * @param prepTime preparation time for Recipe
+     * @param comments comments for Recipe
+     * @param servings number of servings for Recipe
+     * @param category category of Recipe
+     * @param recipeIngredients list of ingredients for recipe
+     * @param photoURL photo URL for Recipe
+     */
+    public Recipe(String title, int prepTime,
+                  String comments, int servings, String category,
+                  ArrayList<Ingredient> recipeIngredients, String photoURL) {
         this.title = title;
         this.prepTime = prepTime;
         this.comments = comments;
         this.servings = servings;
         this.category = category;
         this.recipeIngredients = recipeIngredients;
+
+        this.photoURL = photoURL;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    /**
+     * Setter for title attribute
+     * @param title title for Recipe
+     * @since 1.0.1
+     */
+    public void setTitle(String title) {this.title = title;}
+
 
     public void setPrepTime(int prepTime) {
         this.prepTime = prepTime;
@@ -56,9 +75,30 @@ public class Recipe {
         this.servings = servings;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    /**
+     * Setter for list of ingredients
+     * @param recipeIngredients
+     */
+    public void setRecipeIngredients(ArrayList<Ingredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
     }
+
+    /**
+     * Setter for photo URL
+     * @param photoURL
+     */
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    /**
+     * Setter for category attribute
+     * @param category category of the Recipe
+     * @since 1.0.1
+     */
+
+
+    public void setCategory(String category) {this.category = category;}
 
     /**
      * This method returns the title from the class Recipe
@@ -103,6 +143,14 @@ public class Recipe {
      */
     public String getCategory() {
         return this.category;
+    }
+
+    /**
+     * This method returns the photoURL from the class Recipe
+     * @return photoURL
+     */
+    public String getPhotoURL() {
+        return photoURL;
     }
 
     /**

@@ -1,9 +1,8 @@
 package com.cmput301f22t18.snackntrack;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -12,7 +11,7 @@ import java.util.Hashtable;
  * @author Duc Ho
  * @version 1.0.0
  */
-public class Storage {
+public class Storage implements Serializable {
     private final ArrayList<Ingredient> storage; // Ingredient Storage
     // Comparators
     private final IngredientDescriptionComparator idc = new IngredientDescriptionComparator();
@@ -21,10 +20,10 @@ public class Storage {
     private final IngredientBBDComparator ibc = new IngredientBBDComparator();
     private final Dictionary<String, IngredientComparator> comparators =
             new Hashtable<String, IngredientComparator>() {{
-                put("description", idc);
-                put("location", ilc);
-                put("category", icc);
-                put("best before date", ibc);
+                put("Description", idc);
+                put("Location", ilc);
+                put("Category", icc);
+                put("Best Before", ibc);
             }};
     /**
      * Construct an empty storage
@@ -90,5 +89,9 @@ public class Storage {
         ArrayList<Ingredient> newStorage = storage;
         Collections.sort(newStorage, comparators.get(key));
         return newStorage;
+    }
+
+    public ArrayList<Ingredient> getStorageList(){
+        return storage;
     }
 }
