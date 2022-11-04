@@ -26,7 +26,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
      * by RecyclerView.
      */
     public StorageAdapter(Storage storage) {
-        localDataSet = storage.getStorage();
+        localDataSet = storage.getStorageList();
     }
 
     /**

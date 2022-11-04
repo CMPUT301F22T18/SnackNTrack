@@ -2,9 +2,7 @@ package com.cmput301f22t18.snackntrack;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -93,7 +91,7 @@ public class Storage implements Serializable {
         return newStorage;
     }
 
-    public ArrayList getStorage(){
+    public ArrayList getStorageList(){
         return storage;
     }
 }

@@ -5,8 +5,6 @@
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_ingredient_title">Add Ingredients</string>
     <string name="description_edit_text_title">Description</string>
     <string name="amount_edit_text_title">Amount</string>
@@ -40,4 +38,6 @@
         <item>Fridge</item>
         <item>Pantry</item>
     </string-array>
+    <string name="add_a_recipe">add a recipe</string>
+    <string name="recipe_image_view">Recipe Image View</string>
 </resources>
