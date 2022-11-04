@@ -16,6 +16,7 @@
             android:parentActivityName=".MainActivity"
             android:name=".MainMenuActivity"/>
         <activity
+            android:parentActivityName=".MainMenuActivity"
             android:name=".StorageActivity"
             android:exported="true">
             <meta-data
@@ -23,6 +24,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:parentActivityName=".MainMenuActivity"
             android:name=".RecipeListActivity"
             android:exported="false">
             <meta-data
