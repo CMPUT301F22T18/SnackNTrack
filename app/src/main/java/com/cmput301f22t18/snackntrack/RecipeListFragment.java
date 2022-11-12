@@ -40,33 +40,41 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     }
 
     /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * This method is called when all the views are created
+     * @param inflater a LayoutInflater
+     * @param container a ViewGroup
+     * @param savedInstanceState a Bundle
+     * @return a View v
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
+        // find the views for this fragment
         fab = requireView().findViewById(R.id.recipe_list_action_button);
         recyclerView = requireView().findViewById(R.id.recipe_list);
 
+        // get information for this fragment
         if(getArguments() != null) {
             recipeList = (RecipeList) getArguments().getSerializable(ARG_TEXT);
         }
 
+        // setting the list for this fragment
         recipeListAdapter = new RecipeListAdapter(this.getContext(), recipeList.getRecipeList(), this);
         recyclerView.setAdapter(recipeListAdapter);
+
+        // Controls the floating action button
+        fab.setOnClickListener(view -> {
+            //TODO: move to add recipe screen
+        });
 
         return v;
     }
 
     /**
-     *
-     * @param position
+     * This method is called when the user click an item in the recipe list
+     * @param position the position of the item
      */
     @Override
     public void onNoteClick(int position) {
