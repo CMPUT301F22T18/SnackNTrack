@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,6 +26,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     RecipeList recipeList;
     RecipeListAdapter recipeListAdapter;
     FloatingActionButton fab;
+    ImageButton sortButton;
 
     /**
      * This method create a new instance of the RecipeListFragment
@@ -51,9 +53,12 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
+
+
         // find the views for this fragment
         fab = requireView().findViewById(R.id.recipe_list_action_button);
         recyclerView = requireView().findViewById(R.id.recipe_list);
+        sortButton = requireView().findViewById(R.id.sort_button_recipe_list);
 
         // get information for this fragment
         if(getArguments() != null) {
@@ -67,6 +72,14 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         // Controls the floating action button
         fab.setOnClickListener(view -> {
             //TODO: move to add recipe screen
+        });
+
+        // When clicked on the sort button, some choices are shown
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: let user select their way to sort the list
+            }
         });
 
         return v;
