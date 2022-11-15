@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     RecipeListAdapter recipeListAdapter;
     FloatingActionButton fab;
     ImageButton sortButton;
+    TextView headerText;
 
     /**
      * This method create a new instance of the RecipeListFragment
@@ -57,9 +59,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
 
 
         // find the views for this fragment
-        fab = requireView().findViewById(R.id.recipe_list_action_button);
-        recyclerView = requireView().findViewById(R.id.recipe_list);
-        sortButton = requireView().findViewById(R.id.sort_button_recipe_list);
+        fab = v.findViewById(R.id.recipe_list_action_button);
+        recyclerView = v.findViewById(R.id.recipe_list);
+        sortButton = v.findViewById(R.id.sort_button_recipe_list);
+        headerText = v.findViewById(R.id.recipe_list_header_text);
 
         // get information for this fragment
         if(getArguments() != null) {
@@ -73,7 +76,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         // Controls the floating action button
         fab.setOnClickListener(view -> {
             //TODO: move to add recipe screen
-            Toast.makeText(this.getContext(), "fab clicked", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "fab clicked", Toast.LENGTH_SHORT).show();
         });
 
         // When clicked on the sort button, some choices are shown
@@ -81,7 +84,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
             @Override
             public void onClick(View v) {
                 //TODO: let user select their way to sort the list
-                Toast.makeText(v.getContext(), "sort button clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "sort button clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -95,6 +98,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     @Override
     public void onNoteClick(int position) {
         //TODO: start an activity to view the recipe that was clicked
-        Toast.makeText(this.getContext(), "item clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getContext(), "item clicked", Toast.LENGTH_SHORT).show();
     }
 }
