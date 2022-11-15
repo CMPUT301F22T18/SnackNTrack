@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -72,6 +73,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         // Controls the floating action button
         fab.setOnClickListener(view -> {
             //TODO: move to add recipe screen
+            Toast.makeText(this.getContext(), "fab clicked", Toast.LENGTH_SHORT).show();
         });
 
         // When clicked on the sort button, some choices are shown
@@ -79,6 +81,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
             @Override
             public void onClick(View v) {
                 //TODO: let user select their way to sort the list
+                Toast.makeText(v.getContext(), "sort button clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -92,5 +95,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     @Override
     public void onNoteClick(int position) {
         //TODO: start an activity to view the recipe that was clicked
+        Toast.makeText(this.getContext(), "item clicked", Toast.LENGTH_SHORT).show();
     }
 }
