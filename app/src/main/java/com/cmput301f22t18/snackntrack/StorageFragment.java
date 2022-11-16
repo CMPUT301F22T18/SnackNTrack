@@ -105,46 +105,46 @@ public class StorageFragment extends Fragment{
     }
 
     private void initStorage() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Users").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Log.d(TAG, document.getId() + " => " + document.getData());
-                    Map<String, Object> map = document.getData();
-                    assert user != null;
-                    if (!Objects.equals(user.getEmail(), document.get("email").toString())) continue;
-                    ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) map.get("storage");
-                    for (HashMap<String, Object> o : list) {
-                        Timestamp timestamp = (Timestamp) o.get("bestBeforeDate");
-                        assert timestamp != null;
-                        Ingredient ingredient = new Ingredient(
-                                o.get("description").toString(),
-                                o.get("location").toString(),
-                                o.get("unit").toString(),
-                                o.get("category").toString(),
-                                Integer.parseInt(o.get("amount").toString()),
-                                new Date(timestamp.getSeconds())
-                        );
-                        storage.addIngredient(ingredient);
-                    }
-                }
-                storageAdapter.notifyDataSetChanged();
-            } else {
-                Log.w(TAG, "Error getting documents.", task.getException());
-            }
-        });
-//        Date today = new Date();
-//        Ingredient i1 = new Ingredient("Salt",
-//                "Counter-top","shaker", "Spice", 2, today);
-//        Ingredient i2 = new Ingredient("Pepper",
-//                "Cupboard","shaker", "Spice", 1, today);
-//        Ingredient i3 = new Ingredient("Sugar",
-//                "Pantry","shaker", "Spice", 3, today);
-//
-//        storage.addIngredient(i1);
-//        storage.addIngredient(i2);
-//        storage.addIngredient(i3);
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        db.collection("Users").get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    Log.d(TAG, document.getId() + " => " + document.getData());
+//                    Map<String, Object> map = document.getData();
+//                    assert user != null;
+//                    if (!Objects.equals(user.getEmail(), document.get("email").toString())) continue;
+//                    ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) map.get("storage");
+//                    for (HashMap<String, Object> o : list) {
+//                        Timestamp timestamp = (Timestamp) o.get("bestBeforeDate");
+//                        assert timestamp != null;
+//                        Ingredient ingredient = new Ingredient(
+//                                o.get("description").toString(),
+//                                o.get("location").toString(),
+//                                o.get("unit").toString(),
+//                                o.get("category").toString(),
+//                                Integer.parseInt(o.get("amount").toString()),
+//                                new Date(timestamp.getSeconds())
+//                        );
+//                        storage.addIngredient(ingredient);
+//                    }
+//                }
+//                storageAdapter.notifyDataSetChanged();
+//            } else {
+//                Log.w(TAG, "Error getting documents.", task.getException());
+//            }
+//        });
+        Date today = new Date();
+        Ingredient i1 = new Ingredient("Salt",
+                "Counter-top","shaker", "Spice", 2, today);
+        Ingredient i2 = new Ingredient("Pepper",
+                "Cupboard","shaker", "Spice", 1, today);
+        Ingredient i3 = new Ingredient("Sugar",
+                "Pantry","shaker", "Spice", 3, today);
+
+        storage.addIngredient(i1);
+        storage.addIngredient(i2);
+        storage.addIngredient(i3);
     }
 
 }
