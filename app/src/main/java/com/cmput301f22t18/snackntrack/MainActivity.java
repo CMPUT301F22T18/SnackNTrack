@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //REMOVE THIS LINE
+        //goToMainMenu();
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();

@@ -32,6 +32,31 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
+        </activity>
+        <activity
+            android:parentActivityName=".MainMenuActivity"
+            android:name=".MealPlanActivity"
+            android:exported="false">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+        </activity>
+        <activity
+            android:parentActivityName=".MainMenuActivity"
+            android:name=".DailyPlanActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:parentActivityName=".MainMenuActivity"
+            android:name=".AddEditMealPlanActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"

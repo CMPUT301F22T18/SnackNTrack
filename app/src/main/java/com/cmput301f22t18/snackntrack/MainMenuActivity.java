@@ -37,6 +37,15 @@ public class MainMenuActivity extends AppCompatActivity {
             }
 
         });
+
+        Button mealPlanButton = findViewById(R.id.meal_plan_id);
+        mealPlanButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), MealPlanActivity.class);
+                startActivity(myIntent);
+            }
+
+        });
     }
 
     @Override
