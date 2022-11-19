@@ -1,5 +1,7 @@
 package com.cmput301f22t18.snackntrack;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+
 import java.util.Comparator;
 
 /**

@@ -1,4 +1,10 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.models;
+
+import com.cmput301f22t18.snackntrack.IngredientBBDComparator;
+import com.cmput301f22t18.snackntrack.IngredientCategoryComparator;
+import com.cmput301f22t18.snackntrack.IngredientComparator;
+import com.cmput301f22t18.snackntrack.IngredientDescriptionComparator;
+import com.cmput301f22t18.snackntrack.IngredientLocationComparator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
