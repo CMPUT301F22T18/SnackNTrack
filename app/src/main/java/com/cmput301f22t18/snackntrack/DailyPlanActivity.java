@@ -14,18 +14,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
-public class DailyPlanActivity extends AppCompatActivity {
+public class DailyPlanActivity extends AppCompatActivity implements RecipeListAdapter.OnNoteListener, StorageAdapter.OnItemLongClickListener {
 
     private MealPlan mealPlan;
     private DailyPlan dailyPlan;
-    private RecipeListAdapter RecipeListAdapter;
-    private StorageAdapter StorageAdapter;
+    private RecipeListAdapter recipeListAdapter;
+    private DailyPlanAdapter DailyPlanAdapter;
+    private StorageAdapter storageAdapter;
     private RecyclerView recyclerView;
     private RecyclerView recyclerView2;
     private Button addIngredient;
     private Button addRecipe;
+    private Storage storage;
+    private ArrayList<String> unit_list, location_list, category_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +39,32 @@ public class DailyPlanActivity extends AppCompatActivity {
         Date date = (Date) this.getIntent().getExtras().get("Date");
         Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
 
-        // Firebase, should get meal plan list from user not generate new
+        // Firebase, should get meal plan list based on date, from user not generate new
         mealPlan = new MealPlan();
         dailyPlan = new DailyPlan();
         //dailyPlan = mealPlan.getDailyPlanAtDay(date);
         insertTestRecipes(date);
 
-        RecipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), null);
+        recipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), this);
         recyclerView = this.findViewById(R.id.recipe_list_recycler_view);
-        recyclerView.setAdapter(RecipeListAdapter);
+        recyclerView.setAdapter(recipeListAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
 
-        RecipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), null);
+        storage = new Storage();
+        insertTestStorage();
+        unit_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
+        location_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
+        category_list = new ArrayList<>
+                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
+
+        // DOES NOT WORK. error from storage adapter
+        storageAdapter = new StorageAdapter(storage, getSupportFragmentManager(), this,
+                unit_list, location_list, category_list);
         recyclerView2 = this.findViewById(R.id.ingredient_list_recycler_view);
-        recyclerView2.setAdapter(RecipeListAdapter);
+        recyclerView2.setAdapter(storageAdapter);
         recyclerView2.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext()));
 
@@ -73,7 +88,6 @@ public class DailyPlanActivity extends AppCompatActivity {
 
         });
 
-
     }
 
     private void insertTestRecipes(Date date) {
@@ -88,5 +102,27 @@ public class DailyPlanActivity extends AppCompatActivity {
         dailyPlan.setDate(date);
         mealPlan.addDailyPlan(dailyPlan);
 
+    }
+
+    private void insertTestStorage() {
+        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
+        Ingredient bread = new Ingredient("Bread", "pieces", "Wheat", 2);
+
+        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
+        in2.add(new Ingredient("Ace", "pieces", "C", 2));
+        storage.addIngredient(bread);
+        storage.addIngredient(new Ingredient("Ace", "pieces", "C", 2));
+
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        Toast.makeText(getApplicationContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onClick(Ingredient item) {
+        Toast.makeText(getApplicationContext(), item.getCategory(), Toast.LENGTH_SHORT).show();
     }
 }

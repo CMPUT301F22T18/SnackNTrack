@@ -77,7 +77,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
          */
         @Override
         public void onClick(View v) {
-            this.onNoteListener.onNoteClick(getAdapterPosition());
+            this.onNoteListener.onNoteClick(getAbsoluteAdapterPosition());
         }
     }
 

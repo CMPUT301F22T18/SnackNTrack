@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AddEditMealPlanActivity extends AppCompatActivity {
+public class AddEditMealPlanActivity extends AppCompatActivity implements RecipeListAdapter.OnNoteListener{
     private RecipeList recipeList;
     private RecipeListAdapter recipeListAdapter;
+    private DailyPlan dailyPlan;
+    private DailyPlanAdapter DailyPlanAdapter;
+    private RecyclerView recyclerView;
     private ListView listView;
     ArrayList<String> recipeNames;
     ArrayList<Recipe> list;
@@ -28,57 +31,66 @@ public class AddEditMealPlanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_mealplan);
         Date date = (Date) this.getIntent().getExtras().get("Date");
 
+        // should get recipe list from database
+        dailyPlan = new DailyPlan();
         recipeList = new RecipeList();
-
-        // Firebase, get the arraylist of recipes for the user
-        listView = findViewById(R.id.recipe_listview);
         insertTestRecipes();
-        list = recipeList.getRecipeList();
-        recipeNames = new ArrayList<>();
+        recipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), null);
+        recyclerView = this.findViewById(R.id.recipe_list);
+        recyclerView.setAdapter(recipeListAdapter);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext()));
 
-        String temp;
-        for (int x = 0; x < recipeList.getSize(); x++){
-            temp = list.get(x).getTitle();
-            recipeNames.add(temp);
-        }
+//        recipeList = new RecipeList();
+//
+//        // Firebase, get the arraylist of recipes for the user
+//        listView = findViewById(R.id.recipe_listview);
 
-        //recipeNames.add("pizza");
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_add_mealplan, R.id.textView,recipeNames);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedRecipe = (String) listView.getItemAtPosition(i);
-                Toast.makeText(getApplicationContext(), selectedRecipe + " has been added!", Toast.LENGTH_SHORT).show();
-
-                // Add the selected recipe to the daily plan at Date
-                Intent myIntent = new Intent(view.getContext(), DailyPlanActivity.class);
-                myIntent.putExtra("Recipe",date);
-                startActivity(myIntent);
-            }
-        }
-        );
-
-
-
+//        list = recipeList.getRecipeList();
+//        recipeNames = new ArrayList<>();
+//
+//        String temp;
+//        for (int x = 0; x < recipeList.getSize(); x++){
+//            temp = list.get(x).getTitle();
+//            recipeNames.add(temp);
+//        }
+//
+//        //recipeNames.add("pizza");
+//
+//        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_add_mealplan, R.id.textView,recipeNames);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                selectedRecipe = (String) listView.getItemAtPosition(i);
+//                Toast.makeText(getApplicationContext(), selectedRecipe + " has been added!", Toast.LENGTH_SHORT).show();
+//
+//                // Add the selected recipe to the daily plan at Date
+//                Intent myIntent = new Intent(view.getContext(), DailyPlanActivity.class);
+//                myIntent.putExtra("Recipe",date);
+//                startActivity(myIntent);
+//            }
+//        }
+//        );
 
 
     }
 
     private void insertTestRecipes() {
         ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
-        in1.add(new Ingredient("Bread", "pieces", "Wheat", 2));
-        recipeList.addRecipe(new Recipe("Sandwich", 5, "none", 1, "Lunch", in1, null));
+        Ingredient bread = new Ingredient("Bread", "pieces", "Wheat", 2);
 
         ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
         in2.add(new Ingredient("A", "pieces", "C", 2));
-        recipeList.addRecipe(new Recipe("Soup", 10, "none", 2, "Dinner", in2, null));
-
+        Recipe recipe = new Recipe("Soup", 10, "none", 2, "Dinner", in2, null);
+        dailyPlan.addRecipe(recipe);
+        dailyPlan.addIngredient(bread);
     }
 
 
-
-
-
+    @Override
+    public void onNoteClick(int position) {
+        Toast.makeText(getApplicationContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        dailyPlan.addRecipe(dailyPlan.getDailyPlanRecipes().get(position));
+    }
 }

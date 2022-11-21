@@ -14,20 +14,20 @@ import java.util.ArrayList;
 
 public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.ViewHolder> {
 
-    private ArrayList<DailyPlan> dailyPlanList;
+    private ArrayList<Recipe> recipeList;
     private Context context;
     private DailyPlanAdapter.OnNoteListener myOnNoteListener;
 
     /**
      * This is the constructor for the class {@link DailyPlanAdapter}
      * @param context provides the context
-     * @param dailyPlanList an ArrayList of DailyPlans
+     * @param recipeList an ArrayList of DailyPlans
      * @param myOnNoteListener an OnNoteListener object
      * @since 1.0.0
      */
-    public DailyPlanAdapter(Context context, ArrayList<DailyPlan> dailyPlanList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
+    public DailyPlanAdapter(Context context, ArrayList<Recipe> recipeList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
         this.context = context;
-        this.dailyPlanList = dailyPlanList;
+        this.recipeList = recipeList;
         this.myOnNoteListener = myOnNoteListener;
     }
 
@@ -95,8 +95,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
      */
     @Override
     public void onBindViewHolder(@NonNull DailyPlanAdapter.ViewHolder holder, int position) {
-        DailyPlan dailyplan = dailyPlanList.get(position);
-        Recipe recipe = (Recipe)dailyplan.getDailyPlanRecipes().get(0);
+        Recipe recipe = recipeList.get(0);
         holder.recipeTitle.setText(recipe.getTitle());
         holder.recipeCategory.setText(recipe.getCategory());
 
@@ -115,7 +114,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
      */
     @Override
     public int getItemCount() {
-        return this.dailyPlanList.size();
+        return this.recipeList.size();
     }
 
     public interface OnNoteListener {
