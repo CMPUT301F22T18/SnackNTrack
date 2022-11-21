@@ -13,14 +13,6 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".TestActivity"
-            android:exported="true"
-            android:label="@string/title_activity_test">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".MainMenuActivity"
             android:parentActivityName=".MainActivity" />
         <activity
