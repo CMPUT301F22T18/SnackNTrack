@@ -4,17 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * This class creates a recipe object with the following attributes:
- * title {@link String}
- * prepTime {@link int}
- * comments {@link String}
- * servings {@link int}
- * category {@link String}
- * recipeIngredients {@link ArrayList}
+ * This class creates a recipe object with the following attributes: title, prepTime, comments,
+ * servings, category, recipeIngredients, photoURL
  *
- * @author SCWinter259
- * @version 1.0.1
- * @see Ingredient
+ * @author Casper Nguyen
  */
 public class Recipe implements Serializable {
     private String title;
@@ -26,12 +19,9 @@ public class Recipe implements Serializable {
     private String photoURL;
 
     /**
-     * This method is a constructor for the class Recipe
-     * @since 1.0.0
+     * This method is an empty constructor for the class Recipe
      */
-    public Recipe() {
-        this.recipeIngredients = new ArrayList<Ingredient>();
-    }
+    public Recipe() {}
 
     /**
      * This method is a constructor for the class Recipe
@@ -58,34 +48,30 @@ public class Recipe implements Serializable {
     /**
      * Setter for title attribute
      * @param title title for Recipe
-     * @since 1.0.1
      */
     public void setTitle(String title) {this.title = title;}
 
     /**
      * Setter for prepTime attribute
      * @param prepTime preparation time for Recipe
-     * @since 1.0.1
      */
     public void setPrepTime(int prepTime) {this.prepTime = prepTime;}
 
     /**
      * Setter for comments attribute
      * @param comments comments for Recipe
-     * @since 1.0.1
      */
     public void setComments(String comments) {this.comments = comments;}
 
     /**
      * Setter for servings attribute
      * @param servings number of servings for Recipe
-     * @since 1.0.1
      */
     public void setServings(int servings) {this.servings = servings;}
 
     /**
      * Setter for list of ingredients
-     * @param recipeIngredients
+     * @param recipeIngredients an ArrayList of Ingredient objects
      */
     public void setRecipeIngredients(ArrayList<Ingredient> recipeIngredients) {
         this.recipeIngredients = recipeIngredients;
@@ -93,7 +79,7 @@ public class Recipe implements Serializable {
 
     /**
      * Setter for photo URL
-     * @param photoURL
+     * @param photoURL the photoURL for the recipe
      */
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
@@ -102,16 +88,12 @@ public class Recipe implements Serializable {
     /**
      * Setter for category attribute
      * @param category category of the Recipe
-     * @since 1.0.1
      */
-
-
     public void setCategory(String category) {this.category = category;}
 
     /**
      * This method returns the title from the class Recipe
      * @return title
-     * @since 1.0.0
      */
     public String getTitle() {
         return this.title;
@@ -119,8 +101,7 @@ public class Recipe implements Serializable {
 
     /**
      * This method returns the preparation time from the class Recipe
-     * @return prepTime
-     * @since 1.0.0
+     * @return prepTime (preparation time)
      */
     public int getPrepTime() {
         return this.prepTime;
@@ -129,7 +110,6 @@ public class Recipe implements Serializable {
     /**
      * This method returns the comments from the class Recipe
      * @return comments
-     * @since 1.0.0
      */
     public String getComments() {
         return this.comments;
@@ -137,8 +117,7 @@ public class Recipe implements Serializable {
 
     /**
      * This method returns the number of servings from the class Recipe
-     * @return servings
-     * @since 1.0.0
+     * @return servings (the number of servings)
      */
     public int getServings() {
         return this.servings;
@@ -147,7 +126,6 @@ public class Recipe implements Serializable {
     /**
      * This method returns the category from the class Recipe
      * @return category
-     * @since 1.0.0
      */
     public String getCategory() {
         return this.category;
@@ -164,7 +142,6 @@ public class Recipe implements Serializable {
     /**
      * This method returns the ingredients from the class Recipe
      * @return recipeIngredients
-     * @since 1.0.0
      */
     public ArrayList<Ingredient> getRecipeIngredients() {
         return this.recipeIngredients;
@@ -172,8 +149,7 @@ public class Recipe implements Serializable {
 
     /**
      * This method adds an ingredient to the list of ingredients
-     * @param ingredient {@link Ingredient}
-     * @since 1.0.0
+     * @param ingredient an Ingredient object
      */
     public void addIngredient(Ingredient ingredient) {
         this.recipeIngredients.add(ingredient);
@@ -181,8 +157,7 @@ public class Recipe implements Serializable {
 
     /**
      * This method deletes an ingredient from the list of ingredients
-     * @param ingredient
-     * @since 1.0.0
+     * @param ingredient an Ingredient object
      */
     public void deleteIngredient(Ingredient ingredient) {
         this.recipeIngredients.remove(ingredient);
