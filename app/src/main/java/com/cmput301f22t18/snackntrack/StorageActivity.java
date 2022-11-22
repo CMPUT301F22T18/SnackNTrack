@@ -1,50 +1,35 @@
 package com.cmput301f22t18.snackntrack;
 
-import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import com.cmput301f22t18.snackntrack.controllers.DBController;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class StorageActivity extends AppCompatActivity {
-    private Storage storage = new Storage();
+    private Storage storage;
     private ArrayList<String> unit_list, location_list, category_list;
     FloatingActionButton fab;
 
-    private final String TAG = "DEBUG";
-
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storage);
-
+        storage = new Storage();
         unit_list = new ArrayList<>
                 (Arrays.asList(getResources().getStringArray(R.array.units_array)));
         location_list = new ArrayList<>
@@ -61,6 +46,7 @@ public class StorageActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert(user != null);
         final DocumentReference documentReference =
                 db.collection("Storages").document(user.getUid());
 
@@ -68,9 +54,12 @@ public class StorageActivity extends AppCompatActivity {
             assert value != null;
             Object ingredients = value.get("ingredients");
             if (ingredients != null) {
-                ArrayList list = (ArrayList) ingredients;
+                @SuppressWarnings("unchecked")
+                ArrayList<Object> list = (ArrayList<Object>)ingredients;
+
                 list.forEach(item -> {
-                    Map<String, Object> map = (Map) item;
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> map = (Map<String, Object>) item;
                     Ingredient ingredient = new Ingredient(map);
                     //Log.d(TAG, ingredient.toString());
                     storage.addIngredient(ingredient);
@@ -84,7 +73,7 @@ public class StorageActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             if (savedInstanceState == null) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("storage", (Serializable) storage);
+                bundle.putSerializable("storage", storage);
                 bundle.putStringArrayList("units", unit_list);
                 bundle.putStringArrayList("locations", location_list);
                 bundle.putStringArrayList("categories", category_list);
