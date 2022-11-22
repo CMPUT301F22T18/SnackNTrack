@@ -2,7 +2,9 @@ package com.cmput301f22t18.snackntrack;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,17 +14,25 @@ import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class StorageActivity extends AppCompatActivity {
     private Storage storage;
     private ArrayList<String> unit_list, location_list, category_list;
     FloatingActionButton fab;
+    private String TAG = "Storage";
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -47,26 +57,25 @@ public class StorageActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert(user != null);
-        final DocumentReference documentReference =
-                db.collection("Storages").document(user.getUid());
+        String uid = user.getUid();
+        CollectionReference cf = db.collection("storages")
+                .document(uid).collection("ingredients");
 
-        documentReference.addSnapshotListener((value, error) -> {
-            assert value != null;
-            Object ingredients = value.get("ingredients");
-            if (ingredients != null) {
-                @SuppressWarnings("unchecked")
-                ArrayList<Object> list = (ArrayList<Object>)ingredients;
-
-                list.forEach(item -> {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> map = (Map<String, Object>) item;
-                    Ingredient ingredient = new Ingredient(map);
-                    //Log.d(TAG, ingredient.toString());
-                    storage.addIngredient(ingredient);
-                });
+        cf.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
+                }
+                storage.clearStorage();
+                for (QueryDocumentSnapshot doc : value) {
+                    storage.addIngredient(doc.toObject(Ingredient.class));
+                }
+                storageAdapter.notifyDataSetChanged();
             }
-            storageAdapter.notifyDataSetChanged();
         });
+
 
         fab = findViewById(R.id.add_ingredient_fab);
         fab.show();
@@ -84,6 +93,7 @@ public class StorageActivity extends AppCompatActivity {
                         .commit();
 
             }
+            storageAdapter.notifyDataSetChanged();
         });
     }
 }

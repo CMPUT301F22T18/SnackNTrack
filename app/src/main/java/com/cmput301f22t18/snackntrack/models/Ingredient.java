@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import java.util.Map;
 public class Ingredient implements Serializable {
     private String description, location, unit, category;
     private int amount;
-    private Date bestBeforeDate;
+    private Timestamp bestBeforeDate;
 
 
     public Ingredient() {}
@@ -41,7 +40,7 @@ public class Ingredient implements Serializable {
         this.unit = unit;
         this.category = category;
         this.amount = amount;
-        this.bestBeforeDate = bbf;
+        this.bestBeforeDate = new Timestamp(bbf);
     }
 
     public Ingredient(Map<String, Object> map) {
@@ -52,10 +51,8 @@ public class Ingredient implements Serializable {
         Object amount = map.getOrDefault("amount", 0);
         if (amount != null) this.amount = ((Long)amount).intValue();
         this.location = (String) map.getOrDefault("location", null);
-        Timestamp t = (Timestamp) map.getOrDefault("bestBeforeDate", null);
-        if (t != null) {
-            this.bestBeforeDate = t.toDate();
-        }
+        this.bestBeforeDate = (Timestamp) map.getOrDefault("bestBeforeDate", null);
+
     }
 
     /**
@@ -93,7 +90,7 @@ public class Ingredient implements Serializable {
      * @return the best before date
      */
     public Date getBestBeforeDate() {
-        return bestBeforeDate;
+        return bestBeforeDate.toDate();
     }
 
     /**
@@ -157,7 +154,7 @@ public class Ingredient implements Serializable {
      * @param bestBeforeDate the best before date of the ingredient
      */
     public void setBestBeforeDate(Date bestBeforeDate) {
-        this.bestBeforeDate = bestBeforeDate;
+        this.bestBeforeDate = new Timestamp(bestBeforeDate);
     }
 
     /**

@@ -16,14 +16,18 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
     FirebaseUser user;
-    String TAG_ERROR = "AUTHENTICATION";
+    String TAG_ERROR = "ERROR";
     String TAG_INFO = "INFO";
 
     @Override
@@ -84,8 +88,28 @@ public class MainActivity extends AppCompatActivity {
                         String userName = user.getDisplayName();
                         if (userName != null)
                             Log.i(TAG_INFO, userName);
+
+                        // Create a storage document
+                        String uid = user.getUid();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        CollectionReference cf = db.collection("storages");
+                        DocumentReference df = cf
+                                .document(uid);
+                        df.get().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG_INFO, "Document exists!");
+                                        } else {
+                                            Log.d(TAG_INFO, "Document does not exist!");
+                                        }
+                                    } else {
+                                        Log.d(TAG_ERROR, "Failed with: ", task.getException());
+                                }});
+
                         launchMenu();
                     }
+
                 }
             });
 
