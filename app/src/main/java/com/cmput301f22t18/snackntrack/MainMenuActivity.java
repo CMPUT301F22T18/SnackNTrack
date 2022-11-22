@@ -33,8 +33,8 @@ public class MainMenuActivity extends AppCompatActivity {
         Button recipeButton = findViewById(R.id.recipe_list_id);
         recipeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), RecipeListActivity.class);
-                startActivity(myIntent);
+                //Intent myIntent = new Intent(view.getContext(), RecipeListActivity.class);
+                //startActivity(myIntent);
             }
 
         });
