@@ -8,11 +8,11 @@ android {
 
     defaultConfig {
         applicationId "com.cmput301f22t18.snackntrack"
-        minSdk 21
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
+        resConfigs "en" // For translation
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

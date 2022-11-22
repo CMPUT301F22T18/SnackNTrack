@@ -2,8 +2,12 @@ package com.cmput301f22t18.snackntrack.models;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
+
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * A cooking ingredient, with a description, a counting unit, a category, an amount,
@@ -16,6 +20,9 @@ public class Ingredient implements Serializable {
     private String description, location, unit, category;
     private int amount;
     private Date bestBeforeDate;
+
+
+    public Ingredient() {}
 
     /**
      * Main constructor when all information is available
@@ -35,6 +42,20 @@ public class Ingredient implements Serializable {
         this.category = category;
         this.amount = amount;
         this.bestBeforeDate = bbf;
+    }
+
+    public Ingredient(Map<String, Object> map) {
+        assert map != null;
+        this.description = (String) map.get("description");
+        this.unit = (String) map.get("unit");
+        this.category = (String) map.get("category");
+        Object amount = map.getOrDefault("amount", 0);
+        if (amount != null) this.amount = ((Long)amount).intValue();
+        this.location = (String) map.getOrDefault("location", null);
+        Timestamp t = (Timestamp) map.getOrDefault("bestBeforeDate", null);
+        if (t != null) {
+            this.bestBeforeDate = t.toDate();
+        }
     }
 
     /**
@@ -159,7 +180,7 @@ public class Ingredient implements Serializable {
                 "Location: " + location + '\n' +
                 "Unit: " + unit + '\n' +
                 "Category: " + category + '\n' +
-                "Amount: " + amount +
+                "Amount: " + amount + '\n' +
                 "Best Before: " + bestBeforeDate;
     }
 }

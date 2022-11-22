@@ -89,15 +89,13 @@ public class Storage implements Serializable {
     /**
      * Return a sorted array list of ingredients based on comparing attribute
      * @param key the attribute of ingredient class to compare
-     * @return the sorted array list of the ingredients
      */
-    public ArrayList<Ingredient> sort(String key) {
+    public void sort(String key) {
         ArrayList<Ingredient> newStorage = storage;
-        Collections.sort(newStorage, comparators.get(key));
-        return newStorage;
+        newStorage.sort(comparators.get(key));
     }
 
-    public ArrayList<Ingredient> getStorageList(){
+    public ArrayList<Ingredient> getStorageList() {
         return storage;
     }
 }
