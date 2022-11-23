@@ -28,9 +28,9 @@ import java.util.ArrayList;
  * @author Casper Nguyen
  */
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
-    private ArrayList<Recipe> recipeArrayList;
-    private Context context;
-    private OnNoteListener myOnNoteListener;
+    private final ArrayList<Recipe> recipeArrayList;
+    private final Context context;
+    private final OnNoteListener myOnNoteListener;
 
     /**
      * This is the constructor for the class RecipeListAdapter

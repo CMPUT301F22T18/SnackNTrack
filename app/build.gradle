@@ -50,6 +50,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     // FirebaseUI for Cloud Storage
     implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
+    // Add the dependency for the Cloud Storage library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-storage'
+    // Glide library to process images from firebase storage
     implementation 'com.github.bumptech.glide:glide:4.14.2'
 }
 apply plugin: 'com.google.gms.google-services'
