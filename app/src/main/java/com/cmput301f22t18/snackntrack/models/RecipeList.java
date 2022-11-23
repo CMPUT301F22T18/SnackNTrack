@@ -1,4 +1,6 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.models;
+
+import com.cmput301f22t18.snackntrack.models.Recipe;
 
 import java.io.Serializable;
 import java.util.ArrayList;

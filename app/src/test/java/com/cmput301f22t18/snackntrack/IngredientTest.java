@@ -2,6 +2,8 @@ package com.cmput301f22t18.snackntrack;
 
 import static org.junit.Assert.assertEquals;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+
 import org.junit.Before;
 import org.junit.Test;
 

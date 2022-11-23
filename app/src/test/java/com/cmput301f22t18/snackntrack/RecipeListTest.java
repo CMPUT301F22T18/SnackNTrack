@@ -12,6 +12,10 @@ import java.util.Calendar;
 import java.util.Date;
 import static org.junit.Assert.*;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
+import com.cmput301f22t18.snackntrack.models.RecipeList;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
