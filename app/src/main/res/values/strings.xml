@@ -54,7 +54,8 @@
     <string name="sign_up">Sign up</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-<!--    <string name="default_web_client_id">-->
+    <string name="getting_started">Get Started</string>
+    <!--    <string name="default_web_client_id">-->
 <!--        274455879293-jeiebm0c9gb4pi8ndbvdu7ogv3p4idd2.apps.googleusercontent.com-->
 <!--    </string>-->
 </resources>

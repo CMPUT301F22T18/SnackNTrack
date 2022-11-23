@@ -18,6 +18,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
+import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;

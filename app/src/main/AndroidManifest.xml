@@ -10,11 +10,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
+        android:theme="@style/Theme.SnackNTrack"
         tools:targetApi="31">
         <activity
             android:parentActivityName=".MainActivity"
-            android:name=".MainMenuActivity"/>
+            android:name=".MainMenuActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:parentActivityName=".MainMenuActivity"
             android:name=".StorageActivity"

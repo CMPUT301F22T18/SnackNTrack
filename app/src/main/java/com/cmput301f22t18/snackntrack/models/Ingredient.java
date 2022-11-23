@@ -1,9 +1,12 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.models;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * A cooking ingredient, with a description, a counting unit, a category, an amount,
@@ -15,7 +18,10 @@ import java.util.Date;
 public class Ingredient implements Serializable {
     private String description, location, unit, category;
     private int amount;
-    private Date bestBeforeDate;
+    private Timestamp bestBeforeDate;
+
+
+    public Ingredient() {}
 
     /**
      * Main constructor when all information is available
@@ -34,7 +40,19 @@ public class Ingredient implements Serializable {
         this.unit = unit;
         this.category = category;
         this.amount = amount;
-        this.bestBeforeDate = bbf;
+        this.bestBeforeDate = new Timestamp(bbf);
+    }
+
+    public Ingredient(Map<String, Object> map) {
+        assert map != null;
+        this.description = (String) map.get("description");
+        this.unit = (String) map.get("unit");
+        this.category = (String) map.get("category");
+        Object amount = map.getOrDefault("amount", 0);
+        if (amount != null) this.amount = ((Long)amount).intValue();
+        this.location = (String) map.getOrDefault("location", null);
+        this.bestBeforeDate = (Timestamp) map.getOrDefault("bestBeforeDate", null);
+
     }
 
     /**
@@ -72,7 +90,7 @@ public class Ingredient implements Serializable {
      * @return the best before date
      */
     public Date getBestBeforeDate() {
-        return bestBeforeDate;
+        return bestBeforeDate.toDate();
     }
 
     /**
@@ -136,7 +154,7 @@ public class Ingredient implements Serializable {
      * @param bestBeforeDate the best before date of the ingredient
      */
     public void setBestBeforeDate(Date bestBeforeDate) {
-        this.bestBeforeDate = bestBeforeDate;
+        this.bestBeforeDate = new Timestamp(bestBeforeDate);
     }
 
     /**
@@ -159,7 +177,7 @@ public class Ingredient implements Serializable {
                 "Location: " + location + '\n' +
                 "Unit: " + unit + '\n' +
                 "Category: " + category + '\n' +
-                "Amount: " + amount +
+                "Amount: " + amount + '\n' +
                 "Best Before: " + bestBeforeDate;
     }
 }

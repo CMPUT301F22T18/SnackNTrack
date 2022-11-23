@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Storage;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;

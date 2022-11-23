@@ -2,6 +2,7 @@ package com.cmput301f22t18.snackntrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +19,8 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu_activity);
-        ActionBar actionBar = getSupportActionBar();
-        View v = actionBar.getCustomView();
+        //ActionBar actionBar = getSupportActionBar();
+        //View v = actionBar.getCustomView();
         Button storageButton = findViewById(R.id.storage_id);
         storageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -37,6 +38,13 @@ public class MainMenuActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FirebaseAuth.getInstance().signOut();
     }
 
     @Override

@@ -10,12 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f22t18.snackntrack.models.Recipe;
+
 import java.util.ArrayList;
 
 /**
  * This class is a custom adapter for the recipe list.
  * Attributes:
- * recipeArrayList {@link ArrayList<Recipe>}
+ * recipeArrayList {@link ArrayList< Recipe >}
  * context {@link Context}
  *
  * @author SCWinter259

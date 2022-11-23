@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
+import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
