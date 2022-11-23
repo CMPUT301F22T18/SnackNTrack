@@ -22,19 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:parentActivityName=".MainMenuActivity"
             android:name=".StorageActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            >
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:parentActivityName=".MainMenuActivity"
-            android:name=".RecipeListActivity"
-            android:exported="false">
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

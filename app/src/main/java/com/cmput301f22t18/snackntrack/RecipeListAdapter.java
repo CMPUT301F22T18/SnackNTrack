@@ -79,7 +79,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
          */
         @Override
         public void onClick(View v) {
-            this.onNoteListener.onNoteClick(getAdapterPosition());
+            this.onNoteListener.onNoteClick(getAbsoluteAdapterPosition());
         }
     }
 
@@ -110,10 +110,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         Recipe recipe = recipeArrayList.get(position);
         holder.recipeTitle.setText(recipe.getTitle());
         holder.recipeCategory.setText(recipe.getCategory());
-
-        // TODO: Change prep time representation of Recipe class, for now we'll assume prep time is in minutes
-        String prepTimeString = recipe.getPrepTime() + " mins";
-        holder.recipePrepTime.setText(prepTimeString);
+        holder.recipePrepTime.setText(String.valueOf(recipe.getPrepTime()));
         holder.recipeServings.setText(String.valueOf(recipe.getServings()));
         //TODO: bind image (requires that the recipe has to have an image)
     }
