@@ -111,8 +111,8 @@ public class AddRecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ImageButton imageButton = view.findViewById(R.id.back_button);
-        floatingActionButton = getActivity().findViewById(R.id.add_recipe_fab);
-        recyclerView = getActivity().findViewById(R.id.recipe_list_recycler_view);
+//        floatingActionButton = getActivity().findViewById(R.id.add_recipe_fab);
+//        recyclerView = getActivity().findViewById(R.id.recipe_list_recycler_view);
         backButton = view.findViewById(R.id.back_button);
         addIngredientButton = view.findViewById(R.id.add_ingredient_to_recipe_button);
         addRecipeButton = view.findViewById(R.id.add_recipe_button);
