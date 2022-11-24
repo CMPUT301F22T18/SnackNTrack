@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
     app:layout_constraintVertical_chainStyle="packed"
-    tools:context=".MainActivity">
+    tools:context=".views.main.MainActivity">
 
     <Button
         android:id="@+id/button_getting_started"

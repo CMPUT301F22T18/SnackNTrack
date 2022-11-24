@@ -1,16 +1,17 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.views.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.RecipeListActivity;
+import com.cmput301f22t18.snackntrack.views.storage.StorageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuActivity extends AppCompatActivity {
