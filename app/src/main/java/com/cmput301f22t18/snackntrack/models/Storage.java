@@ -1,14 +1,13 @@
 package com.cmput301f22t18.snackntrack.models;
 
-import com.cmput301f22t18.snackntrack.IngredientBBDComparator;
-import com.cmput301f22t18.snackntrack.IngredientCategoryComparator;
-import com.cmput301f22t18.snackntrack.IngredientComparator;
-import com.cmput301f22t18.snackntrack.IngredientDescriptionComparator;
-import com.cmput301f22t18.snackntrack.IngredientLocationComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientBBDComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientCategoryComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientDescriptionComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientLocationComparator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
 

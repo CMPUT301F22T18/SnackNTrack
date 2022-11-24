@@ -55,7 +55,14 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="getting_started">Get Started</string>
-    <!--    <string name="default_web_client_id">-->
-<!--        274455879293-jeiebm0c9gb4pi8ndbvdu7ogv3p4idd2.apps.googleusercontent.com-->
-<!--    </string>-->
+    <string name="my_recipes">My Recipes</string>
+    <string name="sort_button_for_recipe_list">Sort button for recipe list</string>
+    <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="preptime">PrepTime</string>
+    <string name="servings">Servings</string>
+    <string name="menu_storage">Storage</string>
+    <string name="menu_recipes">Recipes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
