@@ -59,19 +59,16 @@ public class StorageActivity extends AppCompatActivity {
         CollectionReference cf = db.collection("storages")
                 .document(uid).collection("ingredients");
 
-        cf.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error);
-                    return;
-                }
-                storage.clearStorage();
-                for (QueryDocumentSnapshot doc : value) {
-                    storage.addIngredient(doc.toObject(Ingredient.class));
-                }
-                storageAdapter.notifyDataSetChanged();
+        cf.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error);
+                return;
             }
+            storage.clearStorage();
+            for (QueryDocumentSnapshot doc : value) {
+                storage.addIngredient(doc.toObject(Ingredient.class));
+            }
+            storageAdapter.notifyDataSetChanged();
         });
 
 
