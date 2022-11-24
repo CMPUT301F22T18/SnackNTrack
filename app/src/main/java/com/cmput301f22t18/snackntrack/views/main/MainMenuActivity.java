@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f22t18.snackntrack.R;
-import com.cmput301f22t18.snackntrack.RecipeListActivity;
+import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.views.storage.StorageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
