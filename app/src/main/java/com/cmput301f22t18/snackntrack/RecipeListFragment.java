@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
