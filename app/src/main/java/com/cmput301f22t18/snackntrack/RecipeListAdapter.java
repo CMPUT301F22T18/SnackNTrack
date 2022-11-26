@@ -11,31 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.models.Recipe;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 /**
  * This class is a custom adapter for the recipe list.
+<<<<<<< HEAD
  * Attributes:
  * recipeArrayList {@link ArrayList< Recipe >}
  * context {@link Context}
+=======
+ * Attributes: recipeArrayList, context, myOnNoteListener
+>>>>>>> 88c2856 (fixed UI for recipeList cards, fixed Recipe empty constructor, added Glide library (not sure about AppGlideModule), trying to process image within RecipeListAdapter)
  *
- * @author SCWinter259
- * @version 1.0.0
- * @see RecyclerView
- * @see Recipe
+ * @author Casper Nguyen
  */
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
-    private ArrayList<Recipe> recipeArrayList;
-    private Context context;
-    private OnNoteListener myOnNoteListener;
+    private final ArrayList<Recipe> recipeArrayList;
+    private final Context context;
+    private final OnNoteListener myOnNoteListener;
 
     /**
-     * This is the constructor for the class {@link RecipeListAdapter}
+     * This is the constructor for the class RecipeListAdapter
      * @param context provides the context
      * @param recipeArrayList an ArrayList of Recipes
      * @param myOnNoteListener an OnNoteListener object
-     * @since 1.0.0
      */
     public RecipeListAdapter(Context context, ArrayList<Recipe> recipeArrayList, OnNoteListener myOnNoteListener) {
         this.context = context;
@@ -44,8 +45,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     /**
-     * This class provides a reference to the type of views that you are using. It is a custom {@link androidx.recyclerview.widget.RecyclerView.ViewHolder}
-     * @since 1.0.0
+     * This class provides a reference to the type of views that you are using.
+     * It is a custom ViewHolder for RecyclerView, a nested class in RecipeListAdapter.
+     * @author Casper Nguyen
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView recipeTitle;
@@ -59,7 +61,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
          * This method is the constructor for the ViewHolder of RecipeListAdapter
          * @param itemView a particular item view
          * @param onNoteListener an OnNoteListener object
-         * @since 1.0.0
          */
         public ViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
@@ -75,11 +76,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         /**
          * This method gets the position of the item if the item is clicked
          * @param v the item view
-         * @since 1.0.0
          */
         @Override
         public void onClick(View v) {
-            this.onNoteListener.onNoteClick(getAdapterPosition());
+            this.onNoteListener.onNoteClick(getAbsoluteAdapterPosition());
         }
     }
 
@@ -89,7 +89,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
      * @param parent the parent ViewGroup
      * @param viewType a view type
      * @return a ViewHolder object for each item view
-     * @since 1.0.0
      */
     @NonNull
     @Override
@@ -103,31 +102,32 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
      * This method is invoked by the layout manager. It replaces the contents of a view.
      * @param holder a ViewHolder object for RecipeListAdapter
      * @param position indicates the position of the view in the layout
-     * @since 1.0.0
      */
     @Override
     public void onBindViewHolder(@NonNull RecipeListAdapter.ViewHolder holder, int position) {
         Recipe recipe = recipeArrayList.get(position);
+        String prepTimeString = recipe.getPrepTime() + " minutes";
+        String recipeServingsString = recipe.getServings() + " servings";
+        String recipePhotoURL = recipe.getPhotoURL();
         holder.recipeTitle.setText(recipe.getTitle());
         holder.recipeCategory.setText(recipe.getCategory());
-
-        // TODO: Change prep time representation of Recipe class, for now we'll assume prep time is in minutes
-        String prepTimeString = recipe.getPrepTime() + " mins";
         holder.recipePrepTime.setText(prepTimeString);
-        holder.recipeServings.setText(String.valueOf(recipe.getServings()));
-        //TODO: bind image (requires that the recipe has to have an image)
+        holder.recipeServings.setText(recipeServingsString);
+        Glide.with(this.context).load(recipePhotoURL).into(holder.recipeImage);
     }
 
     /**
      * This method returns the size of the list
      * @return the size of recipeArrayList
-     * @since 1.0.0
      */
     @Override
     public int getItemCount() {
         return this.recipeArrayList.size();
     }
 
+    /**
+     * This is an interface nested in RecipeListAdapter
+     */
     public interface OnNoteListener {
         void onNoteClick(int position);
     }
