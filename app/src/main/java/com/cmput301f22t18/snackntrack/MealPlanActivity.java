@@ -2,11 +2,16 @@ package com.cmput301f22t18.snackntrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,17 +25,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MealPlanActivity extends AppCompatActivity {
+public class MealPlanActivity extends Fragment {
 
     private CalendarView cal;
     private int date;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meal_plan);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_meal_plan, container, false);
 
-        cal = findViewById(R.id.calendarView);
+        cal = v.findViewById(R.id.calendarView);
 
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -47,13 +52,20 @@ public class MealPlanActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 //Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent(view.getContext(), DailyPlanActivity.class);
-                myIntent.putExtra("Date",date);
-                startActivity(myIntent);
+                DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
+                Bundle dateBundle = new Bundle();
+                dateBundle.putSerializable("Date",date);
+                dailyPlanActivity.setArguments(dateBundle);
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
             }
-        });
 
+        });
+        return v;
     }
 
 }

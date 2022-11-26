@@ -2,11 +2,15 @@ package com.cmput301f22t18.snackntrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class DailyPlanActivity extends AppCompatActivity implements RecipeListAdapter.OnNoteListener, StorageAdapter.OnItemLongClickListener {
+public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnNoteListener, StorageAdapter.OnItemLongClickListener {
 
     private MealPlan mealPlan;
     private DailyPlan dailyPlan;
@@ -36,12 +40,13 @@ public class DailyPlanActivity extends AppCompatActivity implements RecipeListAd
     private ArrayList<String> unit_list, location_list, category_list;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_plan);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_daily_plan, container, false);
 
-        Date date = (Date) this.getIntent().getExtras().get("Date");
-        Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
+        Bundle dateBundle = getArguments();
+        Date date = (Date) dateBundle.getSerializable("Date");
+        Toast.makeText(v.getContext(), date.toString(), Toast.LENGTH_SHORT).show();
 
         // Firebase, should get meal plan list based on date, from user not generate new
         mealPlan = new MealPlan();
@@ -49,49 +54,53 @@ public class DailyPlanActivity extends AppCompatActivity implements RecipeListAd
         //dailyPlan = mealPlan.getDailyPlanAtDay(date);
         insertTestRecipes(date);
 
-        recipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), this);
-        recyclerView = this.findViewById(R.id.recipe_list_recycler_view);
+        recipeListAdapter = new RecipeListAdapter(this.getContext(), dailyPlan.getDailyPlanRecipes(), this);
+        recyclerView = v.findViewById(R.id.recipe_list_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getApplicationContext()));
 
-        storage = new Storage();
-        insertTestStorage();
-        unit_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
-        location_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
-        category_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
 
-        // DOES NOT WORK. error from storage adapter
-        storageAdapter = new StorageAdapter(storage, getSupportFragmentManager(), this,
-                unit_list, location_list, category_list);
-        recyclerView2 = this.findViewById(R.id.ingredient_list_recycler_view);
-        recyclerView2.setAdapter(storageAdapter);
-        recyclerView2.setLayoutManager(
-                new LinearLayoutManager(getApplicationContext()));
-
-        addIngredient = findViewById(R.id.add_ingredient_button);
+//        storage = new Storage();
+//        insertTestStorage();
+//        unit_list = new ArrayList<>
+//                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
+//        location_list = new ArrayList<>
+//                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
+//        category_list = new ArrayList<>
+//                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
+//
+//        // DOES NOT WORK. error from storage adapter
+//        storageAdapter = new StorageAdapter(storage, getSupportFragmentManager(), this,
+//                unit_list, location_list, category_list);
+//        recyclerView2 = this.findViewById(R.id.ingredient_list_recycler_view);
+//        recyclerView2.setAdapter(storageAdapter);
+//        recyclerView2.setLayoutManager(
+//                new LinearLayoutManager(getApplicationContext()));
+//
+        addIngredient = v.findViewById(R.id.add_ingredient_button);
         addIngredient.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(view.getContext(), MealPlanActivity.class);
-                myIntent.putExtra("Date",date);
                 startActivity(myIntent);
             }
 
         });
 
-        addRecipe = findViewById(R.id.add_recipe_button);
+        addRecipe = v.findViewById(R.id.add_recipe_button);
         addRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), AddEditMealPlanActivity.class);
-                myIntent.putExtra("Date",date);
-                startActivity(myIntent);
+                Bundle dateBundle = new Bundle();
+                dateBundle.putSerializable("Date",date);
+                AddEditMealPlanActivity addEditMealPlanActivity = new AddEditMealPlanActivity();
+                addEditMealPlanActivity.setArguments(dateBundle);
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container_main, addEditMealPlanActivity);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
 
         });
-
+        return v;
     }
 
     private void insertTestRecipes(Date date) {
@@ -121,12 +130,12 @@ public class DailyPlanActivity extends AppCompatActivity implements RecipeListAd
 
     @Override
     public void onNoteClick(int position) {
-        Toast.makeText(getApplicationContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onClick(Ingredient item) {
-        Toast.makeText(getApplicationContext(), item.getCategory(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(), item.getCategory(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -2,13 +2,17 @@ package com.cmput301f22t18.snackntrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,32 +23,27 @@ import com.cmput301f22t18.snackntrack.models.RecipeList;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AddEditMealPlanActivity extends AppCompatActivity implements RecipeListAdapter.OnNoteListener{
+public class AddEditMealPlanActivity extends Fragment implements RecipeListAdapter.OnNoteListener{
     private RecipeList recipeList;
     private RecipeListAdapter recipeListAdapter;
-    private DailyPlan dailyPlan;
-    private DailyPlanAdapter DailyPlanAdapter;
     private RecyclerView recyclerView;
     private ListView listView;
     ArrayList<String> recipeNames;
     ArrayList<Recipe> list;
     String selectedRecipe;
+    Date date;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_mealplan);
-        Date date = (Date) this.getIntent().getExtras().get("Date");
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_add_mealplan, container, false);
+        Bundle dateBundle = getArguments();
+        date = (Date) dateBundle.getSerializable("Date");
         // should get recipe list from database
-        dailyPlan = new DailyPlan();
         recipeList = new RecipeList();
         insertTestRecipes();
-        recipeListAdapter = new RecipeListAdapter(this, dailyPlan.getDailyPlanRecipes(), null);
-        recyclerView = this.findViewById(R.id.recipe_list);
+        recipeListAdapter = new RecipeListAdapter(this.getContext(), recipeList.getRecipeList(), this);
+        recyclerView = v.findViewById(R.id.recipe_list);
         recyclerView.setAdapter(recipeListAdapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getApplicationContext()));
-
 //        recipeList = new RecipeList();
 //
 //        // Firebase, get the arraylist of recipes for the user
@@ -77,7 +76,7 @@ public class AddEditMealPlanActivity extends AppCompatActivity implements Recipe
 //        }
 //        );
 
-
+    return v;
     }
 
     private void insertTestRecipes() {
@@ -86,15 +85,22 @@ public class AddEditMealPlanActivity extends AppCompatActivity implements Recipe
 
         ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
         in2.add(new Ingredient("A", "pieces", "C", 2));
-        Recipe recipe = new Recipe("Soup", 10, "none", 2, "Dinner", in2, null);
-        dailyPlan.addRecipe(recipe);
-        dailyPlan.addIngredient(bread);
+        Recipe recipe = new Recipe("Salad", 10, "none", 2, "Dinner", in2, null);
+        recipeList.addRecipe(recipe);
     }
 
 
     @Override
     public void onNoteClick(int position) {
-        Toast.makeText(getApplicationContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
-        dailyPlan.addRecipe(dailyPlan.getDailyPlanRecipes().get(position));
+        Toast.makeText(this.getContext(), recipeList.getRecipeList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
+        Bundle dateBundle = new Bundle();
+        dateBundle.putSerializable("Date",date);
+        dailyPlanActivity.setArguments(dateBundle);
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

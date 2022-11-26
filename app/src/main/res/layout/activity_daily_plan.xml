@@ -30,7 +30,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_list_recycler_view" />
+                app:layout_constraintTop_toBottomOf="@+id/ingredient_list_recycler_view"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ingredient_list_recycler_view"

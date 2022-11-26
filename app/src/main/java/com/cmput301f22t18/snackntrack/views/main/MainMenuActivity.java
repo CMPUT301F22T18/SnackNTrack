@@ -10,6 +10,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f22t18.snackntrack.MealPlanActivity;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
@@ -36,6 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     StorageFragment storageFragment;
     RecipeListFragment recipeListFragment;
+    MealPlanActivity mealPlanActivity;
     String TAG = "DEBUG";
 
     @Override
@@ -44,6 +46,7 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         storageFragment = new StorageFragment();
+        mealPlanActivity = new MealPlanActivity();
         RecipeList rl = new RecipeList();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
@@ -100,6 +103,14 @@ public class MainMenuActivity extends AppCompatActivity {
                                 .beginTransaction()
                                 .replace(R.id.fragment_container_main,
                                         RecipeListFragment.newInstance(rl))
+                                .commit();
+                        return true;
+
+                    case id_mealPlan:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container_main,
+                                        mealPlanActivity)
                                 .commit();
                         return true;
                 }
