@@ -83,6 +83,7 @@ public class MainMenuActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         final int id_storage = R.id.storage;
         final int id_recipes = R.id.recipes;
+        final int id_mealPlan = R.id.mealPlan;
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

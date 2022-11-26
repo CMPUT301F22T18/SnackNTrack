@@ -32,7 +32,7 @@
 
         </activity>
         <activity
-            android:parentActivityName=".MainMenuActivity"
+            android:parentActivityName=".views.main.MainMenuActivity"
             android:name=".MealPlanActivity"
             android:exported="false">
         <meta-data
@@ -40,7 +40,7 @@
             android:value="" />
         </activity>
         <activity
-            android:parentActivityName=".MainMenuActivity"
+            android:parentActivityName=".views.main.MainMenuActivity"
             android:name=".DailyPlanActivity"
             android:exported="false">
             <meta-data
@@ -48,7 +48,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:parentActivityName=".MainMenuActivity"
+            android:parentActivityName=".views.main.MainMenuActivity"
             android:name=".AddEditMealPlanActivity"
             android:exported="false">
             <meta-data

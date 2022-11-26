@@ -1,5 +1,8 @@
 package com.cmput301f22t18.snackntrack;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
+
 import java.util.ArrayList;
 import java.util.Date;
 
