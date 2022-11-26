@@ -49,7 +49,7 @@
         </activity>
         <activity
             android:parentActivityName=".views.main.MainMenuActivity"
-            android:name=".AddEditMealPlanActivity"
+            android:name=".AddRecipeToMealPlan"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
