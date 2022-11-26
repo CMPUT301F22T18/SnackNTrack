@@ -1,8 +1,13 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.models;
+
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientBBDComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientCategoryComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientDescriptionComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientLocationComparator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -83,15 +88,13 @@ public class Storage implements Serializable {
     /**
      * Return a sorted array list of ingredients based on comparing attribute
      * @param key the attribute of ingredient class to compare
-     * @return the sorted array list of the ingredients
      */
-    public ArrayList<Ingredient> sort(String key) {
+    public void sort(String key) {
         ArrayList<Ingredient> newStorage = storage;
-        Collections.sort(newStorage, comparators.get(key));
-        return newStorage;
+        newStorage.sort(comparators.get(key));
     }
 
-    public ArrayList<Ingredient> getStorageList(){
+    public ArrayList<Ingredient> getStorageList() {
         return storage;
     }
 }

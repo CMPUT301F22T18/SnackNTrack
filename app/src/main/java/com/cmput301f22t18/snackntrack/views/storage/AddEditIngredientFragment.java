@@ -1,4 +1,4 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.views.storage;
 
 
 import android.app.Activity;
@@ -23,7 +23,17 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.cmput301f22t18.snackntrack.DatePickerFragment;
+import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 
@@ -84,7 +94,7 @@ public class AddEditIngredientFragment extends Fragment {
         locations = getArguments().getStringArrayList("locations");
         categories = getArguments().getStringArrayList("categories");
         function = getArguments().getString("function");
-        Log.d("DEBUG", storage.getStorageList().get(0).toString());
+        //Log.d("DEBUG", storage.getStorageList().get(0).toString());
 
     }
 
@@ -240,21 +250,48 @@ public class AddEditIngredientFragment extends Fragment {
         location = locationSpinner.getSelectedItem().toString();
         unit = unitSpinner.getSelectedItem().toString();
         category = categorySpinner.getSelectedItem().toString();
-        Log.d("DEBUG", location);
-        Log.d("DEBUG", unit);
         Ingredient ingredient = new Ingredient(description, location,
                 unit, category, amount, bestBefore);
-        Log.d("DEBUG", ingredient.toString());
         if (item == null) {
             storage.addIngredient(ingredient);
             Log.i("DEBUG", "Added Ingredient!");
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                db.collection("storages")
+                    .document(user.getUid())
+                    .collection("ingredients")
+                    .add(ingredient);
+            }
         }
         else {
+
             Bundle result = new Bundle();
             result.putSerializable("new_item", ingredient);
             requireActivity().getSupportFragmentManager()
                     .setFragmentResult("editIngredient", result);
             Log.i("DEBUG", "Edited Ingredient!");
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            CollectionReference cr = db.collection("storages")
+                    .document(user.getUid())
+                    .collection("ingredients");
+            Query query = cr
+                    .whereEqualTo("description", item.getDescription())
+                    .whereEqualTo("amount", item.getAmount())
+                    .whereEqualTo("category", item.getCategory())
+                    .whereEqualTo("unit", item.getUnit());
+            query.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("DEBUG", document.getId() + " => " + document.getData());
+                        cr.document(document.getId()).set(ingredient);
+                    }
+                } else {
+                    Log.d("DEBUG", "Error getting documents: ", task.getException());
+                }
+            });
+
         }
         floatingActionButton.show();
         requireActivity().getSupportFragmentManager().popBackStackImmediate();

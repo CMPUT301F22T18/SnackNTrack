@@ -1,4 +1,4 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.controllers;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Storage;
+import com.cmput301f22t18.snackntrack.views.storage.AddEditIngredientFragment;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -59,7 +64,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             fm.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragment_container_view, AddEditIngredientFragment.class, bundle)
-                    .addToBackStack("AddIngredient")
+                    .addToBackStack("EditIngredient")
                     .commit();
 
         };
