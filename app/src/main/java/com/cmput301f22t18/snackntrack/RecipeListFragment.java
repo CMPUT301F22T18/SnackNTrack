@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -93,12 +94,14 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     }
 
     /**
-     * This method is called when the user click an item in the recipe list
+     * This method is called when the user click an item in the recipe list.
+     * It moves the user to ViewRecipeActivity
      * @param position the position of the item
      */
     @Override
     public void onNoteClick(int position) {
-        //TODO: start an activity to view the recipe that was clicked
-        //Toast.makeText(this.getContext(), "item clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ViewRecipeActivity.class);
+        intent.putExtra("recipe", recipeList.getRecipeList().get(position));
+        startActivity(intent);
     }
 }

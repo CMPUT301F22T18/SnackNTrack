@@ -156,11 +156,16 @@
 
             <ImageButton
                 android:id="@+id/view_recipe_delete_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/view_recipe_comments"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="24dp"
+                android:paddingVertical="8dp"
+                android:src="@drawable/ic_baseline_clear_24"
+                android:background="@drawable/custom_no_button"
+                android:contentDescription="Delete recipe button for view recipe" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
