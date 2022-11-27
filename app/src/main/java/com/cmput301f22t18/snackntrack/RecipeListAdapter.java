@@ -17,13 +17,6 @@ import java.util.ArrayList;
 
 /**
  * This class is a custom adapter for the recipe list.
-<<<<<<< HEAD
- * Attributes:
- * recipeArrayList {@link ArrayList< Recipe >}
- * context {@link Context}
-=======
- * Attributes: recipeArrayList, context, myOnNoteListener
->>>>>>> 88c2856 (fixed UI for recipeList cards, fixed Recipe empty constructor, added Glide library (not sure about AppGlideModule), trying to process image within RecipeListAdapter)
  *
  * @author Casper Nguyen
  */
