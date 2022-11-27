@@ -10,6 +10,7 @@
     <color name="gray_300">#D3D3D3</color>
     <color name="gray_200">#F5F3F4</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green_300">#81C784</color>
 
     <!-- Label color. -->
     <color name="blue">#2AB2DD</color>
