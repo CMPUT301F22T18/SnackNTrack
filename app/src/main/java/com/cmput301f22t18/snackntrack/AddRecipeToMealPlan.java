@@ -40,6 +40,7 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         recyclerView = v.findViewById(R.id.meal_plan_add_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
 
+        //TODO: clicking on a recipe should add it to meal plan
     return v;
     }
 

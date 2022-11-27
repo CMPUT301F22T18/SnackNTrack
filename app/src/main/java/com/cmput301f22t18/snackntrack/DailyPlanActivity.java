@@ -65,7 +65,7 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
         recyclerView = v.findViewById(R.id.recipe_list_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
 
-
+        //gets list of ingredients (but from storage, not meal plans)
         storage = new Storage();
         //insertTestStorage();
         FirebaseFirestore db = FirebaseFirestore.getInstance();

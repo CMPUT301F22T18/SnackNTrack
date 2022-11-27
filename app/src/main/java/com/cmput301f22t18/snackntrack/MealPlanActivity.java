@@ -49,12 +49,14 @@ public class MealPlanActivity extends Fragment {
 
         cal = v.findViewById(R.id.calendarView);
 
+        // when a date on calender is pressed
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
 
+                // get date pressed
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
                 Date date = null;
                 try {
@@ -69,7 +71,7 @@ public class MealPlanActivity extends Fragment {
                 dateBundle.putSerializable("Date",date);
                 dailyPlanActivity.setArguments(dateBundle);
 
-
+                //firebase, get meal plan for user, then get daily plan based on date
                 Timestamp ts =new Timestamp(date);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
