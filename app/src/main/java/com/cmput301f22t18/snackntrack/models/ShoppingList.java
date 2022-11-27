@@ -1,4 +1,8 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.models;
+
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientCategoryComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientComparator;
+import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientDescriptionComparator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,17 +59,33 @@ public class ShoppingList {
      * @param mealPlan - the user's MealPlan
      * @param storage - the user's Storage
      */
+    // Issue: ingredients not mutable, so will change ingredients in the Storage and MealPlan while calculating List
     public void calculateList(MealPlan mealPlan, Storage storage) {
         // Get a list of all ingredients in the user's MealPlan
         ArrayList<Ingredient> neededIngredients = calculateNeeded(mealPlan);
-        // Check which of those ingredients is not in the storage
+        // Get a list of all ingredients in the user's Storage (Needs to be a copy, so the original list is not altered)
+        ArrayList<Ingredient> storageIngredients = new ArrayList<Ingredient>(storage.getStorageList());
+        // Check if each needed ingredient needs to be shopped for
         for (int i = 0; i < neededIngredients.size(); i++) {
             // Check if the ingredient exists within the storage
-            if () {
-                // If it does, check if there is enough
-            }
-            else {
-                this.addShoppingIngredient(neededIngredients.get(i));
+            for (int j = 0; j < storageIngredients.size(); j++) {
+                if (Objects.equals(neededIngredients.get(i).getDescription(), storageIngredients.get(j).getDescription())) {
+                    // If it does, check if there is enough
+                    if (storageIngredients.get(j).getAmount() >= neededIngredients.get(i).getAmount()) {
+                        // Successful find; subtract amount from storageIngredients
+                        storageIngredients.get(j).setAmount(storageIngredients.get(j).getAmount() - neededIngredients.get(i).getAmount());
+                    }
+                    else {
+                        // Partially successful find; set amount in storage to zero, and add remainder to shopping list
+                        neededIngredients.get(i).setAmount(neededIngredients.get(i).getAmount() - storageIngredients.get(j).getAmount());
+                        storageIngredients.get(j).setAmount(0);
+                        this.addShoppingIngredient(neededIngredients.get(i));
+                    }
+                }
+                else {
+                    // Unsuccessful find; add ingredient in its entirety to shopping list
+                    this.addShoppingIngredient(neededIngredients.get(i));
+                }
             }
         }
     }
@@ -123,7 +143,7 @@ public class ShoppingList {
     public void purchased(Ingredient ingredient, Storage storage) {
         // Remove from the shoppingList
         shoppingList.remove(ingredient);
-        // Add the ingredient to the Storage
+        // Add ingredient to storage
         storage.addIngredient(ingredient);
     }
 

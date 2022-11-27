@@ -4,10 +4,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+
+import com.cmput301f22t18.snackntrack.models.ShoppingList;
+import com.cmput301f22t18.snackntrack.models.Storage;
 
 import java.util.ArrayList;
 
@@ -19,7 +25,8 @@ import java.util.ArrayList;
  * @see RecyclerView
  */
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
-    private ArrayList<Ingredient> localShoppingList;
+    private ShoppingList localShoppingList;
+    private Storage storage;
 
     /**
      * Initialize the dataset of the Adapter.
@@ -27,8 +34,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
      * @param shoppingList - The user's ShoppingList
      * by RecyclerView.
      */
-    public ShoppingListAdapter(ShoppingList shoppingList) {
-        localShoppingList = shoppingList.getShoppingList();
+    public ShoppingListAdapter(ShoppingList shoppingList, Storage storage) {
+        localShoppingList = shoppingList;
     }
 
     /**
@@ -53,12 +60,17 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getDescriptionTextView().setText(localShoppingList.get(position).getDescription());
-        holder.getCategoryTextView().setText(localShoppingList.get(position).getCategory());
-        String amountUnit = localShoppingList.get(position).getAmount() + " " +
-                localShoppingList.get(position).getUnit();
+        holder.getDescriptionTextView().setText(localShoppingList.getShoppingList().get(position).getDescription());
+        holder.getCategoryTextView().setText(localShoppingList.getShoppingList().get(position).getCategory());
+        String amountUnit = localShoppingList.getShoppingList().get(position).getAmount() + " " +
+                localShoppingList.getShoppingList().get(position).getUnit();
         holder.getAmountUnitTextView().setText(amountUnit);
-
+        holder.getIngredientCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                localShoppingList.purchased(localShoppingList.getShoppingList().get(holder.getBindingAdapterPosition()), storage);
+            }
+        });
     }
 
     /**
@@ -106,11 +118,12 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         }
 
         /**
-         * Get the ingredient Check Box View
-         * @return ingredient CheckBox
+         * Get Ingredient Check Box
+         * @return Ingredient Check Box
          */
-        public CheckBox getIngredientCheckBox() {return ingredientCheckBox;}
-
+        public CheckBox getIngredientCheckBox() {
+            return ingredientCheckBox;
+        }
     }
 
     /**
@@ -119,7 +132,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
      */
     @Override
     public int getItemCount() {
-        return localShoppingList.size();
+        return localShoppingList.getShoppingList().size();
     }
 }
 
