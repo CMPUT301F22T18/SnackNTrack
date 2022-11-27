@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddRecipeFragment">
+    tools:context=".AddEditRecipeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -174,7 +174,7 @@
             app:layout_constraintTop_toBottomOf="@id/servings_category_row" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/add_ingredient_recycler_view"
+            android:id="@+id/recipe_ingredient_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toBottomOf="@id/add_ingredient_to_recipe_button"
@@ -186,7 +186,7 @@
             android:layout_height="wrap_content"
             android:text="Comments"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_ingredient_recycler_view"/>
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_recycler_view"/>
 
         <EditText
             android:id="@+id/comments_edit_text"
