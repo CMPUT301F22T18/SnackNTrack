@@ -2,12 +2,14 @@ package com.cmput301f22t18.snackntrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,7 +17,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -28,7 +40,7 @@ import java.util.Date;
 public class MealPlanActivity extends Fragment {
 
     private CalendarView cal;
-    private int date;
+    private MealPlan mealplan;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +68,31 @@ public class MealPlanActivity extends Fragment {
                 Bundle dateBundle = new Bundle();
                 dateBundle.putSerializable("Date",date);
                 dailyPlanActivity.setArguments(dateBundle);
+
+
+                Timestamp ts =new Timestamp(date);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                assert(user != null);
+                String uid = user.getUid();
+                final String[] dailyPlanId = new String[1];
+                Log.d("TRY", "THIS IS A TEST");
+
+                //DOES NOT WORK. NO IDEA WHYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+                CollectionReference cf = db.collection("mealPlans")
+                        .document(uid).collection("mealPlanList");
+
+                cf.addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.w("Storage", "Listen failed.", error);
+                        return;
+                    }
+                    for (QueryDocumentSnapshot doc : value) {
+                        mealplan.addDailyPlan(doc.toObject(DailyPlan.class));
+                    }
+                    Log.w("ADDED: ", mealplan.getDailyPlan().get(0).getDate().toString(), error);
+                });
+
 
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container_main, dailyPlanActivity);

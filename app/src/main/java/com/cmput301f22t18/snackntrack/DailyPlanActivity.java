@@ -1,7 +1,7 @@
 package com.cmput301f22t18.snackntrack;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +11,18 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.Storage;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,17 +30,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnNoteListener {
+public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnNoteListener, DailyPlanAdapter.OnNoteListener {
 
     private MealPlan mealPlan;
     private DailyPlan dailyPlan;
     private RecipeListAdapter recipeListAdapter;
-    private StorageAdapter storageAdapter;
+    private DailyPlanAdapter dailyPlanAdapter;
     private RecyclerView recyclerView;
     private RecyclerView recyclerView2;
     private Button addIngredient;
     private Button addRecipe;
     private Storage storage;
+    String temp;
     private ArrayList<String> unit_list, location_list, category_list;
 
     @Override
@@ -51,7 +57,9 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
         mealPlan = new MealPlan();
         dailyPlan = new DailyPlan();
         //dailyPlan = mealPlan.getDailyPlanAtDay(date);
-        insertTestRecipes(date);
+        //insertTestRecipes(date);
+
+
 
         recipeListAdapter = new RecipeListAdapter(this.getContext(), dailyPlan.getDailyPlanRecipes(), this);
         recyclerView = v.findViewById(R.id.recipe_list_recycler_view);
@@ -59,23 +67,33 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
 
 
         storage = new Storage();
+        //insertTestStorage();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert(user != null);
+        String uid = user.getUid();
 
-        unit_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.units_array)));
-        location_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_locations_array)));
-        category_list = new ArrayList<>
-                (Arrays.asList(getResources().getStringArray(R.array.ingredient_categories_array)));
+        CollectionReference cf = db.collection("storages")
+                .document(uid).collection("ingredients");
 
-        // DOES NOT WORK. error from storage adapter
-        FragmentManager Manager = getParentFragmentManager();
-        storageAdapter = new StorageAdapter(storage, Manager, this,
-                unit_list, location_list, category_list);
+        cf.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w("Storage", "Listen failed.", error);
+                return;
+            }
+            //storage.clearStorage();
+            for (QueryDocumentSnapshot doc : value) {
+                storage.addIngredient(doc.toObject(Ingredient.class));
+            }
+            dailyPlanAdapter.notifyDataSetChanged();
+        });
+        //Toast.makeText(this.getContext(), storage.getStorageList().get(0).getDescription(), Toast.LENGTH_SHORT).show();
+        dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), storage.getStorageList(), this);
         recyclerView2 = v.findViewById(R.id.ingredient_list_recycler_view);
-        recyclerView2.setAdapter(storageAdapter);
+        recyclerView2.setAdapter(dailyPlanAdapter);
         recyclerView2.setLayoutManager(
                 new LinearLayoutManager(this.getContext()));
-        insertTestStorage();
+
         addIngredient = v.findViewById(R.id.add_ingredient_button);
         addIngredient.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -134,10 +152,11 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
         }
         ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
         Ingredient bread = new Ingredient("Bread", "Fridge","pack", "Bakery", 2, date);
-
+        Ingredient cheese = new Ingredient("Cheese", "Fridge","pack", "Bakery", 1, date);
         ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
         in2.add(new Ingredient("Ace", "pieces", "C", 2));
         storage.addIngredient(bread);
+        storage.addIngredient(cheese);
         //storage.addIngredient(new Ingredient("Ace", "pieces", "C", 2));
 
     }
@@ -148,4 +167,9 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
 
     }
 
+    @Override
+    public void onIngredientNoteClick(int position) {
+        Toast.makeText(this.getContext(), storage.getStorageList().get(position).getDescription(), Toast.LENGTH_SHORT).show();
+
+    }
 }
