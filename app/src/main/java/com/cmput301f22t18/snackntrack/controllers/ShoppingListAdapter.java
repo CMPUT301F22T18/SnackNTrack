@@ -1,4 +1,4 @@
-package com.cmput301f22t18.snackntrack;
+package com.cmput301f22t18.snackntrack.controllers;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 
 import com.cmput301f22t18.snackntrack.models.ShoppingList;
@@ -26,7 +27,8 @@ import java.util.ArrayList;
  */
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
     private ShoppingList localShoppingList;
-    private Storage storage;
+    private Storage localStorage;
+    private ArrayList<Ingredient> checkedIngredients;
 
     /**
      * Initialize the dataset of the Adapter.
@@ -34,8 +36,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
      * @param shoppingList - The user's ShoppingList
      * by RecyclerView.
      */
-    public ShoppingListAdapter(ShoppingList shoppingList, Storage storage) {
+    public ShoppingListAdapter(ShoppingList shoppingList) {
         localShoppingList = shoppingList;
+        checkedIngredients = new ArrayList<Ingredient>();
     }
 
     /**
@@ -68,9 +71,24 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         holder.getIngredientCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                localShoppingList.purchased(localShoppingList.getShoppingList().get(holder.getBindingAdapterPosition()), storage);
+                if (isChecked) {
+                    // If box is checked, add ingredient to checked list
+                    checkedIngredients.add(localShoppingList.getShoppingList().get(position));
+                }
+                else {
+                    // If unchecked, remove from the checked list
+                    checkedIngredients.remove(localShoppingList.getShoppingList().get(position));
+                }
             }
         });
+    }
+
+    /**
+     * Gets the array list of checked ingredients
+     * @return checkedIngredients array list
+     */
+    public ArrayList<Ingredient> getCheckedIngredients() {
+        return checkedIngredients;
     }
 
     /**

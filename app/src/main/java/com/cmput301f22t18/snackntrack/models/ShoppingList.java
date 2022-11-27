@@ -4,6 +4,7 @@ import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.Ingred
 import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientComparator;
 import com.cmput301f22t18.snackntrack.controllers.comparators.ingredients.IngredientDescriptionComparator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -137,14 +138,12 @@ public class ShoppingList {
     }
 
     /**
-     * This method adds a successfully purchased ingredient to storage and removes it from the shoppingList
+     * This method removes a successfully purchased ingredient from the shoppingList
      * @param ingredient - ingredient that was purchased
      */
-    public void purchased(Ingredient ingredient, Storage storage) {
+    public void removeIngredient(Ingredient ingredient) {
         // Remove from the shoppingList
         shoppingList.remove(ingredient);
-        // Add ingredient to storage
-        storage.addIngredient(ingredient);
     }
 
     /**
