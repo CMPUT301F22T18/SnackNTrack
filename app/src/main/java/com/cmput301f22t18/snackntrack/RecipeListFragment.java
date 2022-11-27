@@ -20,8 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * This class is a fragment for the recipe list.
  *
  * @author SCWinter259
- * @see RecipeList
- * @see RecipeListAdapter
  */
 public class RecipeListFragment extends Fragment implements RecipeListAdapter.OnNoteListener{
     private static final String ARG_TEXT = "recipeList";

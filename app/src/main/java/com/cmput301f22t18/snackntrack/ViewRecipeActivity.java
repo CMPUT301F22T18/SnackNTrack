@@ -12,6 +12,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 
+/**
+ * An activity to view the recipe
+ *
+ * @author Casper Nguyen
+ */
 public class ViewRecipeActivity extends AppCompatActivity {
     Recipe recipe;
     ImageButton backButton;
@@ -61,7 +66,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: get end the activity, get people back to where they were before
+                // end the activity, get people back to where they were before
+                finish();
             }
         });
 

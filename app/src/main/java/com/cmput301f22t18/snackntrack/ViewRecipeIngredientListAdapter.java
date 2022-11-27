@@ -14,10 +14,20 @@ import com.cmput301f22t18.snackntrack.models.Ingredient;
 
 import java.util.ArrayList;
 
+/**
+ * Custom adapter for the ingredient list inside view recipe activity
+ *
+ * @author Casper Nguyen
+ */
 public class ViewRecipeIngredientListAdapter extends ArrayAdapter {
     private final ArrayList<Ingredient> ingredients;
     private final Context context;
 
+    /**
+     * Constructor for the adapter
+     * @param context Context
+     * @param ingredients an ArrayList of Ingredients
+     */
     public ViewRecipeIngredientListAdapter(Context context, ArrayList<Ingredient> ingredients) {
         super(context, 0, ingredients);
         this.context = context;
