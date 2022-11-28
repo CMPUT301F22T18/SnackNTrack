@@ -82,6 +82,7 @@ public class Ingredient implements Serializable {
      * @return the location
      */
     public String getLocation() {
+        if (location == null) return null;
         return location;
     }
 
@@ -90,6 +91,7 @@ public class Ingredient implements Serializable {
      * @return the best before date
      */
     public Date getBestBeforeDate() {
+        if (bestBeforeDate == null) return null;
         return bestBeforeDate.toDate();
     }
 
@@ -154,7 +156,9 @@ public class Ingredient implements Serializable {
      * @param bestBeforeDate the best before date of the ingredient
      */
     public void setBestBeforeDate(Date bestBeforeDate) {
-        this.bestBeforeDate = new Timestamp(bestBeforeDate);
+        if (bestBeforeDate != null)
+            this.bestBeforeDate = new Timestamp(bestBeforeDate);
+        else this.bestBeforeDate = null;
     }
 
     /**
