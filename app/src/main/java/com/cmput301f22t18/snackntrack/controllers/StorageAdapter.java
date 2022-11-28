@@ -1,73 +1,37 @@
 package com.cmput301f22t18.snackntrack.controllers;
 
-import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Storage;
-import com.cmput301f22t18.snackntrack.views.storage.AddEditIngredientFragment;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * This class represents the Storage Adapter for the Storage Activity Recyler View
  */
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
-    private ArrayList<Ingredient> localDataSet;
-    private final OnItemLongClickListener listener;
+    private final ArrayList<Ingredient> localDataSet;
 
-
-    public interface OnItemLongClickListener {
-        void onClick(Ingredient item);
-    }
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param storage The Storage containing the data to be populated
      * by RecyclerView.
      */
-    public StorageAdapter(Storage storage, FragmentManager fm,
-                          LifecycleOwner owner,
-                          ArrayList<String> unit_list, ArrayList<String> location_list,
-                          ArrayList<String> category_list) {
+    public StorageAdapter(Storage storage) {
         localDataSet = storage.getStorageList();
-        listener = item -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("item", (Serializable) item);
-            int pos = localDataSet.indexOf(item);
-            bundle.putInt("position", pos);
-            bundle.putSerializable("storage", (Serializable) storage);
-            bundle.putStringArrayList("units", unit_list);
-            bundle.putStringArrayList("locations", location_list);
-            bundle.putStringArrayList("categories", category_list);
-            bundle.putString("function", "Edit");
-            fm.setFragmentResultListener("editIngredient", owner,
-                    (requestKey, result) -> {
-                        Ingredient new_item = (Ingredient) result.getSerializable("new_item");
-                        storage.setIngredient(pos, new_item);
-                        localDataSet.set(pos, new_item);
-                        notifyItemChanged(pos);
-                    });
-            fm.beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, AddEditIngredientFragment.class, bundle)
-                    .addToBackStack("EditIngredient")
-                    .commit();
-
-        };
     }
 
     /**
@@ -80,7 +44,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.storage_row_item, parent, false);
+                .inflate(R.layout.ingredient_detail_card, parent, false);
 
         return new ViewHolder(view);
     }
@@ -95,21 +59,17 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
         holder.getDescriptionTextView().setText(localDataSet.get(position).getDescription());
         holder.getLocationTextView().setText(localDataSet.get(position).getLocation());
         holder.getCategoryTextView().setText(localDataSet.get(position).getCategory());
-        String amountUnit = localDataSet.get(position).getAmount() + " " +
-                localDataSet.get(position).getUnit();
-        holder.getAmountUnitTextView().setText(amountUnit);
+        holder.getAmountTextView().setText(String.format(Locale.CANADA, "%d",
+                localDataSet.get(position).getAmount()));
+        holder.getUnitTextView().setText(localDataSet.get(position).getUnit());
         Date bbf = localDataSet.
                 get(position).
                 getBestBeforeDate();
-        LocalDate date = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            date = bbf.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-        String dateText = "Best Before: " + date.toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+        String dateText = "Best Before: " + simpleDateFormat.format(bbf);
         holder.
                 getBestBeforeDateTextView().
                 setText(dateText);
-        holder.bind(localDataSet.get(position), listener);
     }
 
 
@@ -128,11 +88,12 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
     /**
      * Provide a reference to the Card View of each item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView descriptionTextView;
         private final TextView locationTextView;
         private final TextView categoryTextView;
-        private final TextView amountUnitTextView;
+        private final TextView amountTextView;
+        private final TextView unitTextView;
         private final TextView bestBeforeDateTextView;
 
         public ViewHolder(View view) {
@@ -141,16 +102,11 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             descriptionTextView = view.findViewById(R.id.ingredient_description_text_view);
             locationTextView = view.findViewById(R.id.ingredient_location_text_view);
             categoryTextView = view.findViewById(R.id.ingredient_category_text_view);
-            amountUnitTextView = view.findViewById(R.id.ingredient_amount_unit_text_view);
+            amountTextView = view.findViewById(R.id.ingredient_amount_text_view);
+            unitTextView = view.findViewById(R.id.ingredient_unit_text_view);
             bestBeforeDateTextView = view.findViewById(R.id.ingredient_best_before_date_text_view);
         }
 
-        public void bind(final Ingredient item, final OnItemLongClickListener listener) {
-            itemView.setOnLongClickListener(v -> {
-                listener.onClick(item);
-                return true;
-            });
-        }
 
         /**
          * Get Description Text View
@@ -169,11 +125,19 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
         }
 
         /**
-         * Get Amount + Unit Text View
-         * @return Amount + Unit Text View
+         * Get Amount Text View
+         * @return Amount Text View
          */
-        public TextView getAmountUnitTextView() {
-            return amountUnitTextView;
+        public TextView getAmountTextView() {
+            return amountTextView;
+        }
+
+        /**
+         * Get Amount Text View
+         * @return Amount Text View
+         */
+        public TextView getUnitTextView() {
+            return unitTextView;
         }
 
         /**
