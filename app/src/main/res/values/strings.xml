@@ -87,4 +87,5 @@
     <string name="add_an_ingredient_open_date_picker">Open Date Picker</string>
     <string name="ingredient_bbf_hint">Best Before Date</string>
     <string name="add_an_ingredient_description_hint">Description</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
 </resources>
