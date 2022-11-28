@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.SnackNTrack" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -8,7 +8,7 @@
         <item name="colorAccent">?attr/colorPrimary</item>
         <item name="colorSecondary">@color/red_700</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="materialCalendarTheme">@style/ThemeOverlay.SnackNTrack.DatePicker</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
@@ -28,7 +28,9 @@
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
 
         <item name="floatingActionButtonStyle">@style/Widget.SnackNTrack.FloatingActionButton</item>
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackAndTrack.SmallComponent</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackNTrack.SmallComponent</item>
+        <item name="materialCardViewStyle">@style/Widget.SnackNTrack.CardView</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.SnackNTrack.DatePicker</item>
     </style>
 
 </resources>

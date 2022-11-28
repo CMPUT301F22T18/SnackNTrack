@@ -1,31 +1,19 @@
 package com.cmput301f22t18.snackntrack.models;
+
+import java.util.ArrayList;
+
 public class AppUser {
-    String name;
-    String email;
+    ArrayList<String> units;
 
     public AppUser() {
-        name = "";
-        email = "";
+        units = new ArrayList<>();
     }
 
-    public AppUser(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public ArrayList<String> getUnits() {
+        return units;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
+    public void setUnits(ArrayList<String> units) {
+        this.units = units;
     }
 }

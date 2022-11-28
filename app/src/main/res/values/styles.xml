@@ -3,18 +3,18 @@
     <style name="ThemeOverlay.SnackNTrack.DatePicker" parent="@style/ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorPrimary">@color/red_900</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackAndTrack.SmallComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SnackAndTrack.MediumComponent</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackNTrack.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SnackNTrack.MediumComponent</item>
     </style>
 
-    <style name="ShapeAppearance.SnackAndTrack.SmallComponent"
+    <style name="ShapeAppearance.SnackNTrack.SmallComponent"
         parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
 
     </style>
 
-    <style name="ShapeAppearance.SnackAndTrack.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+    <style name="ShapeAppearance.SnackNTrack.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerSize">16dp</item>
     </style>
 
@@ -25,5 +25,19 @@
     <style name="ThemeOverlay.SnackNTrack.FloatingActionButton" parent="">
         <item name="colorContainer">@color/red_900</item>
         <item name="colorOnContainer">@color/white</item>
+    </style>
+
+    <style name="Widget.SnackNTrack.CardView" parent="Widget.Material3.CardView.Outlined">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.SnackNTrack.Card</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SnackNTrack.MediumComponent</item>
+    </style>
+
+    <style name="ThemeOverlay.SnackNTrack.Card" parent="">
+        <item name="colorSecondary">@color/red_900</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
+        <item name="colorOutline">@color/gray_400</item>
+        <item name="android:checkable">true</item>
     </style>
 </resources>

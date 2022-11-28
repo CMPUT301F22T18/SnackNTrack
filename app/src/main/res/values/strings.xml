@@ -88,4 +88,8 @@
     <string name="ingredient_bbf_hint">Best Before Date</string>
     <string name="add_an_ingredient_description_hint">Description</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="pick_a_unit">Pick a Unit</string>
+    <string name="add_a_unit">Add a Unit</string>
+    <string name="edit_unit">Edit Unit</string>
+    <string name="confirm_unit">Confirm Unit</string>
 </resources>
