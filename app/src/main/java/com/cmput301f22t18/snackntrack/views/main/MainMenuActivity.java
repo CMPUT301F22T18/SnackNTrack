@@ -13,6 +13,7 @@ import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
+import com.cmput301f22t18.snackntrack.views.shoppingList.ShoppingListFragment;
 import com.cmput301f22t18.snackntrack.views.storage.StorageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,7 @@ public class MainMenuActivity extends AppCompatActivity {
     StorageFragment storageFragment;
     RecipeListFragment recipeListFragment;
     MealPlanFragment mealPlanFragment;
+    ShoppingListFragment shoppingListFragment;
     String TAG = "DEBUG";
 
     @Override
@@ -39,6 +41,7 @@ public class MainMenuActivity extends AppCompatActivity {
         storageFragment = new StorageFragment();
         mealPlanFragment = new MealPlanFragment();
         recipeListFragment = new RecipeListFragment();
+        shoppingListFragment = new ShoppingListFragment();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -46,6 +49,7 @@ public class MainMenuActivity extends AppCompatActivity {
             final int id_storage = R.id.storage;
             final int id_recipes = R.id.recipes;
             final int id_mealPlan = R.id.mealPlan;
+            final int id_shoppingList = R.id.shoppingList;
             bottomNavigationView.setOnItemSelectedListener(item -> {
                 switch (item.getItemId()) {
                     case id_storage:
@@ -67,6 +71,13 @@ public class MainMenuActivity extends AppCompatActivity {
                                 .beginTransaction()
                                 .replace(R.id.fragment_container_main,
                                         mealPlanFragment)
+                                .commit();
+                        return true;
+                    case id_shoppingList:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container_main,
+                                        shoppingListFragment)
                                 .commit();
                         return true;
                 }

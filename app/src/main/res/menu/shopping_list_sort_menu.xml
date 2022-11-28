@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/shopping_list_sort_default"
+        android:title="@string/default_option" />
+
+    <item android:id="@+id/shopping_list_sort_description"
+        android:title="@string/description_edit_text_title"/>
+
+    <item android:id="@+id/shopping_list_sort_category"
+        android:title="@string/category"/>
+</menu>
