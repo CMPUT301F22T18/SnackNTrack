@@ -43,11 +43,10 @@
                 android:contentDescription="@string/sort_button_for_recipe_list" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shopping_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="480dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
         </androidx.recyclerview.widget.RecyclerView>
 

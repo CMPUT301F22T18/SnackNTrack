@@ -20,9 +20,15 @@ import com.cmput301f22t18.snackntrack.R;
  * @author Charlotte Kalutycz
  */
 public class ClearShoppingListFragment extends DialogFragment {
+    Boolean clear;
 
     public ClearShoppingListFragment() {
         // Empty constructor for ClearShoppingListFragment
+    }
+
+    public ClearShoppingListFragment(Boolean clear) {
+        // Empty constructor for ClearShoppingListFragment
+        this.clear = clear;
     }
 
     /**
@@ -42,6 +48,7 @@ public class ClearShoppingListFragment extends DialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clear = Boolean.TRUE;
                 dismiss();
             }
         });

@@ -8,14 +8,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cmput301f22t18.snackntrack.DailyPlan;
 import com.cmput301f22t18.snackntrack.MealPlan;
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.controllers.ShoppingListAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
@@ -47,7 +52,7 @@ import java.util.Date;
  * @see ShoppingList
  * @see ShoppingListAdapter
  */
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
     private static final String ARG_TEXT = "ShoppingList";
     private String TAG;
 
@@ -62,15 +67,12 @@ public class ShoppingListFragment extends Fragment {
     ArrayList<Ingredient> ingredientArrayList;
     ArrayList<Recipe> recipeArrayList;
     ArrayList<DocumentReference> ingredientDR;
-    ArrayList<DocumentReference> recipeDR;
     ArrayList<DocumentReference> dailyPlanDR;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -148,6 +150,11 @@ public class ShoppingListFragment extends Fragment {
         TAG = "MealPlan";
         mealPlan = new MealPlan();
 
+        ingredientArrayList = new ArrayList<Ingredient>();
+        recipeArrayList = new ArrayList<Recipe>();
+        ingredientDR = new ArrayList<DocumentReference>();
+        dailyPlanDR = new ArrayList<DocumentReference>();
+
         cf = db.collection("mealPlans")
                 .document(uid).collection("mealPlanList");
 
@@ -161,41 +168,47 @@ public class ShoppingListFragment extends Fragment {
                 doc.get("date");
                 ArrayList<DocumentReference> ingredients = (ArrayList<DocumentReference>) doc.get("ingredients");
                 ArrayList<DocumentReference> recipes = (ArrayList<DocumentReference>) doc.get("recipes");
-                ingredientDR.addAll(ingredients);
                 DailyPlan dailyPlan = new DailyPlan();
-                for (DocumentReference ingredient : ingredients) {
-                    ingredient.addSnapshotListener((value2, error2) -> {
-                        Ingredient ingredient2 = value2.toObject(Ingredient.class);
-                        ingredientArrayList.add(ingredient2);
-                        dailyPlan.addIngredient(ingredient2);
-                        if (dailyPlanDR.contains(doc.getReference())) {
-                            int position = dailyPlanDR.indexOf(doc.getReference());
-                            mealPlan.getDailyPlan().get(position).addIngredient(ingredient2);
-                            shoppingList.calculateList(mealPlan, storage);
-                        }
-                        else {
-                            dailyPlanDR.add(doc.getReference());
-                            mealPlan.addDailyPlan(dailyPlan);
-                            shoppingList.calculateList(mealPlan, storage);
-                        }
-                    });
+                if (ingredients != null) {
+                    ingredientDR.addAll(ingredients);
+                    for (DocumentReference ingredient : ingredients) {
+                        ingredient.addSnapshotListener((value2, error2) -> {
+                            if (value2 != null) {
+                                Ingredient ingredient2 = value2.toObject(Ingredient.class);
+                                ingredientArrayList.add(ingredient2);
+                                dailyPlan.addIngredient(ingredient2);
+                                if (dailyPlanDR.contains(doc.getReference(  ))) {
+                                    int position = dailyPlanDR.indexOf(doc.getReference());
+                                    mealPlan.getDailyPlan().get(position).addIngredient(ingredient2);
+                                    shoppingList.calculateList(mealPlan, storage);
+                                } else {
+                                    dailyPlanDR.add(doc.getReference());
+                                    mealPlan.addDailyPlan(dailyPlan);
+                                    shoppingList.calculateList(mealPlan, storage);
+                                }
+                            }
+                        });
+                    }
                 }
-                for (DocumentReference recipe : recipes) {
-                    recipe.addSnapshotListener((value2, error2) -> {
-                        Recipe recipe2 = value2.toObject(Recipe.class);
-                        recipeArrayList.add(recipe2);
-                        dailyPlan.addRecipe(recipe2);
-                        if (dailyPlanDR.contains(doc.getReference())) {
-                            int position = dailyPlanDR.indexOf(doc.getReference());
-                            mealPlan.getDailyPlan().get(position).addRecipe(recipe2);
-                            shoppingList.calculateList(mealPlan, storage);
-                        }
-                        else {
-                            dailyPlanDR.add(doc.getReference());
-                            mealPlan.addDailyPlan(dailyPlan);
-                            shoppingList.calculateList(mealPlan, storage);
-                        }
-                    });
+                if (recipes != null) {
+                    for (DocumentReference recipe : recipes) {
+                        recipe.addSnapshotListener((value2, error2) -> {
+                            if (value2 != null) {
+                                Recipe recipe2 = value2.toObject(Recipe.class);
+                                recipeArrayList.add(recipe2);
+                                dailyPlan.addRecipe(recipe2);
+                                if (dailyPlanDR.contains(doc.getReference())) {
+                                    int position = dailyPlanDR.indexOf(doc.getReference());
+                                    mealPlan.getDailyPlan().get(position).addRecipe(recipe2);
+                                    shoppingList.calculateList(mealPlan, storage);
+                                } else {
+                                    dailyPlanDR.add(doc.getReference());
+                                    mealPlan.addDailyPlan(dailyPlan);
+                                    shoppingList.calculateList(mealPlan, storage);
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -203,26 +216,30 @@ public class ShoppingListFragment extends Fragment {
         // Create instance of the ShoppingListAdapter
         shoppingListAdapter = new ShoppingListAdapter(shoppingList);
         recyclerView.setAdapter(shoppingListAdapter);
+        shoppingList.sort(("Description"));
+        shoppingListAdapter.notifyDataSetChanged();
 
         // When the sort button is clicked, user can choose from description or category
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: let user select their way to sort the list
-                //Toast.makeText(v.getContext(), "sort button clicked", Toast.LENGTH_SHORT).show();
+                PopupMenu popup = new PopupMenu(ShoppingListFragment.this.getContext(), v);
+                popup.setOnMenuItemClickListener(ShoppingListFragment.this);
+                popup.inflate(R.menu.shopping_list_sort_menu);
+                popup.show();
             }
         });
 
         // When user clicks the green button, confirms whether or not they would like to move selected ingredients to the storage
         addButton.setOnClickListener(new View.OnClickListener() {
-            boolean clear;
+            Boolean clear = new Boolean(false);
             @Override
             public void onClick(View v) {
                 // Display Confirmation
-                new ClearShoppingListFragment().show(
+                new ClearShoppingListFragment(clear).show(
                         getChildFragmentManager(), ClearShoppingListFragment.TAG);
 
-                if (clear) {
+                if (clear.booleanValue()) {
                     // Get all ingredients currently checked
                     ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
                     // Add these ingredients to the storage, and remove from ShoppingList
@@ -263,6 +280,32 @@ public class ShoppingListFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.shopping_list_sort_description) {
+            Toast.makeText(this.getContext(), "Description", Toast.LENGTH_SHORT).show();
+            shoppingList.sort(("Description"));
+            shoppingListAdapter.notifyDataSetChanged();
+            return true;
+        }
+        else if(id == R.id.shopping_list_sort_category) {
+            Toast.makeText(this.getContext(), "Category", Toast.LENGTH_SHORT).show();
+            shoppingList.sort(("Category"));
+            shoppingListAdapter.notifyDataSetChanged();
+            return true;
+        }
+        else if(id == R.id.shopping_list_sort_default) {
+            Toast.makeText(this.getContext(), "Default", Toast.LENGTH_SHORT).show();
+            shoppingList.sort(("Default"));
+            shoppingListAdapter.notifyDataSetChanged();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ingredient_category"
-                    android:background="@drawable/category_label"
+                    android:background="@drawable/custom_label"
                     android:textColor="@color/white"
                     android:fontFamily="@font/nunito"
                     app:layout_constraintRight_toRightOf="parent"

@@ -81,4 +81,5 @@
     <string name="sort_hint">Sort</string>
     <string name="add_an_ingredient">Add an Ingredient</string>
     <string name="ingredient_unit">Unit</string>
+    <string name="default_option">Default</string>
 </resources>

@@ -74,9 +74,14 @@ public class ShoppingList {
      * @return sortedShoppingList
      */
     public ArrayList<Ingredient> sort(String key) {
-        ArrayList<Ingredient> sortedShoppingList = shoppingList;
-        Collections.sort(sortedShoppingList, comparators.get(key));
-        return sortedShoppingList;
+        if (key != "Default") {
+            ArrayList<Ingredient> sortedShoppingList = shoppingList;
+            Collections.sort(sortedShoppingList, comparators.get(key));
+            return sortedShoppingList;
+        }
+        else {
+            return shoppingList;
+        }
     }
 
     /**
@@ -142,16 +147,22 @@ public class ShoppingList {
                 recipeAmount = currentDailyPlan.getDailyPlanRecipes().size();
                 // Add all ingredients in the DailyPlan to the neededIngredients ArrayList
                 for (int j = 0; j < ingredientAmount; j++) {
-                    neededIngredients.add(currentDailyPlan.getDailyPlanIngredients().get(j));
+                    if (currentDailyPlan.getDailyPlanIngredients().get(j) != null && (currentDailyPlan.getDailyPlanIngredients().get(j).getDescription() != null && currentDailyPlan.getDailyPlanIngredients().get(j).getDescription() != null)) {
+                        neededIngredients.add(currentDailyPlan.getDailyPlanIngredients().get(j));
+                    }
                 }
                 // Check each Recipe in the DailyPlan
                 for (int k = 0; k < recipeAmount; k++) {
                     // Get the kth recipe and check how many ingredients it has
                     currentRecipe = currentDailyPlan.getDailyPlanRecipes().get(k);
-                    ingredientAmount = currentRecipe.getRecipeIngredients().size();
-                    // Add all ingredients in the Recipe to the neededIngredients ArrayList
-                    for (int l = 0; l < ingredientAmount; l++) {
-                        neededIngredients.add(currentRecipe.getRecipeIngredients().get(l));
+                    if (currentRecipe.getRecipeIngredients() != null) {
+                        ingredientAmount = currentRecipe.getRecipeIngredients().size();
+                        // Add all ingredients in the Recipe to the neededIngredients ArrayList
+                        for (int l = 0; l < ingredientAmount; l++) {
+                            if (currentRecipe.getRecipeIngredients().get(l) != null && (currentRecipe.getRecipeIngredients().get(l).getDescription() != null && currentRecipe.getRecipeIngredients().get(l).getCategory() != null)) {
+                                neededIngredients.add(currentRecipe.getRecipeIngredients().get(l));
+                            }
+                        }
                     }
                 }
             }
