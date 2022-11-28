@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,24 +16,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.models.RecipeList;
-import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * This class represent the a DailyPlanFragment fragment, Which displays the date, recipe and ingredient lists
+ * @author Areeba Fazal
+ */
 public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnNoteListener, DailyPlanAdapter.OnNoteListener {
 
     private MealPlan mealPlan;
     private DailyPlan dailyPlan;
     private RecipeListAdapter recipeListAdapter;
-    private RecipeList recipeList;
     private DailyPlanAdapter dailyPlanAdapter;
     private RecyclerView recyclerView;
     private RecyclerView recyclerView2;
@@ -41,8 +40,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
     private Button addRecipe;
     private Button scaleButton;
     private EditText scaleText;
-    private Storage storage;
-    String temp;
+    private TextView dateView;
     private String id;
     private ArrayList<DocumentReference> documentReferencesRecipies;
     private ArrayList<DocumentReference> documentReferencesIngredients;
@@ -52,22 +50,25 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_daily_plan, container, false);
 
+        // Get arguments passed from MealPlanActivity
         Bundle dateBundle = getArguments();
         Date date = (Date) dateBundle.getSerializable("Date");
-        id = (String) dateBundle.getSerializable("id");
-        Log.w("ID: ", date.toString());
+        SimpleDateFormat DateFor = new SimpleDateFormat("dd MMMM yyyy");
 
-        // Firebase, should get meal plan list based on date, from user not generate new
+        // Set date display
+        dateView = v.findViewById(R.id.date_text);
+        dateView.setText(DateFor.format(date));
+        id = (String) dateBundle.getSerializable("id");
+
         mealPlan = new MealPlan();
         dailyPlan = new DailyPlan();
 
+        // Set recipe recycler view
         recipeListAdapter = new RecipeListAdapter(this.getContext(), dailyPlan.getDailyPlanRecipes(), this);
         recyclerView = v.findViewById(R.id.recipe_list_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
 
-        //gets list of ingredients (but from storage, not meal plans)
-        storage = new Storage();
-        //insertTestStorage();
+        // get current user from firebase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ArrayList<Recipe> recipeList = new ArrayList<>();
 
@@ -88,12 +89,12 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                         }
                         else if (value != null && value.getData() != null) {
 
-                            //dailyPlan.setDate((Date)value.get("date"));
+                            // Get recipe list from Firebase
                             if (value.get("recipes") != null) {
                                 ArrayList<DocumentReference> recipes =
                                         (ArrayList<DocumentReference>) value.get("recipes");
                                 documentReferencesRecipies.addAll(recipes);
-
+                                dailyPlan.clearRecipes();
                                 for (DocumentReference recipe : recipes) {
 
                                     Log.d("DEBUG", recipe.toString());
@@ -103,14 +104,12 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                         }
                                         else if (value2 != null) {
                                             Recipe r = value2.toObject(Recipe.class);
-                                            //Log.d("RECIPE", r.getTitle());
                                             int index = documentReferencesRecipies.indexOf(recipe);
                                             if (index != -1 && index < dailyPlan.getDailyPlanRecipes().size() &&
                                                     dailyPlan.getDailyPlanRecipes().get(index) != null) {
                                                 dailyPlan.getDailyPlanRecipes().set(index, r);
                                             }
                                             else {
-                                                //recipeList.add(r);
                                                 dailyPlan.addRecipe(r);
                                             }
                                             recipeListAdapter.notifyDataSetChanged();
@@ -118,11 +117,14 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                     });
                                 }
                             }
+
+                            // Get ingredient list from Firebase
+
                             if (value.get("ingredients") != null) {
                                 ArrayList<DocumentReference> ingredients =
                                         (ArrayList<DocumentReference>) value.get("ingredients");
                                 documentReferencesIngredients.addAll(ingredients);
-
+                                dailyPlan.clearIngredients();
                                 for (DocumentReference ingredient : ingredients) {
 
                                     Log.d("DEBUG", ingredient.toString());
@@ -153,13 +155,14 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
             );
         }
 
-        //Toast.makeText(this.getContext(), storage.getStorageList().get(0).getDescription(), Toast.LENGTH_SHORT).show();
+        // set ingredient recycler view
         dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), dailyPlan.getDailyPlanIngredients(), this);
         recyclerView2 = v.findViewById(R.id.ingredient_list_recycler_view);
         recyclerView2.setAdapter(dailyPlanAdapter);
         recyclerView2.setLayoutManager(
                 new LinearLayoutManager(this.getContext()));
 
+        // Add ingredient button, goes to AddIngredientToMealPlan fragment
         addIngredient = v.findViewById(R.id.add_ingredient_button);
         addIngredient.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -176,6 +179,8 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
             }
 
         });
+
+        // Add ingredient button, goes to AddRecipeToMealPlan fragment
 
         addRecipe = v.findViewById(R.id.add_recipe_button);
         addRecipe.setOnClickListener(new View.OnClickListener() {
@@ -196,13 +201,15 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
 
         scaleText = v.findViewById(R.id.scale_text);
 
+        // Set servings button, updates all the numbers in recipe/ingredient list to match new serving amount
         scaleButton = v.findViewById(R.id.scale_button);
         scaleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String temp = scaleText.getText().toString();
                 if (temp.length()>0){
                     int newServings = Integer.parseInt(temp);
-                    
+
+                    // For every recipe in the list, update the servings
                     for (int recipeIndex = 0; recipeIndex < dailyPlan.getDailyPlanRecipes().size(); recipeIndex++){
                         Log.d("Recipe",dailyPlan.getDailyPlanRecipes().get(recipeIndex).getTitle());
                         Log.d("idofRecipe",documentReferencesRecipies.get(recipeIndex).getPath());
@@ -211,6 +218,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                         ArrayList<Ingredient> recipeIngredients;
                         recipeIngredients = recipe.getRecipeIngredients();
 
+                        // for every ingredient in the recipe, update its amount
                         for (int ingredientIndex = 0; ingredientIndex < recipeIngredients.size(); ingredientIndex++) {
                             Ingredient ingredient = recipeIngredients.get(ingredientIndex);
                             int currentAmount = ingredient.getAmount();
@@ -220,6 +228,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                         }
                         recipe.setServings(newServings);
 
+                        // Store new values in Firebase
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         String uid = user.getUid();
@@ -235,44 +244,14 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
         return v;
     }
 
-    private void insertTestRecipes(Date date) {
-        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
-        Ingredient bread = new Ingredient("Bread", "Fridge","pack", "Bakery", 2, date);
 
-        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
-        in2.add(new Ingredient("cheese", "Fridge","pack", "Bakery", 2, date));
-        Recipe recipe = new Recipe("Soup", 10, "none", 2, "Dinner", in2, null);
-        Recipe recipe2 = new Recipe("Sandwich", 50, "none", 1, "Dinner", in2, null);
-        dailyPlan.addRecipe(recipe);
-        dailyPlan.addRecipe(recipe2);
-        dailyPlan.addIngredient(bread);
-        dailyPlan.setDate(date);
-        mealPlan.addDailyPlan(dailyPlan);
-
-    }
-
-    private void insertTestStorage(){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date =null;
-        try {
-            date = formatter.parse("2022/11/03");
-        }catch (ParseException e) {
-        e.printStackTrace();
-        }
-        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
-        Ingredient bread = new Ingredient("Bread", "Fridge","pack", "Bakery", 2, date);
-        Ingredient cheese = new Ingredient("Cheese", "Fridge","pack", "Bakery", 1, date);
-        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
-        in2.add(new Ingredient("Ace", "pieces", "C", 2));
-        storage.addIngredient(bread);
-        storage.addIngredient(cheese);
-        //storage.addIngredient(new Ingredient("Ace", "pieces", "C", 2));
-
-    }
-
+    /**
+     * This is called when the recipe list is clicked, open up DeleteFromMealPlan dialog fragment to delete recipe
+     * @param position - the index of the recipe that was clicked
+     * @author Areeba Fazal
+     */
     @Override
     public void onNoteClick(int position) {
-        Toast.makeText(this.getContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putSerializable("Reference", documentReferencesRecipies.get(position).getPath());
         bundle.putSerializable("id",id);
@@ -283,9 +262,13 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
 
     }
 
+    /**
+     * This is called when the ingredient list is clicked, open up DeleteFromMealPlan dialog fragment to delete ingredient
+     * @param position - the index of the ingredient that was clicked
+     * @author Areeba Fazal
+     */
     @Override
     public void onIngredientNoteClick(int position) {
-        Toast.makeText(this.getContext(), dailyPlan.getDailyPlanIngredients().get(position).getDescription(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("Reference", documentReferencesIngredients.get(position).getPath());

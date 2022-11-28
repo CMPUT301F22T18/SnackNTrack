@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,6 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class represent the a AddIngredientToMealPlan, which adds a ingredient to the meal plan
+ * @author Areeba Fazal
+ */
 public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapter.OnNoteListener {
     private Storage storage;
     private DailyPlanAdapter dailyPlanAdapter;
@@ -49,15 +52,18 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         Bundle dateBundle = getArguments();
         date = (Date) dateBundle.getSerializable("Date");
         id = (String) dateBundle.getSerializable("id");
-        // should get recipe list from database
+
         storage = new Storage();
 
+        // set ingredient list recycler view
         dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), storage.getStorageList(), this);
         recyclerView = v.findViewById(R.id.meal_plan_add_recycler_view);
         recyclerView.setAdapter(dailyPlanAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(this.getContext()));
         newIngredient = new ArrayList<>();
+
+        // get user's ingredient from FireBase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert(user != null);
@@ -78,42 +84,30 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
             dailyPlanAdapter.notifyDataSetChanged();
         });
 
-
-
         return v;
     }
 
-    private void insertTestStorage() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = null;
-        try {
-            date = formatter.parse("2022/11/03");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
-        Ingredient bread = new Ingredient("Bread", "Fridge", "pack", "Bakery", 2, date);
-
-        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
-        in2.add(new Ingredient("Ace", "pieces", "C", 2));
-        storage.addIngredient(bread);
-    }
-
-
+    /**
+     * This is called when the ingredient list is clicked
+     * Adds the clicked ingredient to the daily plan, then switches back to DailyPlanFragment
+     * @param position - the index of the ingredient that was clicked
+     * @author Areeba Fazal
+     */
     @Override
     public void onIngredientNoteClick(int position) {
-        Toast.makeText(this.getContext(), storage.getStorageList().get(position).getDescription(), Toast.LENGTH_SHORT).show();
         selectedIngredient = storage.getStorageList().get(position);
         selectedIngredientReference = newIngredient.get(position);
         Log.w("NEW INGRED", selectedIngredientReference.getPath());
         DailyPlanFragment dailyPlanFragment = new DailyPlanFragment();
+
+        // Set bundle
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
         dateBundle.putSerializable("Ingredient",selectedIngredient);
         dateBundle.putSerializable("id",id);
         dailyPlanFragment.setArguments(dateBundle);
 
-
+        // Add selected ingredient to Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
@@ -136,7 +130,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
                     }
                 });
 
-
+        // switch back to DailyPlanFragment
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_main, dailyPlanFragment);
         transaction.addToBackStack(null);

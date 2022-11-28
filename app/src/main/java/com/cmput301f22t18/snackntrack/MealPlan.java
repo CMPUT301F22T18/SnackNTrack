@@ -6,7 +6,6 @@ import java.util.Date;
 /**
  * This class represent the entire meal plan, comprised of multiple days
  * @author Areeba Fazal
- * @version 1.0.0
  */
 public class MealPlan {
 
@@ -14,7 +13,6 @@ public class MealPlan {
 
     /**
      * This method is the constructor for the MealPlan
-     * @since 1.0.0
      */
     public MealPlan() {
         this.dailyPlanList = new ArrayList<>();
@@ -23,7 +21,6 @@ public class MealPlan {
     /**
      * This method gets the full meal plan list from the dailyPlan
      * @return recipeList
-     * @since 1.0.0
      */
     public ArrayList<DailyPlan> getDailyPlan() {
         return this.dailyPlanList;
@@ -32,7 +29,6 @@ public class MealPlan {
     /**
      * This method returns the size of the dailyPlan
      * @return int
-     * @since 1.0.0
      */
     public int getSize() {
         return this.dailyPlanList.size();
@@ -41,7 +37,6 @@ public class MealPlan {
     /**
      * This method adds a recipe/ingredient into the dailyPLan
      * @param newDailyPlan - a recipe/ingredient to be added
-     * @since 1.0.0
      */
     public void addDailyPlan(DailyPlan newDailyPlan) {
         this.dailyPlanList.add(newDailyPlan);
@@ -50,7 +45,6 @@ public class MealPlan {
     /**
      * This method deletes a recipe/ingredient from the dailyPLan
      * @param newDailyPlan - a recipe to be deleted
-     * @since 1.0.0
      */
     public void deleteDailyPlan(DailyPlan newDailyPlan) {
         this.dailyPlanList.remove(newDailyPlan);
@@ -60,7 +54,6 @@ public class MealPlan {
      * This method returns the dailyPlan for a specified day
      * @param newDate - int representing the day
      * @return dailyPlan
-     * @since 1.0.0
      */
     public DailyPlan getDailyPlanAtDay(Date newDate) {
         for (int planIndex = 0; planIndex < dailyPlanList.size(); planIndex++) {

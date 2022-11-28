@@ -20,8 +20,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+/**
+ * This class represent the a DeleteFromMealPlan dialog fragment, which deletes items from meal plans
+ * @author Areeba Fazal
+ */
 public class DeleteFromMealPlan extends DialogFragment {
 
+    /**
+     * This method is called when the dialog is created
+     * @author Areeba Fazal
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,7 +44,8 @@ public class DeleteFromMealPlan extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_delete_mealplan, null);
 
         builder.setView(view)
-                // Add action buttons
+
+                // when ok is pressed, delete item
                 .setPositiveButton(R.string.OK, (dialog, id) -> {
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -46,6 +55,7 @@ public class DeleteFromMealPlan extends DialogFragment {
                     DocumentReference cf = db.collection("mealPlans")
                             .document(uid).collection("mealPlanList").document(docId);
 
+                    // Find item by its id, and remove it
                     cf.update(type, FieldValue.arrayRemove(tempDf))
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -63,6 +73,8 @@ public class DeleteFromMealPlan extends DialogFragment {
                             });
 
                 })
+
+                // if cancel is pressed, do nothing
                 .setNegativeButton(R.string.cancel, (dialog, id) ->
                         Objects.requireNonNull(DeleteFromMealPlan.this.getDialog()).cancel());
         return builder.create();

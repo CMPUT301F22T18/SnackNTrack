@@ -18,7 +18,6 @@ public class DailyPlan {
 
     /**
      * This method is the constructor for the DailyPlan
-     * @since 1.0.0
      */
     public DailyPlan() {
         this.dailyPlanIngredients = new ArrayList<Ingredient>();
@@ -29,7 +28,6 @@ public class DailyPlan {
     /**
      * This method gets the full ingredients meal plan list from the dailyPlan
      * @return recipeList
-     * @since 1.0.0
      */
     public ArrayList<Ingredient> getDailyPlanIngredients() {
         return this.dailyPlanIngredients;
@@ -38,7 +36,6 @@ public class DailyPlan {
     /**
      * This method gets the full recipes meal plan list from the dailyPlan
      * @return recipeList
-     * @since 1.0.0
      */
     public ArrayList<Recipe> getDailyPlanRecipes() {
         return this.dailyPlanRecipes;
@@ -47,7 +44,6 @@ public class DailyPlan {
     /**
      * This method returns the total size of the dailyPlan
      * @return int
-     * @since 1.0.0
      */
     public int getSize() {
         return this.dailyPlanIngredients.size() + this.dailyPlanRecipes.size();
@@ -57,7 +53,6 @@ public class DailyPlan {
     /**
      * This method adds an ingredient into the dailyPLan
      * @param ingredient - a ingredient to be added
-     * @since 1.0.0
      */
     public void addIngredient(Ingredient ingredient) {
         this.dailyPlanIngredients.add(ingredient);
@@ -66,7 +61,6 @@ public class DailyPlan {
     /**
      * This method adds a recipe into the dailyPLan
      * @param recipe - a recipe to be added
-     * @since 1.0.0
      */
     public void addRecipe(Recipe recipe) {
         this.dailyPlanRecipes.add(recipe);
@@ -75,7 +69,6 @@ public class DailyPlan {
     /**
      * This method deletes a recipe/ingredient from the dailyPLan
      * @param ingredient - a recipe to be deleted
-     * @since 1.0.0
      */
     public void deleteIngredient(Ingredient ingredient) {
         this.dailyPlanIngredients.remove(ingredient);
@@ -84,7 +77,6 @@ public class DailyPlan {
     /**
      * This method deletes a recipe/ingredient from the dailyPLan
      * @param recipe - a recipe to be deleted
-     * @since 1.0.0
      */
     public void deleteRecipe(Recipe recipe) {
         this.dailyPlanRecipes.remove(recipe);
@@ -93,7 +85,6 @@ public class DailyPlan {
     /**
      * This method returns the day associated with this daily meal plan
      * @return day - date representing the day
-     * @since 1.0.0
      */
     public Date getDate() {
         return date;
@@ -102,9 +93,22 @@ public class DailyPlan {
     /**
      * This method sets the day associated with this daily meal plan
      * @param date - date representing the day
-     * @since 1.0.0
      */
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    /**
+     * This method clears the recipe list
+     */
+    public void clearRecipes() {
+        this.dailyPlanRecipes.clear();
+    }
+
+    /**
+     * This method clears the ingredient list
+     */
+    public void clearIngredients() {
+        this.dailyPlanIngredients.clear();
     }
 }

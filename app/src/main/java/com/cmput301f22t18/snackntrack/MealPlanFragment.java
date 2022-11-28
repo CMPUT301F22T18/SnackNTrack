@@ -24,12 +24,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represent the a mealPlan fragment, which connects to the calendar
+ * @author Areeba Fazal
+ */
 public class MealPlanFragment extends Fragment {
 
     private CalendarView cal;
-    private MealPlan mealplan;
     private ArrayList<Long> dates = new ArrayList<>();
 
+    /**
+     * This method creates a new instance of the MealPlanFragment
+     * @return a new instance of the MealPlanFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,6 +47,10 @@ public class MealPlanFragment extends Fragment {
         // when a date on calender is pressed
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
+            /**
+             * This method is called when a date on the calendar is clicked
+             * switches to new DailyPlanFragment
+             */
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
@@ -53,7 +64,7 @@ public class MealPlanFragment extends Fragment {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                //Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
+
                 DailyPlanFragment dailyPlanFragment = new DailyPlanFragment();
                 Bundle dateBundle = new Bundle();
                 dateBundle.putSerializable("Date",date);
@@ -78,7 +89,7 @@ public class MealPlanFragment extends Fragment {
                     }
                     //Find daily plan that matches date pressed
                     for (QueryDocumentSnapshot doc : value) {
-                        //Log.w("DATE1: ", doc.get("date").toString(), error);
+
                         if (doc.get("date") != null) {
                             if (myTimestamp.getSeconds() == ((Timestamp) doc.get("date")).getSeconds()) {
                                 dates.add(((Timestamp) doc.get("date")).getSeconds());
