@@ -77,4 +77,5 @@
     <string name="my_storage_title">My Storage</string>
     <string name="sort_hint">Sort</string>
     <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
 </resources>
