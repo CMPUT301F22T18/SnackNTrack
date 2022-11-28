@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 
-
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -48,9 +45,9 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         private final TextView descriptionTextView;
         private final TextView locationTextView;
         private final TextView categoryTextView;
+        private final TextView bestBeforeDateTextView;
         private final TextView amountTextView;
         private final TextView unitTextView;
-        private final TextView bestBeforeDateTextView;
         DailyPlanAdapter.OnNoteListener onNoteListener;
 
         /**
@@ -106,19 +103,14 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         holder.descriptionTextView.setText(ingredientList.get(position).getDescription());
         holder.locationTextView.setText(ingredientList.get(position).getLocation());
         holder.categoryTextView.setText(ingredientList.get(position).getCategory());
-        String amountUnit = ingredientList.get(position).getAmount() + " " +
-                ingredientList.get(position).getUnit();
         holder.amountTextView.setText(String.format(Locale.CANADA, "%d",
                 ingredientList.get(position).getAmount()));
         holder.unitTextView.setText(ingredientList.get(position).getUnit());
         Date bbf = ingredientList.
                 get(position).
                 getBestBeforeDate();
-        LocalDate date = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            date = bbf.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-        String dateText = "Best Before: " + date.toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M d, y", Locale.CANADA);
+        String dateText = "Best Before: " + simpleDateFormat.format(bbf);
         holder.
                 bestBeforeDateTextView.
                 setText(dateText);
