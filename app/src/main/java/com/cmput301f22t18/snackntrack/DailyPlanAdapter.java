@@ -101,7 +101,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         holder.descriptionTextView.setText(ingredientList.get(position).getDescription());
         holder.locationTextView.setText(ingredientList.get(position).getLocation());
         holder.categoryTextView.setText(ingredientList.get(position).getCategory());
-        holder.amountTextView.setText(ingredientList.get(position).getAmount());
+        holder.amountTextView.setText(Integer.toString(ingredientList.get(position).getAmount()));
         holder.unitTextView.setText(ingredientList.get(position).getUnit());
         Date bbf = ingredientList.
                 get(position).
