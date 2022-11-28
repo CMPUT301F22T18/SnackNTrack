@@ -52,7 +52,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         // should get recipe list from database
         storage = new Storage();
 
-        dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), storage.getStorageList(), this);
+        dailyPlanAdapter = new DailyPlanAdapter(storage.getStorageList(), this);
         recyclerView = v.findViewById(R.id.meal_plan_add_recycler_view);
         recyclerView.setAdapter(dailyPlanAdapter);
         recyclerView.setLayoutManager(

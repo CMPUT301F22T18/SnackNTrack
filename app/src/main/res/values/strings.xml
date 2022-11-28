@@ -45,7 +45,7 @@
     <string name="recipe_list">Recipe List</string>
     <string name="storage">Storage</string>
     <string name="add_edit_your_location">Add / Edit your </string>
-    <string name="location_label">Location</string>
+    <string name="location">Location</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_button">Cancel</string>
@@ -77,4 +77,8 @@
     <string name="delete_recipe_button_for_view_recipe">Delete recipe button for view recipe</string>
     <string name="ingredient">Ingredient</string>
     <string name="amount">Amount</string>
+    <string name="my_storage_title">My Storage</string>
+    <string name="sort_hint">Sort</string>
+    <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="ingredient_unit">Unit</string>
 </resources>

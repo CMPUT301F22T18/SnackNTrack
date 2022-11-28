@@ -159,7 +159,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
         }
 
         //Toast.makeText(this.getContext(), storage.getStorageList().get(0).getDescription(), Toast.LENGTH_SHORT).show();
-        dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), dailyPlan.getDailyPlanIngredients(), this);
+        dailyPlanAdapter = new DailyPlanAdapter(dailyPlan.getDailyPlanIngredients(), this);
         recyclerView2 = v.findViewById(R.id.ingredient_list_recycler_view);
         recyclerView2.setAdapter(dailyPlanAdapter);
         recyclerView2.setLayoutManager(

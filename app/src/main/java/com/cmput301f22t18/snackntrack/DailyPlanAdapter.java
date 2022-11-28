@@ -1,45 +1,32 @@
 package com.cmput301f22t18.snackntrack;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
-import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.models.Storage;
-import com.cmput301f22t18.snackntrack.views.storage.AddEditIngredientFragment;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.ViewHolder> {
 
-    private ArrayList<Ingredient> ingredientList;
-    private Context context;
-    private DailyPlanAdapter.OnNoteListener myOnNoteListener;
+    private final ArrayList<Ingredient> ingredientList;
+    private final DailyPlanAdapter.OnNoteListener myOnNoteListener;
 
     /**
      * This is the constructor for the class {@link DailyPlanAdapter}
-     * @param context provides the context
      * @param ingredientList an ArrayList of DailyPlans
      * @param myOnNoteListener an OnNoteListener object
      * @since 1.0.0
      */
-    public DailyPlanAdapter(Context context, ArrayList<Ingredient> ingredientList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
-        this.context = context;
+    public DailyPlanAdapter(ArrayList<Ingredient> ingredientList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
         this.ingredientList = ingredientList;
         this.myOnNoteListener = myOnNoteListener;
     }
@@ -52,8 +39,9 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         private final TextView descriptionTextView;
         private final TextView locationTextView;
         private final TextView categoryTextView;
-        private final TextView amountUnitTextView;
         private final TextView bestBeforeDateTextView;
+        private final TextView amountTextView;
+        private final TextView unitTextView;
         DailyPlanAdapter.OnNoteListener onNoteListener;
 
         /**
@@ -67,7 +55,8 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
             descriptionTextView = view.findViewById(R.id.ingredient_description_text_view);
             locationTextView = view.findViewById(R.id.ingredient_location_text_view);
             categoryTextView = view.findViewById(R.id.ingredient_category_text_view);
-            amountUnitTextView = view.findViewById(R.id.ingredient_amount_unit_text_view);
+            amountTextView = view.findViewById(R.id.ingredient_amount_text_view);
+            unitTextView = view.findViewById(R.id.ingredient_unit_text_view);
             bestBeforeDateTextView = view.findViewById(R.id.ingredient_best_before_date_text_view);
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
@@ -96,7 +85,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
     @Override
     public DailyPlanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.storage_row_item, parent, false);
+                .inflate(R.layout.ingredient_detail_card, parent, false);
 
         return new DailyPlanAdapter.ViewHolder(view, this.myOnNoteListener);
     }
@@ -112,17 +101,14 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         holder.descriptionTextView.setText(ingredientList.get(position).getDescription());
         holder.locationTextView.setText(ingredientList.get(position).getLocation());
         holder.categoryTextView.setText(ingredientList.get(position).getCategory());
-        String amountUnit = ingredientList.get(position).getAmount() + " " +
-                ingredientList.get(position).getUnit();
-        holder.amountUnitTextView.setText(amountUnit);
+        holder.amountTextView.setText(String.format(Locale.CANADA, "%d",
+                ingredientList.get(position).getAmount()));
+        holder.unitTextView.setText(ingredientList.get(position).getUnit());
         Date bbf = ingredientList.
                 get(position).
                 getBestBeforeDate();
-        LocalDate date = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            date = bbf.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-        String dateText = "Best Before: " + date.toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M d, y", Locale.CANADA);
+        String dateText = "Best Before: " + simpleDateFormat.format(bbf);
         holder.
                 bestBeforeDateTextView.
                 setText(dateText);
