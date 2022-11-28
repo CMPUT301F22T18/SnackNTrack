@@ -68,9 +68,10 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_an_ingredient_description_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/ingredient_description"
+                    android:hint="@string/add_an_ingredient_description_hint"
                     android:textColorHint="@color/gray_400"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -93,6 +94,7 @@
                 android:textAppearance=
                     "@style/TextAppearance.MaterialComponents.Headline4.SnackNTrack"/>
             <ImageButton
+                android:id="@+id/add_an_ingredient_decrease_amount_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_remove_24"
@@ -106,6 +108,7 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_an_ingredient_amount_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="numberDecimal"
@@ -115,6 +118,7 @@
                     />
             </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
+                android:id="@+id/add_an_ingredient_increase_amount_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_add_24"
@@ -223,22 +227,24 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_an_ingredient_bbf_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberDecimal"
+                    android:inputType="date"
                     android:gravity="center"
-                    android:hint="@string/_0"
+                    android:hint="@string/ingredient_bbf_hint"
                     android:textColorHint="@color/gray_400"
                     />
             </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
+                android:id="@+id/add_an_ingredient_calendar_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_calendar_month_24"
                 android:background="@drawable/custom_image_button"
                 android:padding="12dp"
                 android:layout_marginStart="8dp"
-                android:contentDescription="@string/plus"/>
+                android:contentDescription="@string/add_an_ingredient_open_date_picker"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
