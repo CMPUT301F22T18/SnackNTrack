@@ -30,6 +30,10 @@ import java.util.ArrayList;
 
 
 /**
+ *  * A simple {@link Fragment} subclass.
+ *  * Use the {@link ShoppingListFragment#newInstance} factory method to
+ *  * create an instance of this fragment.
+ *
  * This class is the fragment for the Shopping List
  *
  * @author Charlotte Kalutycz
@@ -73,7 +77,7 @@ public class ShoppingListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_shopping_list, container, false);
 
         // Get the views for this fragment
-        recyclerView = v.findViewById(R.id.shopping_list_recycler_view);
+        recyclerView = v.findViewById(R.id.shopping_list);
         sortButton = v.findViewById(R.id.sort_button_shopping_list);
         addButton = v.findViewById(R.id.purchased_button);
         headerText = v.findViewById(R.id.shopping_list_header_text);
@@ -125,7 +129,7 @@ public class ShoppingListFragment extends Fragment {
         shoppingListAdapter = new ShoppingListAdapter(shoppingList);
         recyclerView.setAdapter(shoppingListAdapter);
 
-        // When clicked on the sort button, some choices are shown
+        // When the sort button is clicked, user can choose from description or category
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,42 +138,52 @@ public class ShoppingListFragment extends Fragment {
             }
         });
 
+        // When user clicks the green button, confirms whether or not they would like to move selected ingredients to the storage
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get all ingredients currently checked
-                ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
-                // Add these ingredients to the storage, and remove from ShoppingList
-                if (checkedIngredients.size() != 0) {
-                    for (int i = 0; i < checkedIngredients.size(); i++) {
-                        Bundle result = new Bundle();
-                        result.putSerializable("new_item", checkedIngredients.get(i));
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        CollectionReference cr = db.collection("storages")
-                                .document(user.getUid())
-                                .collection("ingredients");
-                        Query query = cr
-                                .whereEqualTo("description", checkedIngredients.get(i).getDescription())
-                                .whereEqualTo("amount", checkedIngredients.get(i).getAmount())
-                                .whereEqualTo("category", checkedIngredients.get(i).getCategory())
-                                .whereEqualTo("unit", checkedIngredients.get(i).getUnit());
-                        Ingredient finalIngredient = checkedIngredients.get(i);
-                        query.get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("DEBUG", document.getId() + " => " + document.getData());
-                                    cr.document(document.getId()).set(finalIngredient);
+                // Display Confirmation
+                ClearShoppingListFragment clearShoppingListFragment = new ClearShoppingListFragment(new ClearShoppingListFragment.CallBack() {
+                    @Override
+                    public void confirmed(boolean clear) {
+                        if (clear) {
+                            // Get all ingredients currently checked
+                            ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
+                            // Add these ingredients to the storage, and remove from ShoppingList
+                            if (checkedIngredients.size() != 0) {
+                                for (int i = 0; i < checkedIngredients.size(); i++) {
+                                    Bundle result = new Bundle();
+                                    result.putSerializable("new_item", checkedIngredients.get(i));
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    CollectionReference cr = db.collection("storages")
+                                            .document(user.getUid())
+                                            .collection("ingredients");
+                                    Query query = cr
+                                            .whereEqualTo("description", checkedIngredients.get(i).getDescription())
+                                            .whereEqualTo("amount", checkedIngredients.get(i).getAmount())
+                                            .whereEqualTo("category", checkedIngredients.get(i).getCategory())
+                                            .whereEqualTo("unit", checkedIngredients.get(i).getUnit());
+                                    Ingredient finalIngredient = checkedIngredients.get(i);
+                                    query.get().addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d("DEBUG", document.getId() + " => " + document.getData());
+                                                cr.document(document.getId()).set(finalIngredient);
+                                            }
+                                        } else {
+                                            Log.d("DEBUG", "Error getting documents: ", task.getException());
+                                        }
+                                    });
+                                    shoppingList.removeIngredient(checkedIngredients.get(i));
                                 }
-                            } else {
-                                Log.d("DEBUG", "Error getting documents: ", task.getException());
+                                // Now that all ingredients have been added to the storage, clear checkedIngredients
+                                checkedIngredients.clear();
                             }
-                        });
-                        shoppingList.removeIngredient(checkedIngredients.get(i));
+                        }
                     }
-                    // Now that all ingredients have been added to the storage, clear checkedIngredients
-                    checkedIngredients.clear();
-                }
+                });
+
             }
         });
 
