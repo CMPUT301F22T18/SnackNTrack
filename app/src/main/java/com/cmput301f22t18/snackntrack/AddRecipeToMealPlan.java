@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,35 +28,44 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class represent the a AddRecipeToMealPlan, which adds a recipe to the meal plan
+ * @author Areeba Fazal
+ */
 public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.OnNoteListener{
     private RecipeList recipeList;
     private RecipeListAdapter recipeListAdapter;
     private RecyclerView recyclerView;
     private ListView listView;
-    ArrayList<String> recipeNames;
-    ArrayList<Recipe> list;
-    Recipe selectedRecipe;
-    Date date;
-    String id;
-    String uid;
+    private ArrayList<String> recipeNames;
+    private ArrayList<Recipe> list;
+    private Recipe selectedRecipe;
+    private Date date;
+    private String id;
+    private String uid;
 
-    ArrayList<DocumentReference> newRecipe;
-    ArrayList<DocumentReference> documentReferencesRecipe;
-    DocumentReference selectedRecipeReference;
+    private ArrayList<DocumentReference> newRecipe;
+    private ArrayList<DocumentReference> documentReferencesRecipe;
+    private DocumentReference selectedRecipeReference;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_add_mealplan, container, false);
+
+        // get arguments from DailyPlanAdapter
         Bundle dateBundle = getArguments();
         date = (Date) dateBundle.getSerializable("Date");
         id = (String) dateBundle.getSerializable("id");
-        // should get recipe list from database
+
+        // set recipe list recycler view
         recipeList = new RecipeList();
-        //insertTestRecipes();
         recipeListAdapter = new RecipeListAdapter(this.getContext(), recipeList.getRecipeList(), this);
         recyclerView = v.findViewById(R.id.meal_plan_add_recycler_view);
         recyclerView.setAdapter(recipeListAdapter);
 
+        // get user's recipes from firebase
         newRecipe = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -81,79 +89,62 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
     return v;
     }
 
-    private void insertTestRecipes() {
-        ArrayList<Ingredient> in1 = new ArrayList<Ingredient>();
-        Ingredient bread = new Ingredient("Bread", "pieces", "Wheat", 2);
-
-        ArrayList<Ingredient> in2 = new ArrayList<Ingredient>();
-        in2.add(new Ingredient("A", "pieces", "C", 2));
-        Recipe recipe = new Recipe("Salad", 10, "none", 2, "Dinner", in2, null);
-        recipeList.addRecipe(recipe);
-    }
-
-
+    /**
+     * This is called when the recipe list is clicked
+     * Adds the clicked recipe to the daily plan, then switches back to DailyPlanFragment
+     * @param position - the index of the recipe that was clicked
+     * @author Areeba Fazal
+     */
     @Override
     public void onNoteClick(int position) {
-        Toast.makeText(this.getContext(), recipeList.getRecipeList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
         selectedRecipe = recipeList.getRecipeList().get(position);
         selectedRecipeReference = newRecipe.get(position);
         DailyPlanFragment dailyPlanFragment = new DailyPlanFragment();
+
+        // Create bundle
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
         dateBundle.putSerializable("Recipe",selectedRecipe);
         dateBundle.putSerializable("id",id);
         dailyPlanFragment.setArguments(dateBundle);
 
+        // Save the selected recipe in a separate place in Firebase
+        // to ensure original recipe is not effected
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         DocumentReference df = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList").document(id);
+                .document(uid).collection("mealPlanRecipes").document();
 
-//        df.set(selectedRecipe)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // These are a method which gets executed when the task is succeeded
-//                        Log.d("Success", "Data has been added successfully!");
-//
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // These are a method which gets executed if there’s any problem
-//                        Log.d("error", "Data could not be added!" + e.toString());
-//                    }
-//                });
-
-//        db.collection("mealPlans")
-//                .document(uid).collection("mealPlanRecipes")
-//                .add(selectedRecipe)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w("TAG", "Error adding document", e);
-//                    }
-//                });
-
-
-
-        DocumentReference cf = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList").document(id);
-
-        cf.update("recipes", FieldValue.arrayUnion(selectedRecipeReference))
+        df.set(selectedRecipe)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
-                        Log.d("Success", "Data has been added successfully!");
+                        Log.d("SET RECIPE AT: ", df.getPath());
+
+                        DocumentReference tempDf = db.document(df.getPath());
+                        selectedRecipeReference = tempDf;
+
+                        // Once new recipe is created, add it back to fireBase for this DailyPlan
+                        DocumentReference cf = db.collection("mealPlans")
+                            .document(uid).collection("mealPlanList").document(id);
+
+                        cf.update("recipes", FieldValue.arrayUnion(selectedRecipeReference))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // These are a method which gets executed when the task is succeeded
+                                        Log.d("Success", "Data has been added successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // These are a method which gets executed if there’s any problem
+                                        Log.d("error", "Data could not be added!" + e.toString());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -164,9 +155,7 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
                     }
                 });
 
-
-
-
+        // Switch back to DailyPlanFragment
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_main, dailyPlanFragment);
         transaction.addToBackStack(null);

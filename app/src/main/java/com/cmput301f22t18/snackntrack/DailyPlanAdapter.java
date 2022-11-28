@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,25 +16,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * This class represent the a DailyPlanAdapter, which controls the ingredient list recycler view
+ * @author Areeba Fazal
+ */
 public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.ViewHolder> {
 
-    private final ArrayList<Ingredient> ingredientList;
-    private final DailyPlanAdapter.OnNoteListener myOnNoteListener;
+    private ArrayList<Ingredient> ingredientList;
+    private Context context;
+    private DailyPlanAdapter.OnNoteListener myOnNoteListener;
 
     /**
-     * This is the constructor for the class {@link DailyPlanAdapter}
+     * This is the constructor for the DailyPlanAdapter
+     * @param context provides the context
      * @param ingredientList an ArrayList of DailyPlans
      * @param myOnNoteListener an OnNoteListener object
-     * @since 1.0.0
      */
-    public DailyPlanAdapter(ArrayList<Ingredient> ingredientList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
+    public DailyPlanAdapter(Context context, ArrayList<Ingredient> ingredientList, DailyPlanAdapter.OnNoteListener myOnNoteListener) {
+        this.context = context;
         this.ingredientList = ingredientList;
         this.myOnNoteListener = myOnNoteListener;
     }
 
     /**
-     * This class provides a reference to the type of views that you are using. It is a custom {@link androidx.recyclerview.widget.RecyclerView.ViewHolder}
-     * @since 1.0.0
+     * This class provides a reference to the type of views that you are using
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView descriptionTextView;
@@ -45,10 +51,9 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         DailyPlanAdapter.OnNoteListener onNoteListener;
 
         /**
-         * This method is the constructor for the ViewHolder of RecipeListAdapter
+         * This method is the constructor for the ViewHolder of DailyPlanAdapter
          * @param view a particular item view
          * @param onNoteListener an OnNoteListener object
-         * @since 1.0.0
          */
         public ViewHolder(@NonNull View view, DailyPlanAdapter.OnNoteListener onNoteListener) {
             super(view);
@@ -65,7 +70,6 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         /**
          * This method gets the position of the item if the item is clicked
          * @param v the item view
-         * @since 1.0.0
          */
         @Override
         public void onClick(View v) {
@@ -79,7 +83,6 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
      * @param parent the parent ViewGroup
      * @param viewType a view type
      * @return a ViewHolder object for each item view
-     * @since 1.0.0
      */
     @NonNull
     @Override
@@ -92,9 +95,8 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
 
     /**
      * This method is invoked by the layout manager. It replaces the contents of a view.
-     * @param holder a ViewHolder object for RecipeListAdapter
+     * @param holder a ViewHolder object for DailyPlanAdapter
      * @param position indicates the position of the view in the layout
-     * @since 1.0.0
      */
     @Override
     public void onBindViewHolder(@NonNull DailyPlanAdapter.ViewHolder holder, int position) {
@@ -117,7 +119,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
 
     /**
      * This method returns the size of the list
-     * @return the size of recipeArrayList
+     * @return the size of ingredientList
      * @since 1.0.0
      */
     @Override
@@ -125,6 +127,9 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         return this.ingredientList.size();
     }
 
+    /**
+     * This interface allows the use of the onClick method
+     */
     public interface OnNoteListener {
         void onIngredientNoteClick(int position);
     }

@@ -2,6 +2,7 @@ package com.cmput301f22t18.snackntrack;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 
+import java.util.Objects;
+
 /**
  * An activity to view the recipe
  *
@@ -19,6 +22,7 @@ import com.cmput301f22t18.snackntrack.models.Recipe;
  */
 public class ViewRecipeActivity extends AppCompatActivity {
     Recipe recipe;
+    String recipeID;
     ImageButton backButton;
     TextView recipeTitle;
     ImageButton editButton;
@@ -38,6 +42,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         // get the extra from RecipeListFragment
         recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+        recipeID = (String) getIntent().getSerializableExtra("recipeID");
 
         // find the views
         backButton = findViewById(R.id.view_recipe_back_button);
@@ -82,6 +87,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: lead people to a fragment asking are you sure you want to delete the recipe
+                DeleteRecipeFragment dialog = new DeleteRecipeFragment(recipeID);
+                dialog.show(getSupportFragmentManager(), null);
             }
         });
     }
