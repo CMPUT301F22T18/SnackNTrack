@@ -20,8 +20,12 @@
             android:id="@+id/unit_name_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ingredient_unit"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4.SnackNTrack"
+            />
+        <TextView
+            android:id="@+id/label_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline5"
             android:textAlignment="center" />
         <ImageButton
             android:id="@+id/edit_unit_button"
@@ -30,7 +34,7 @@
             android:src="@drawable/ic_baseline_edit_24_black"
             android:background="@color/white"
             android:padding="12dp"
-            android:contentDescription="@string/edit_unit"
+            android:contentDescription="@string/edit_label"
             android:layout_marginStart="16dp"/>
         <ImageButton
             android:id="@+id/delete_unit_button"
@@ -39,7 +43,7 @@
             android:src="@drawable/ic_baseline_close_24_black"
             android:background="@color/white"
             android:padding="12dp"
-            android:contentDescription="@string/edit_unit"
+            android:contentDescription="@string/delete_label"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

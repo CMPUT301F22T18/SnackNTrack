@@ -40,4 +40,20 @@
         <item name="colorOutline">@color/gray_400</item>
         <item name="android:checkable">true</item>
     </style>
+
+    <style name="Widget.SnackNTrack.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.SnackNTrack.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.SnackNTrack.BottomNavigationView" parent="">
+        <item name="colorOnSurface">@color/red_900</item>
+        <item name="colorOnSurfaceVariant">@color/gray_400</item>
+        <item name="colorSurface">@color/gray_200</item>
+        <item name="colorSecondaryContainer">@color/fui_transparent</item>
+        <item name="elevation">10dp</item>
+    </style>
+
+    <style name="SnackNTrack.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="colorSecondaryContainer">@color/red_900</item>
+    </style>
 </resources>

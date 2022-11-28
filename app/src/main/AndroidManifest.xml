@@ -20,7 +20,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".views.storage.PickUnitActivity"
+            android:name=".views.storage.PickLabelActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

@@ -157,7 +157,7 @@
                 />
 
             <ImageButton
-                android:id="@+id/add_an_ingredient_amount_pick_unit_button"
+                android:id="@+id/add_an_ingredient_pick_unit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -182,8 +182,23 @@
                 android:text="@string/ingredient_category"
                 android:textAppearance=
                     "@style/TextAppearance.MaterialComponents.Headline4.SnackNTrack"/>
+
+            <TextView
+                android:id="@+id/add_an_ingredient_category_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/custom_label"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginStart="8dp"
+                android:textAppearance="?attr/textAppearanceCaption"
+
+                />
+
             <ImageButton
-                android:id="@+id/add_an_ingredient_amount_pick_category_button"
+                android:id="@+id/add_an_ingredient_pick_category_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_add_24"
@@ -208,8 +223,23 @@
                 android:text="@string/ingredient_location"
                 android:textAppearance=
                     "@style/TextAppearance.MaterialComponents.Headline4.SnackNTrack"/>
+
+            <TextView
+                android:id="@+id/add_an_ingredient_location_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/custom_label"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginStart="8dp"
+                android:textAppearance="?attr/textAppearanceCaption"
+
+                />
+
             <ImageButton
-                android:id="@+id/add_an_ingredient_amount_pick_location_button"
+                android:id="@+id/add_an_ingredient_pick_location_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_add_24"

@@ -31,6 +31,8 @@
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackNTrack.SmallComponent</item>
         <item name="materialCardViewStyle">@style/Widget.SnackNTrack.CardView</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.SnackNTrack.DatePicker</item>
+        <item name="bottomNavigationStyle">@style/Widget.SnackNTrack.BottomNavigationView</item>
+        <item name="itemActiveIndicatorStyle">@style/SnackNTrack.Custom.Indicator</item>
     </style>
 
 </resources>

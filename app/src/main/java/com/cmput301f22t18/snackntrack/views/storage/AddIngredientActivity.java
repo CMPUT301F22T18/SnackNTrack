@@ -3,6 +3,8 @@ package com.cmput301f22t18.snackntrack.views.storage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,8 +15,11 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.Label;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -28,7 +33,7 @@ public class AddIngredientActivity extends AppCompatActivity {
     ImageButton pickUnitButton, pickLocationButton, pickCategoryButton;
     TextInputEditText descriptionEditText, amountEditText, bbfEditText;
     ActivityResultLauncher<Intent> mGetContent;
-    TextView unitTextView;
+    TextView unitTextView, categoryTextView, locationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +46,9 @@ public class AddIngredientActivity extends AppCompatActivity {
         decreaseAmountButton = findViewById(R.id.add_an_ingredient_decrease_amount_button);
         calendarButton = findViewById(R.id.add_an_ingredient_calendar_button);
 
-        pickUnitButton = findViewById(R.id.add_an_ingredient_amount_pick_unit_button);
-        pickCategoryButton = findViewById(R.id.add_an_ingredient_amount_pick_category_button);
-        pickLocationButton = findViewById(R.id.add_an_ingredient_amount_pick_location_button);
+        pickUnitButton = findViewById(R.id.add_an_ingredient_pick_unit_button);
+        pickCategoryButton = findViewById(R.id.add_an_ingredient_pick_category_button);
+        pickLocationButton = findViewById(R.id.add_an_ingredient_pick_location_button);
 
         // Get the edit texts
         descriptionEditText = findViewById(R.id.add_an_ingredient_description_edit_text);
@@ -64,19 +69,44 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         unitTextView = findViewById(R.id.add_an_ingredient_unit_text_view);
         unitTextView.setVisibility(View.GONE);
+        categoryTextView = findViewById(R.id.add_an_ingredient_category_text_view);
+        categoryTextView.setVisibility(View.GONE);
+        locationTextView = findViewById(R.id.add_an_ingredient_location_text_view);
+        locationTextView.setVisibility(View.GONE);
 
         mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        if (result.getData() != null) {
-                            //Log.d("INFO", result.getData().getExtras().getString("unit"));
-                            unitTextView.setVisibility(View.VISIBLE);
-                            unitTextView.setText(result.getData().getExtras().getString("unit"));
+                        Intent i = result.getData();
+                        if (i != null) {
+                            if (i.hasExtra("unit")) {
+                                unitTextView.setVisibility(View.VISIBLE);
+                                unitTextView.setText(result.getData().getExtras().getString("unit"));
+                            }
+                            else if (i.hasExtra("location")) {
+                                Label location = (Label)i.getExtras().getSerializable("location");
+                                locationTextView.setText(location.getName());
+                                Drawable drawable = colorLabel(location);
+                                locationTextView.setBackground(drawable);
+                                locationTextView.setVisibility(View.VISIBLE);
+                            }
+                            else if (i.hasExtra("category")) {
+                                Label category = (Label)i.getExtras().getSerializable("category");
+                                categoryTextView.setText(category.getName());
+                                Drawable drawable = colorLabel(category);
+                                categoryTextView.setBackground(drawable);
+                                int black = ResourcesCompat.getColor(
+                                        this.getResources(), R.color.black, null);
+                                categoryTextView.setTextColor(black);
+                                categoryTextView.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 });
 
-        pickUnitButton.setOnClickListener(v->openPickerActivity());
+        pickUnitButton.setOnClickListener(v->openPickerActivity("unit"));
+        pickCategoryButton.setOnClickListener(v->openPickerActivity("category"));
+        pickLocationButton.setOnClickListener(v->openPickerActivity("location"));
     }
 
     /**
@@ -151,10 +181,23 @@ public class AddIngredientActivity extends AppCompatActivity {
         materialDatePicker.show(getSupportFragmentManager(), "MaterialDatePicker");
     }
 
-    public void openPickerActivity() {
+    public void openPickerActivity(String labelType) {
         Intent intent = new Intent();
-        intent.setClass(this, PickUnitActivity.class);
+        intent.putExtra("labelType", labelType);
+        intent.setClass(this, PickLabelActivity.class);
         mGetContent.launch(intent);
+    }
+
+    public Drawable colorLabel(Label label) {
+        Drawable unwrappedDrawable = ResourcesCompat.getDrawable(this.getResources(),
+                R.drawable.custom_label, null);
+        if (unwrappedDrawable != null) {
+            Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+
+            wrappedDrawable.setTint(Color.parseColor(label.getColor()));
+            return wrappedDrawable;
+        }
+        return null;
     }
 
     /**

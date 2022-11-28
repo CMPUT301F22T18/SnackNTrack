@@ -92,4 +92,8 @@
     <string name="add_a_unit">Add a Unit</string>
     <string name="edit_unit">Edit Unit</string>
     <string name="confirm_unit">Confirm Unit</string>
+    <string name="confirm_label">Confirm Label</string>
+    <string name="delete_unit">Delete Unit</string>
+    <string name="delete_label">Delete Label</string>
+    <string name="edit_label">Edit Label</string>
 </resources>
