@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.SnackNTrack" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.SnackNTrack" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_900</item>
         <item name="colorPrimaryVariant">@color/red_700</item>
@@ -8,6 +8,7 @@
         <item name="colorAccent">?attr/colorPrimary</item>
         <item name="colorSecondary">@color/red_700</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.SnackNTrack.DatePicker</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
@@ -26,13 +27,8 @@
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
 
-        <!--this is to change the shape of the MDC EditText-->
+        <item name="floatingActionButtonStyle">@style/Widget.SnackNTrack.FloatingActionButton</item>
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackAndTrack.SmallComponent</item>
     </style>
-    <style name="ShapeAppearance.SnackAndTrack.SmallComponent"
-        parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
 
-    </style>
 </resources>

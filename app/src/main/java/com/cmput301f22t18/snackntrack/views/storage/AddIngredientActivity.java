@@ -4,15 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class AddIngredientActivity extends AppCompatActivity {
     ImageButton backButton, increaseAmountButton, decreaseAmountButton, calendarButton;
@@ -39,6 +45,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         backButton.setOnClickListener(v->goBack());
         increaseAmountButton.setOnClickListener(v->changeAmount(1));
         decreaseAmountButton.setOnClickListener(v->changeAmount(-1));
+        calendarButton.setOnClickListener(v->openDatePicker());
     }
 
     /**
@@ -92,8 +99,25 @@ public class AddIngredientActivity extends AppCompatActivity {
             amount = Integer.parseInt(amountEditText.getText().toString());
         }
         amount += changeAmount;
+        if (amount < 0) amount = 0;
         String new_amount = String.format(Locale.CANADA, "%d", amount);
         amountEditText.setText(new_amount);
+    }
+
+    public void openDatePicker() {
+
+        final MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker
+                .Builder
+                .datePicker().build();
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            TimeZone timeZoneUTC = TimeZone.getDefault();
+            // It will be negative, so that's the -1
+            int offsetFromUTC = timeZoneUTC.getOffset(new Date().getTime()) * -1;
+            Date date = new Date(selection + offsetFromUTC);
+            SimpleDateFormat format = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+            bbfEditText.setText(format.format(date));
+        });
+        materialDatePicker.show(getSupportFragmentManager(), "MaterialDatePicker");
     }
 
     /**
