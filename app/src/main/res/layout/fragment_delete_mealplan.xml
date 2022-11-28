@@ -3,35 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MealPlanFragment">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/meal_plan_header"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito"
-        android:text="Select a Date"
+        android:text="Delete this item?"
         android:textColor="@color/red_900"
-        android:textSize="32sp"
+        android:textSize="26sp"
         android:textStyle="bold"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="334dp"
-        android:layout_height="368dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/meal_plan_header" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
