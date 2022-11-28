@@ -117,7 +117,7 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference dr = db
                     .collection("mealPlans")
-                    .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2")
+                    .document(uid)
                     .collection("mealPlanList")
                     .document(id);
             dr.addSnapshotListener(

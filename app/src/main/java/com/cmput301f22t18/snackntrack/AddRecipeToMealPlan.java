@@ -39,6 +39,7 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
     Recipe selectedRecipe;
     Date date;
     String id;
+    String uid;
 
     ArrayList<DocumentReference> newRecipe;
     ArrayList<DocumentReference> documentReferencesRecipe;
@@ -61,9 +62,9 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert(user != null);
-        String uid = user.getUid();
+        uid = user.getUid();
         CollectionReference cf = db.collection("recipeLists")
-                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("recipes");
+                .document(uid).collection("recipes");
 
         cf.addSnapshotListener((value, error) -> {
             if (error != null) {
@@ -106,7 +107,7 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DocumentReference cf = db.collection("mealPlans")
-                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("mealPlanList").document(id);
+                .document(uid).collection("mealPlanList").document(id);
 
         cf.update("recipes", FieldValue.arrayUnion(selectedRecipeReference))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

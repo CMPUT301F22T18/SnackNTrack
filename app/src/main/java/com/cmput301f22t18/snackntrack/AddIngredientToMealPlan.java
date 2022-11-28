@@ -70,7 +70,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         assert(user != null);
         String uid = user.getUid();
         CollectionReference cf = db.collection("storages")
-                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("ingredients");
+                .document(uid).collection("ingredients");
 
         cf.addSnapshotListener((value, error) -> {
             if (error != null) {
@@ -123,8 +123,9 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
         DocumentReference cf = db.collection("mealPlans")
-                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("mealPlanList").document(id);
+                .document(uid).collection("mealPlanList").document(id);
 
         cf.update("ingredients", FieldValue.arrayUnion(selectedIngredientReference))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

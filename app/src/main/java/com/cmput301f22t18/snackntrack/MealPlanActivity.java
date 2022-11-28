@@ -82,7 +82,7 @@ public class MealPlanActivity extends Fragment {
                 Log.d("TRY", "THIS IS A TEST");
 
                 CollectionReference cf = db.collection("mealPlans")
-                        .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("mealPlanList");
+                        .document(uid).collection("mealPlanList");
 
                 cf.addSnapshotListener((value, error) -> {
                     if (error != null) {
