@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,10 +21,15 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Label;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -31,6 +38,7 @@ import java.util.TimeZone;
 public class AddIngredientActivity extends AppCompatActivity {
     ImageButton backButton, increaseAmountButton, decreaseAmountButton, calendarButton;
     ImageButton pickUnitButton, pickLocationButton, pickCategoryButton;
+    ImageButton confirmButton;
     TextInputEditText descriptionEditText, amountEditText, bbfEditText;
     ActivityResultLauncher<Intent> mGetContent;
     TextView unitTextView, categoryTextView, locationTextView;
@@ -107,6 +115,9 @@ public class AddIngredientActivity extends AppCompatActivity {
         pickUnitButton.setOnClickListener(v->openPickerActivity("unit"));
         pickCategoryButton.setOnClickListener(v->openPickerActivity("category"));
         pickLocationButton.setOnClickListener(v->openPickerActivity("location"));
+
+        confirmButton = findViewById(R.id.add_an_ingredient_confirm_button);
+        confirmButton.setOnClickListener(v->addIngredient());
     }
 
     /**
@@ -165,8 +176,10 @@ public class AddIngredientActivity extends AppCompatActivity {
         amountEditText.setText(new_amount);
     }
 
+    /**
+     * This function opens the Material Date Picker to get the date
+     */
     public void openDatePicker() {
-
         final MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker
                 .Builder
                 .datePicker().build();
@@ -181,6 +194,10 @@ public class AddIngredientActivity extends AppCompatActivity {
         materialDatePicker.show(getSupportFragmentManager(), "MaterialDatePicker");
     }
 
+    /**
+     * This function launches the PickLabelActivity that carries the corresponding label type
+     * @param labelType the label type the user want to pick
+     */
     public void openPickerActivity(String labelType) {
         Intent intent = new Intent();
         intent.putExtra("labelType", labelType);
@@ -188,6 +205,11 @@ public class AddIngredientActivity extends AppCompatActivity {
         mGetContent.launch(intent);
     }
 
+    /**
+     * This function return a custom colored drawable
+     * @param label the label object to be draw
+     * @return the drawable object
+     */
     public Drawable colorLabel(Label label) {
         Drawable unwrappedDrawable = ResourcesCompat.getDrawable(this.getResources(),
                 R.drawable.custom_label, null);
@@ -198,6 +220,57 @@ public class AddIngredientActivity extends AppCompatActivity {
             return wrappedDrawable;
         }
         return null;
+    }
+
+    /**
+     * This function extracts all the inputs an create a new ingredient, then add to database
+     */
+    private void addIngredient() {
+
+        String description = "";
+        if (descriptionEditText.getText()!=null)
+            description = descriptionEditText.getText().toString();
+        int amount = 0;
+        if (amountEditText.getText() != null && !amountEditText.getText().toString().isEmpty()) {
+            amount = Integer.parseInt(amountEditText.getText().toString());
+        }
+        String unit = "";
+        if (unitTextView.getText() !=null)
+            unit = unitTextView.getText().toString();
+        String location = "";
+        if (locationTextView.getText() !=null)
+            location = locationTextView.getText().toString();
+        String category = "";
+        if (categoryTextView.getText() !=null)
+            category = categoryTextView.getText().toString();
+        String bbfText = "";
+        if (bbfEditText.getText() !=null)
+            bbfText = bbfEditText.getText().toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+        Date bbf = null;
+        try {
+            bbf = simpleDateFormat.parse(bbfText);
+        }
+        catch (ParseException e) {
+            Log.e("ERROR", "Cannot parse date");
+        }
+        if (description.isEmpty()
+                || amount == 0 || unit.isEmpty() || category.isEmpty() || location.isEmpty()
+                || bbf == null)
+        {
+            Toast.makeText(this, "Insufficient Input", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Ingredient i = new Ingredient(description, location, unit, category, amount, bbf);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String uid = user.getUid();
+                db.collection("storages").document(uid).collection("ingredients")
+                        .add(i);
+                finish();
+            }
+        }
     }
 
     /**
