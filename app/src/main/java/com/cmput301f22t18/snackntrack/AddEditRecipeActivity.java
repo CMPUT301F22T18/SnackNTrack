@@ -168,14 +168,6 @@ public class AddEditRecipeActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable("recipe", (Serializable) recipe);
 
-            // In testing, uncomment below to use mock fragment
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack("Add Ingredient To Recipe")
-                    .add(R.id.fragment_container_view, MockAddIngredientToRecipeFragment.class, bundle)
-                    .commit();
-            ingredientAdapter.notifyDataSetChanged();
-
             // TODO: Send Intent to AddEditIngredientActivity; below can be built upon
             //Intent ingredientIntent = new Intent(this, AddEditIngredientActivity.class);
             //ingredientIntent.putExtra("RECIPE", (Serializable) recipe);
