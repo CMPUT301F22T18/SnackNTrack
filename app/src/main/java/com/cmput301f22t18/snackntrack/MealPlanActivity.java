@@ -25,6 +25,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -58,7 +59,7 @@ public class MealPlanActivity extends Fragment {
 
                 // get date pressed
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                Date date = null;
+                Date date = new Date();
                 try {
                     String temp = String.valueOf(year) +"/" +String.valueOf(month+1) +"/"+String.valueOf(dayOfMonth);
                     date = formatter.parse(temp);
@@ -69,20 +70,19 @@ public class MealPlanActivity extends Fragment {
                 DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
                 Bundle dateBundle = new Bundle();
                 dateBundle.putSerializable("Date",date);
-                dailyPlanActivity.setArguments(dateBundle);
 
                 //firebase, get meal plan for user, then get daily plan based on date
-                Timestamp ts =new Timestamp(date);
+                Timestamp myTimestamp = new Timestamp(date);
+                Log.w("myTIME: ", myTimestamp.toString());
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 assert(user != null);
                 String uid = user.getUid();
-                final String[] dailyPlanId = new String[1];
+                ArrayList<String> dailyPlanId = new ArrayList<>();
                 Log.d("TRY", "THIS IS A TEST");
 
-                //DOES NOT WORK. NO IDEA WHYYYYYYYYYYYYYYYYYYYYYYYYYYYY
                 CollectionReference cf = db.collection("mealPlans")
-                        .document(uid).collection("mealPlanList");
+                        .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("mealPlanList");
 
                 cf.addSnapshotListener((value, error) -> {
                     if (error != null) {
@@ -90,16 +90,25 @@ public class MealPlanActivity extends Fragment {
                         return;
                     }
                     for (QueryDocumentSnapshot doc : value) {
-                        mealplan.addDailyPlan(doc.toObject(DailyPlan.class));
+                        Log.w("DATE: ", doc.get("date").toString(), error);
+                        if (myTimestamp.getSeconds() == ((Timestamp) doc.get("date")).getSeconds()){
+                            Log.w("FOUND: ", doc.get("date").toString(), error);
+                            dailyPlanId.add(doc.getId());
+                            Log.w("ID: ", dailyPlanId.get(0), error);
+
+                            Log.w("ID2: ", dailyPlanId.get(0));
+                            dateBundle.putSerializable("id",dailyPlanId.get(0));
+                            dailyPlanActivity.setArguments(dateBundle);
+
+                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+                        }
+
                     }
-                    Log.w("ADDED: ", mealplan.getDailyPlan().get(0).getDate().toString(), error);
                 });
 
-
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
-                transaction.addToBackStack(null);
-                transaction.commit();
 
             }
 

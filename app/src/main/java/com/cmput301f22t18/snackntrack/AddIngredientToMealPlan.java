@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -41,6 +43,9 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
     private RecyclerView recyclerView;
     Ingredient selectedIngredient;
     Date date;
+    String id;
+    ArrayList<DocumentReference> documentReferencesIngredients;
+    DocumentReference selectedIngredientReference;
 
 
     @Override
@@ -49,15 +54,38 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         View v = inflater.inflate(R.layout.activity_add_mealplan, container, false);
         Bundle dateBundle = getArguments();
         date = (Date) dateBundle.getSerializable("Date");
+        id = (String) dateBundle.getSerializable("id");
         // should get recipe list from database
         storage = new Storage();
-        insertTestStorage();
 
         dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), storage.getStorageList(), this);
         recyclerView = v.findViewById(R.id.meal_plan_add_recycler_view);
         recyclerView.setAdapter(dailyPlanAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(this.getContext()));
+        documentReferencesIngredients = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert(user != null);
+        String uid = user.getUid();
+        CollectionReference cf = db.collection("storages")
+                .document(uid).collection("ingredients");
+
+        cf.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w("AddIngred", "Listen failed.", error);
+                return;
+            }
+            storage.clearStorage();
+            for (QueryDocumentSnapshot doc : value) {
+                storage.addIngredient(doc.toObject(Ingredient.class));
+                documentReferencesIngredients.add(doc.getReference());
+                Log.w("ref", documentReferencesIngredients.get(0).toString(), error);
+            }
+            dailyPlanAdapter.notifyDataSetChanged();
+        });
+
+
 
         return v;
     }
@@ -83,10 +111,12 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
     public void onIngredientNoteClick(int position) {
         Toast.makeText(this.getContext(), storage.getStorageList().get(position).getDescription(), Toast.LENGTH_SHORT).show();
         selectedIngredient = storage.getStorageList().get(position);
+        selectedIngredientReference = documentReferencesIngredients.get(position);
         DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
         dateBundle.putSerializable("Ingredient",selectedIngredient);
+        dateBundle.putSerializable("id",id);
         dailyPlanActivity.setArguments(dateBundle);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -94,10 +124,10 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         assert(user != null);
         String uid = user.getUid();
 
-        CollectionReference cf = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList");
+        DocumentReference cf = db.collection("mealPlans")
+                .document(uid).collection("mealPlanList").document(id);
 
-        cf.document().set(selectedIngredient)
+        cf.update("ingredients", FieldValue.arrayUnion("HI"))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

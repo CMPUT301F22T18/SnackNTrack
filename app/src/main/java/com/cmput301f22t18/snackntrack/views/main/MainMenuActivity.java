@@ -65,57 +65,50 @@ public class MainMenuActivity extends AppCompatActivity {
                 CollectionReference cr2 = cr
                         .document(doc.getId())
                         .collection("ingredients");
-                cr2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document != null)
-                                    r.addIngredient(document.toObject(Ingredient.class));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
+                cr2.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (document != null)
+                                r.addIngredient(document.toObject(Ingredient.class));
+                            Log.d(TAG, document.getId() + " => " + document.getData());
                         }
                     }
                 });
                 rl.addRecipe(r);
             }
         });
-        Log.d(TAG, rl.toString());
         recipeListFragment = RecipeListFragment.newInstance(rl);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         final int id_storage = R.id.storage;
         final int id_recipes = R.id.recipes;
         final int id_mealPlan = R.id.mealPlan;
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case id_storage:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container_main, storageFragment)
-                                .commit();
-                        return true;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case id_storage:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container_main, storageFragment)
+                            .commit();
+                    return true;
 
-                    case id_recipes:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container_main,
-                                        RecipeListFragment.newInstance(rl))
-                                .commit();
-                        return true;
+                case id_recipes:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container_main,
+                                    RecipeListFragment.newInstance(rl))
+                            .commit();
+                    return true;
 
-                    case id_mealPlan:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container_main,
-                                        mealPlanActivity)
-                                .commit();
-                        return true;
-                }
-                return false;
+                case id_mealPlan:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container_main,
+                                    mealPlanActivity)
+                            .commit();
+                    return true;
             }
+            return false;
         });
         bottomNavigationView.setSelectedItemId(R.id.storage);
     }
@@ -129,11 +122,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                FirebaseAuth.getInstance().signOut();
-                this.finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            FirebaseAuth.getInstance().signOut();
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
