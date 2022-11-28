@@ -17,8 +17,7 @@
         <CheckBox
             android:id="@+id/ingredient_check_box"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked" />
+            android:layout_height="wrap_content" />
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,8 +34,10 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:textSize="20sp"
+                    android:fontFamily="@font/nunito"
+                    android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:paddingHorizontal="8dp" />
                 <TextView
                     android:id="@+id/ingredient_category_text_view"
@@ -45,14 +46,12 @@
                     android:text="@string/ingredient_category"
                     android:background="@drawable/category_label"
                     android:textColor="@color/white"
+                    android:fontFamily="@font/nunito"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:paddingHorizontal="8dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <Space
-                android:layout_height="8dp"
-                android:layout_width="match_parent"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -64,6 +63,8 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:fontFamily="@font/nunito"
+                    android:textColor="@color/black"
                     android:paddingHorizontal="8dp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

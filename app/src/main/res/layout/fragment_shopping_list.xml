@@ -18,26 +18,27 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp" >
 
             <TextView
                 android:id="@+id/shopping_list_header_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:text="@string/shopping_list"
-                android:textSize="36sp"
+                android:textStyle="bold"
+                android:textSize="32sp"
                 android:fontFamily="@font/nunito"
+                android:textColor="@color/red_900"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <ImageButton
                 android:id="@+id/sort_button_shopping_list"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/recipe_list_sort_button"
-                android:layout_margin="20dp"
+                android:background="@drawable/custom_image_button"
                 android:src="@drawable/ic_baseline_sort_24"
                 android:contentDescription="@string/sort_button_for_recipe_list" />
 
@@ -60,9 +61,10 @@
                 android:id="@+id/purchased_button"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
-                android:background="@drawable/check_button"
+                android:background="@drawable/custom_yes_button"
                 android:contentDescription="@string/sort_button_for_recipe_list"
-                android:src="@drawable/ic_baseline_add_24"
+                android:layout_marginVertical="20dp"
+                android:src="@drawable/ic_baseline_check_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>

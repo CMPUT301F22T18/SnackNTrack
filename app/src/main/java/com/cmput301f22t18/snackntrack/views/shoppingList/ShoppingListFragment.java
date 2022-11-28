@@ -3,6 +3,7 @@ package com.cmput301f22t18.snackntrack.views.shoppingList;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -12,13 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.cmput301f22t18.snackntrack.DailyPlan;
+import com.cmput301f22t18.snackntrack.MealPlan;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.ShoppingListAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.ShoppingList;
-import com.cmput301f22t18.snackntrack.models.MealPlan;
 import com.cmput301f22t18.snackntrack.models.Storage;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,6 +30,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -53,15 +58,39 @@ public class ShoppingListFragment extends Fragment {
     ImageButton addButton;
     TextView headerText;
 
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public ShoppingListFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * This method creates a new instance of the ShoppingListFragment
      * @return a new instance of ShoppingListFragment
      */
-    public static ShoppingListFragment newInstance() {
+    public static ShoppingListFragment newInstance(String param1, String param2) {
         ShoppingListFragment fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     /**
@@ -108,21 +137,37 @@ public class ShoppingListFragment extends Fragment {
         // Get a copy of the meal plan
         TAG = "MealPlan";
         mealPlan = new MealPlan();
+
+        DailyPlan dailyPlan1 = new DailyPlan();
+        dailyPlan1.addIngredient(new Ingredient("Bread", "Slices", "Grains", 2));
+        DailyPlan dailyPlan2 = new DailyPlan();
+        dailyPlan2.addIngredient(new Ingredient("Cheese", "Grams", "Dairy", 750));
+        mealPlan.addDailyPlan(dailyPlan1);
+        mealPlan.addDailyPlan(dailyPlan2);
+
+        //TODO: get MealPlan from database
+        /*
+        CollectionReference cf2;
+
         cf = db.collection("mealPlans")
-                .document(uid).collection("dailyPlans");
+                .document(uid).collection("mealPlanList");
 
         cf.addSnapshotListener((value, error) -> {
             if (error != null) {
-                Log.w(TAG, "Listen failed.", error);
+                Log.w("Storage", "Listen failed.", error);
                 return;
             }
-            // Clear MealPlan
             for (QueryDocumentSnapshot doc : value) {
-                mealPlan.addDailyPlan(doc.toObject(DailyPlan.class));
+                Log.w("DATE: ", doc.get("date").toString(), error);
+                mealPlan.addDailyPlan(new DailyPlan());
+                cf2 = value.collection("");
             }
         });
 
+         */
+
         // Fill shopping list
+        shoppingList = new ShoppingList();
         shoppingList.calculateList(mealPlan, storage);
 
         // Create instance of the ShoppingListAdapter
