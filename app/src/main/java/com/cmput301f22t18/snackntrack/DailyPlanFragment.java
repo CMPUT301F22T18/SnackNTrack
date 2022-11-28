@@ -43,7 +43,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
     private EditText scaleText;
     private Storage storage;
     String temp;
-    private ArrayList<String> unit_list, location_list, category_list;
+    private ArrayList<DocumentReference> documentReferencesRecipies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +69,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ArrayList<Recipe> recipeList = new ArrayList<>();
 
-        ArrayList<DocumentReference> documentReferencesRecipies = new ArrayList<>();
+        documentReferencesRecipies = new ArrayList<>();
         ArrayList<DocumentReference> documentReferencesIngredients = new ArrayList<>();
         if (user != null) {
             String uid = user.getUid();
@@ -101,7 +101,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                         }
                                         else if (value2 != null) {
                                             Recipe r = value2.toObject(Recipe.class);
-                                            Log.d("RECIPE", r.getTitle());
+                                            //Log.d("RECIPE", r.getTitle());
                                             int index = documentReferencesRecipies.indexOf(recipe);
                                             if (index != -1 && index < dailyPlan.getDailyPlanRecipes().size() &&
                                                     dailyPlan.getDailyPlanRecipes().get(index) != null) {
@@ -114,12 +114,8 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                             recipeListAdapter.notifyDataSetChanged();
                                         }
                                     });
-
                                 }
-
-
                             }
-
                             if (value.get("ingredients") != null) {
                                 ArrayList<DocumentReference> ingredients =
                                         (ArrayList<DocumentReference>) value.get("ingredients");
@@ -134,7 +130,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                         }
                                         else if (value2 != null) {
                                             Ingredient i = value2.toObject(Ingredient.class);
-                                            Log.d("RECIPE", i.getDescription());
+                                            //Log.d("RECIPE", i.getDescription());
                                             int index = documentReferencesIngredients.indexOf(ingredient);
                                             if (index != -1 && index < dailyPlan.getDailyPlanIngredients().size() &&
                                                     dailyPlan.getDailyPlanIngredients().get(index) != null) {
@@ -149,13 +145,10 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                                     });
 
                                 }
-
-
                             }
                         }
                     }
             );
-
         }
 
         //Toast.makeText(this.getContext(), storage.getStorageList().get(0).getDescription(), Toast.LENGTH_SHORT).show();
@@ -204,9 +197,34 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
         scaleButton = v.findViewById(R.id.scale_button);
         scaleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (scaleText.getText() != null){
-                    String temp = scaleText.getText().toString();
-                    int servings = Integer.parseInt(temp);
+                String temp = scaleText.getText().toString();
+                if (temp.length()>0){
+                    int newServings = Integer.parseInt(temp);
+                    
+                    for (int recipeIndex = 0; recipeIndex < dailyPlan.getDailyPlanRecipes().size(); recipeIndex++){
+                        Log.d("Recipe",dailyPlan.getDailyPlanRecipes().get(recipeIndex).getTitle());
+                        Log.d("idofRecipe",documentReferencesRecipies.get(recipeIndex).getPath());
+                        Recipe recipe = dailyPlan.getDailyPlanRecipes().get(recipeIndex);
+                        int currentServings = recipe.getServings();
+                        ArrayList<Ingredient> recipeIngredients;
+                        recipeIngredients = recipe.getRecipeIngredients();
+
+                        for (int ingredientIndex = 0; ingredientIndex < recipeIngredients.size(); ingredientIndex++) {
+                            Ingredient ingredient = recipeIngredients.get(ingredientIndex);
+                            int currentAmount = ingredient.getAmount();
+                            ingredient.setAmount((int) Math.ceil(currentAmount * (double)newServings / currentServings));
+
+                            Log.d(ingredient.getDescription(), Integer.toString(ingredient.getAmount()));
+                        }
+                        recipe.setServings(newServings);
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        String uid = user.getUid();
+                        DocumentReference df = db.document(documentReferencesRecipies.get(recipeIndex).getPath());
+                        df.set(recipe);
+
+                    }
 
                 }
             }

@@ -108,52 +108,36 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         DocumentReference df = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList").document(id);
+                .document(uid).collection("mealPlanRecipes").document();
 
-//        df.set(selectedRecipe)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // These are a method which gets executed when the task is succeeded
-//                        Log.d("Success", "Data has been added successfully!");
-//
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // These are a method which gets executed if there’s any problem
-//                        Log.d("error", "Data could not be added!" + e.toString());
-//                    }
-//                });
-
-//        db.collection("mealPlans")
-//                .document(uid).collection("mealPlanRecipes")
-//                .add(selectedRecipe)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w("TAG", "Error adding document", e);
-//                    }
-//                });
-
-
-
-        DocumentReference cf = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList").document(id);
-
-        cf.update("recipes", FieldValue.arrayUnion(selectedRecipeReference))
+        df.set(selectedRecipe)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // These are a method which gets executed when the task is succeeded
-                        Log.d("Success", "Data has been added successfully!");
+                        Log.d("SET RECIPE AT: ", df.getPath());
+
+                        DocumentReference tempDf = db.document(df.getPath());
+                        selectedRecipeReference = tempDf;
+
+                        DocumentReference cf = db.collection("mealPlans")
+                            .document(uid).collection("mealPlanList").document(id);
+
+                        cf.update("recipes", FieldValue.arrayUnion(selectedRecipeReference))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // These are a method which gets executed when the task is succeeded
+                                        Log.d("Success", "Data has been added successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // These are a method which gets executed if there’s any problem
+                                        Log.d("error", "Data could not be added!" + e.toString());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -163,8 +147,6 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
                         Log.d("error", "Data could not be added!" + e.toString());
                     }
                 });
-
-
 
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
