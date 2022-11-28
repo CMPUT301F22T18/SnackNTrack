@@ -66,4 +66,13 @@
     <string name="menu_mealPlan">Meal Plan</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="back_button_for_view_recipe">Back button for view recipe</string>
+    <string name="recipe">Recipe</string>
+    <string name="edit_button_for_view_recipe">Edit button for view recipe</string>
+    <string name="recipe_image">Recipe Image</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="comments">Comments</string>
+    <string name="delete_recipe_button_for_view_recipe">Delete recipe button for view recipe</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="amount">Amount</string>
 </resources>
