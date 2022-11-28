@@ -31,30 +31,7 @@
                 android:value="" />
 
         </activity>
-        <activity
-            android:parentActivityName=".views.main.MainMenuActivity"
-            android:name=".MealPlanActivity"
-            android:exported="false">
-        <meta-data
-            android:name="android.app.lib_name"
-            android:value="" />
-        </activity>
-        <activity
-            android:parentActivityName=".views.main.MainMenuActivity"
-            android:name=".DailyPlanActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:parentActivityName=".views.main.MainMenuActivity"
-            android:name=".AddRecipeToMealPlan"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".views.main.MainActivity"
             android:exported="true">

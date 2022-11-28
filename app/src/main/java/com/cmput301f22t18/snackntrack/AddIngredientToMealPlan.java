@@ -5,21 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
-import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +28,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapter.OnNoteListener {
@@ -113,12 +106,12 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         selectedIngredient = storage.getStorageList().get(position);
         selectedIngredientReference = newIngredient.get(position);
         Log.w("NEW INGRED", selectedIngredientReference.getPath());
-        DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
+        DailyPlanFragment dailyPlanFragment = new DailyPlanFragment();
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
         dateBundle.putSerializable("Ingredient",selectedIngredient);
         dateBundle.putSerializable("id",id);
-        dailyPlanActivity.setArguments(dateBundle);
+        dailyPlanFragment.setArguments(dateBundle);
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -145,7 +138,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
 
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
+        transaction.replace(R.id.fragment_container_main, dailyPlanFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,22 +18,17 @@ import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.cmput301f22t18.snackntrack.models.Storage;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
-public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnNoteListener, DailyPlanAdapter.OnNoteListener {
+public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnNoteListener, DailyPlanAdapter.OnNoteListener {
 
     private MealPlan mealPlan;
     private DailyPlan dailyPlan;
@@ -46,6 +39,8 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
     private RecyclerView recyclerView2;
     private Button addIngredient;
     private Button addRecipe;
+    private Button scaleButton;
+    private EditText scaleText;
     private Storage storage;
     String temp;
     private ArrayList<String> unit_list, location_list, category_list;
@@ -59,38 +54,10 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
         Date date = (Date) dateBundle.getSerializable("Date");
         String id = (String) dateBundle.getSerializable("id");
         Log.w("ID: ", date.toString());
-        //Toast.makeText(v.getContext(), id, Toast.LENGTH_SHORT).show();
 
         // Firebase, should get meal plan list based on date, from user not generate new
         mealPlan = new MealPlan();
         dailyPlan = new DailyPlan();
-        //dailyPlan = mealPlan.getDailyPlanAtDay(date);
-        //insertTestRecipes(date);
-
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        assert(user != null);
-//        String uid = user.getUid();
-//
-//        CollectionReference cf = db.collection("mealPlans")
-//                .document(uid).collection("mealPlanList");
-//
-//        cf.document().set(mealPlan)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // These are a method which gets executed when the task is succeeded
-//                        Log.d("Success", "Data has been added successfully!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // These are a method which gets executed if there’s any problem
-//                        Log.d("error", "Data could not be added!" + e.toString());
-//                    }
-//                });
-
 
         recipeListAdapter = new RecipeListAdapter(this.getContext(), dailyPlan.getDailyPlanRecipes(), this);
         recyclerView = v.findViewById(R.id.recipe_list_recycler_view);
@@ -101,15 +68,7 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
         //insertTestStorage();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ArrayList<Recipe> recipeList = new ArrayList<>();
-//        RecipeListAdapter recipeListAdapter = new RecipeListAdapter(getContext(), recipeList, new RecipeListAdapter.OnNoteListener() {
-//            @Override
-//            public void onNoteClick(int position) {
-//
-//            }
-//        });
-//        RecyclerView dailyPlanRecylerView = v.findViewById(R.id.meal_plan_recipe_list);
-//        dailyPlanRecylerView.setAdapter(recipeListAdapter);
-        //dailyPlanRecylerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         ArrayList<DocumentReference> documentReferencesRecipies = new ArrayList<>();
         ArrayList<DocumentReference> documentReferencesIngredients = new ArrayList<>();
         if (user != null) {
@@ -198,25 +157,7 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
             );
 
         }
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        assert(user != null);
-//        String uid = user.getUid();
-//
-//        CollectionReference cf = db.collection("storages")
-//                .document(uid).collection("ingredients");
-//
-//        cf.addSnapshotListener((value, error) -> {
-//            if (error != null) {
-//                Log.w("Storage", "Listen failed.", error);
-//                return;
-//            }
-//            //storage.clearStorage();
-//            for (QueryDocumentSnapshot doc : value) {
-//                storage.addIngredient(doc.toObject(Ingredient.class));
-//            }
-//            dailyPlanAdapter.notifyDataSetChanged();
-//        });
+
         //Toast.makeText(this.getContext(), storage.getStorageList().get(0).getDescription(), Toast.LENGTH_SHORT).show();
         dailyPlanAdapter = new DailyPlanAdapter(this.getContext(), dailyPlan.getDailyPlanIngredients(), this);
         recyclerView2 = v.findViewById(R.id.ingredient_list_recycler_view);
@@ -254,6 +195,20 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
                 transaction.replace(R.id.fragment_container_main, addRecipeToMealPlan);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+
+        });
+
+        scaleText = v.findViewById(R.id.scale_text);
+
+        scaleButton = v.findViewById(R.id.scale_button);
+        scaleButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (scaleText.getText() != null){
+                    String temp = scaleText.getText().toString();
+                    int servings = Integer.parseInt(temp);
+
+                }
             }
 
         });
@@ -303,7 +258,7 @@ public class DailyPlanActivity extends Fragment implements RecipeListAdapter.OnN
 
     @Override
     public void onIngredientNoteClick(int position) {
-        Toast.makeText(this.getContext(), storage.getStorageList().get(position).getDescription(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(), dailyPlan.getDailyPlanIngredients().get(position).getDescription(), Toast.LENGTH_SHORT).show();
 
     }
 }

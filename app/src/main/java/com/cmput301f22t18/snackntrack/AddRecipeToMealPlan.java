@@ -97,15 +97,54 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         Toast.makeText(this.getContext(), recipeList.getRecipeList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
         selectedRecipe = recipeList.getRecipeList().get(position);
         selectedRecipeReference = newRecipe.get(position);
-        DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
+        DailyPlanFragment dailyPlanFragment = new DailyPlanFragment();
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
         dateBundle.putSerializable("Recipe",selectedRecipe);
         dateBundle.putSerializable("id",id);
-        dailyPlanActivity.setArguments(dateBundle);
+        dailyPlanFragment.setArguments(dateBundle);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DocumentReference df = db.collection("mealPlans")
+                .document(uid).collection("mealPlanList").document(id);
+
+//        df.set(selectedRecipe)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // These are a method which gets executed when the task is succeeded
+//                        Log.d("Success", "Data has been added successfully!");
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        // These are a method which gets executed if there’s any problem
+//                        Log.d("error", "Data could not be added!" + e.toString());
+//                    }
+//                });
+
+//        db.collection("mealPlans")
+//                .document(uid).collection("mealPlanRecipes")
+//                .add(selectedRecipe)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w("TAG", "Error adding document", e);
+//                    }
+//                });
+
+
+
         DocumentReference cf = db.collection("mealPlans")
                 .document(uid).collection("mealPlanList").document(id);
 
@@ -126,8 +165,10 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
                 });
 
 
+
+
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
+        transaction.replace(R.id.fragment_container_main, dailyPlanFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

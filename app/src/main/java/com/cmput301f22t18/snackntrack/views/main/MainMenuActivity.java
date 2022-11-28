@@ -1,34 +1,25 @@
 package com.cmput301f22t18.snackntrack.views.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cmput301f22t18.snackntrack.MealPlanActivity;
+import com.cmput301f22t18.snackntrack.MealPlanFragment;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
-import com.cmput301f22t18.snackntrack.views.storage.StorageActivity;
 import com.cmput301f22t18.snackntrack.views.storage.StorageFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -37,7 +28,7 @@ public class MainMenuActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     StorageFragment storageFragment;
     RecipeListFragment recipeListFragment;
-    MealPlanActivity mealPlanActivity;
+    MealPlanFragment mealPlanFragment;
     String TAG = "DEBUG";
 
     @Override
@@ -46,7 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         storageFragment = new StorageFragment();
-        mealPlanActivity = new MealPlanActivity();
+        mealPlanFragment = new MealPlanFragment();
         RecipeList rl = new RecipeList();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
@@ -104,7 +95,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment_container_main,
-                                    mealPlanActivity)
+                                    mealPlanFragment)
                             .commit();
                     return true;
             }
