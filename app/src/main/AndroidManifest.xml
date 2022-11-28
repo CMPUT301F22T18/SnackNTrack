@@ -13,20 +13,6 @@
         android:theme="@style/Theme.SnackNTrack"
         tools:targetApi="31" >
         <activity
-            android:name=".MockMainMenuActivity"
-            android:exported="true" >
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".views.main.MockMainMenuActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".AddEditRecipeActivity"
             android:exported="false">
             <meta-data

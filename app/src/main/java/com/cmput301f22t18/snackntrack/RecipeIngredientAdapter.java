@@ -77,7 +77,7 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
     }
 
     /**
-     * Set the view holder for the recyler view
+     * Set the view holder for the recycler view
      * @param parent the parent view group
      * @param viewType the type of view
      * @return the ViewHolder associate with the row layout

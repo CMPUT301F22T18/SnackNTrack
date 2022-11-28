@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,13 +23,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,8 +55,8 @@ public class AddEditRecipeActivity extends AppCompatActivity {
     ImageButton backButton, addRecipeButton;
     Spinner categorySpinner;
     EditText titleEditText, commentsEditText, servingsEditText, prepTimeEditText;
-    String title, category, comments, photoURL;
-    int prepTime, servings, position;
+    String title, category, comments, photoURL, recipeID;
+    int prepTime, servings;
     ArrayList<Ingredient> ingredients;
     RecipeList recipeList;
     Recipe recipe;
@@ -57,6 +67,8 @@ public class AddEditRecipeActivity extends AppCompatActivity {
     ArrayList<String> categories;
     ArrayAdapter<String> categoryAdapter;
 
+    private final String TAG = "AddEditRecipeActivity";
+    boolean editing;
     /**
      * Create the Activity
      * @param savedInstanceState most recent state data
@@ -80,20 +92,18 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         prepTimeEditText = this.findViewById(R.id.prep_time_edit_text);
         categorySpinner = this.findViewById(R.id.category_spinner);
 
-        // Get RecipeList from fragment
+        // Get recipe from list fragment or view activity
         Intent intent = getIntent();
-        recipeList = (RecipeList) intent.getSerializableExtra("RECIPE_LIST");
+        recipe = (Recipe) intent.getSerializableExtra("recipe");
+        recipeID = (String) intent.getSerializableExtra("recipeID");
+        editing = true;
 
-        // Check if RECIPE_POSITION was provided; i.e. check if add/edit mode
-        position = intent.getIntExtra("RECIPE_POSITION", -1);
-        if (position >= 0) {
-            recipe = recipeList.getRecipeList().get(position);
-        }
-        else {
-            // Create new recipe object if not editing recipe
+        // Create new recipe if no recipe provided
+        if (recipe == null) {
             recipe = new Recipe();
             ingredients = new ArrayList<Ingredient>();
             recipe.setRecipeIngredients(ingredients);
+            editing = false;
         }
 
         // Adjust spinner
@@ -121,13 +131,14 @@ public class AddEditRecipeActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
         categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
         // TODO: Set category to new category made from custom fragment
 
         // If editing, set applicable inputs to match selected recipe
-        if (position != -1) {
+        if (recipe != null) {
             if (recipe.getPhotoURL() != null) {
                 Glide.with(this).load(photoURL).into(recipeImage);
                 addImageButton.setText("Change the image");
@@ -151,18 +162,19 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         recyclerView.setAdapter(ingredientAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+
         // Button operations
         addIngredientButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putSerializable("recipe", (Serializable) recipe);
 
             // In testing, uncomment below to use mock fragment
-            /*getSupportFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .addToBackStack("Add Ingredient To Recipe")
                     .add(R.id.fragment_container_view, MockAddIngredientToRecipeFragment.class, bundle)
                     .commit();
-            ingredientAdapter.notifyDataSetChanged();*/
+            ingredientAdapter.notifyDataSetChanged();
 
             // TODO: Send Intent to AddEditIngredientActivity; below can be built upon
             //Intent ingredientIntent = new Intent(this, AddEditIngredientActivity.class);
@@ -183,22 +195,21 @@ public class AddEditRecipeActivity extends AppCompatActivity {
 
         addImageButton.setOnClickListener(v -> {
             openFileDialog(v);
-            addImageButton.setText("Change the image");
+            addImageButton.setText("Change image");
         });
 
         addRecipeButton.setOnClickListener(v -> {
             Log.i("Debug", "Pressed add recipe!");
-            addRecipe();
-            finish();
+            addEditRecipe();
         });
 
     }
 
     /**
-     * Add recipe to recipe list, as long as required fields
+     * Add or edit recipe to recipe list, as long as required fields
      * are filled.
      */
-    public void addRecipe() {
+    public void addEditRecipe() {
         if (!validateInput()) {
             Toast.makeText(this, "Recipe requires title, prep time, servings, category!", Toast.LENGTH_LONG).show();
         }
@@ -214,8 +225,13 @@ public class AddEditRecipeActivity extends AppCompatActivity {
             recipe.setServings(servings);
             recipe.setPrepTime(prepTime);
             recipe.setPhotoURL(photoURL);
-            recipeList.addRecipe(recipe);
-            Log.d("TEST NAME", recipeList.getRecipeList().get(recipeList.getRecipeList().size()-1).getTitle());
+            recipe.setRecipeIngredients(ingredients);
+            /*if (recipe != null)
+                recipeList.addRecipe(recipe); // TODO: IMPORTANT: recipeList may require reference in bundle
+            else
+                recipeList.setRecipe(position, recipe);*/
+            updateDatabase();
+            finish();
 
         }
     }
@@ -261,5 +277,58 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         data.setType("image/*");
         data = Intent.createChooser(data, "Choose an image");
         sActivityResultLauncher.launch(data);
+    }
+
+    /**
+     * Add or edit a recipe in the database
+     */
+    public void updateDatabase() {
+        if (!editing) { // add recipe in DB
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                db.collection("recipeLists")
+                        .document(user.getUid())
+                        .collection("recipes")
+                        .document()
+                        .set(recipe)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "successfully written recipe!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "error writing recipe", e);
+                            }
+                        });
+
+            }
+        }//TODO: properly upload image to firebase then use firebase url instead of local
+        else { // edit recipe in DB
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                CollectionReference cr = db.collection("recipeLists")
+                        .document(user.getUid())
+                        .collection("recipes");
+                cr.document(recipeID)
+                        .set(recipe)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "Document successfully edited!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Error editing document", e);
+                            }
+                        });
+            }
+        }
     }
 }
