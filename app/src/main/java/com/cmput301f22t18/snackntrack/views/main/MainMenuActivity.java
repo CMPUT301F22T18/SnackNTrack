@@ -38,38 +38,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
         storageFragment = new StorageFragment();
         mealPlanFragment = new MealPlanFragment();
-        RecipeList rl = new RecipeList();
+        recipeListFragment = new RecipeListFragment();
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference cr = db.collection("recipeLists")
-                    .document(user.getUid()).collection("recipes");
-            cr.addSnapshotListener((value, error) -> {
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error);
-                    return;
-                }
-                rl.getRecipeList().clear();
-                for (QueryDocumentSnapshot doc : value) {
-                    Recipe r = doc.toObject(Recipe.class);
-                    r.setRecipeIngredients(new ArrayList<>());
-                    CollectionReference cr2 = cr
-                            .document(doc.getId())
-                            .collection("ingredients");
-                    cr2.get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document != null)
-                                    r.addIngredient(document.toObject(Ingredient.class));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        }
-                    });
-                    rl.addRecipe(r);
-                }
-            });
-            recipeListFragment = RecipeListFragment.newInstance(rl);
-
             bottomNavigationView = findViewById(R.id.bottom_navigation_view);
             final int id_storage = R.id.storage;
             final int id_recipes = R.id.recipes;
@@ -86,8 +58,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     case id_recipes:
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_container_main,
-                                        RecipeListFragment.newInstance(rl))
+                                .replace(R.id.fragment_container_main, recipeListFragment)
                                 .commit();
                         return true;
 
