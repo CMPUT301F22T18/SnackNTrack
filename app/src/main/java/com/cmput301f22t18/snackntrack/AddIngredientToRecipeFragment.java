@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.views.storage.AddEditCustomValueFragment;
 
 import org.jetbrains.annotations.Contract;
 
@@ -219,43 +218,5 @@ public class AddIngredientToRecipeFragment extends Fragment {
 
         unitSpinner.setAdapter(unit_adapter);
         categorySpinner.setAdapter(category_adapter);
-
-        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != unit_adapter.getCount() - 1)
-                    onItemSelectedUnit(parent, view, position, id);
-                else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("type", "unit");
-                    requireActivity().getSupportFragmentManager().beginTransaction().addToBackStack("Add Unit").
-                            add(AddEditCustomValueFragment.class, bundle, "Add Unit").commit();
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != category_adapter.getCount() - 1)
-                    onItemSelectedCategory(parent, view, position, id);
-                else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("type", "category");
-                    requireActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .addToBackStack("Add Category").
-                            add(AddEditCustomValueFragment.class, bundle, "Add Category")
-                            .commit();
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
     }
 }
