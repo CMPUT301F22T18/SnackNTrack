@@ -28,5 +28,7 @@
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_container_view"/>
+        android:id="@+id/fragment_container_view"
+        android:name="com.cmput301f22t18.snackntrack.AddEditIngredientFragment"
+        tools:layout="@layout/fragment_add_edit_ingredient" />
 </androidx.constraintlayout.widget.ConstraintLayout>
