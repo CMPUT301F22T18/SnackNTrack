@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 public class DeleteRecipeFragment extends DialogFragment {
     private ImageButton yesButton;
     private ImageButton noButton;
@@ -60,6 +62,7 @@ public class DeleteRecipeFragment extends DialogFragment {
                             }
                         });
                 dismiss();
+                requireActivity().finish();
             }
         });
 

@@ -189,30 +189,30 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
                 query = collectionReference;
             }
 
-            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()) {
-                        for(QueryDocumentSnapshot recipeDocument : task.getResult()) {
-                            // do something
-                            Recipe recipe = recipeDocument.toObject(Recipe.class);
-                            String id = recipeDocument.getId();
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            recipeList.getRecipeList().clear();
+                            recipeIDs.clear();
+                            if(task.isSuccessful()) {
+                                for(QueryDocumentSnapshot recipeDocument : task.getResult()) {
+                                    // do something
+                                    Recipe recipe = recipeDocument.toObject(Recipe.class);
+                                    String id = recipeDocument.getId();
 
-                            if(recipeIDs.contains(id)) {
-                                int position = recipeIDs.indexOf(id);
-                                recipeList.getRecipeList().set(position, recipe);
-                                recipeListAdapter.notifyDataSetChanged();
+                                    recipeIDs.add(id);
+                                    recipeList.addRecipe(recipe);
+                                    recipeListAdapter.notifyDataSetChanged();
+                                }
                             }
                             else {
-                                recipeIDs.add(id);
-                                recipeList.addRecipe(recipe);
-                                recipeListAdapter.notifyItemChanged(recipeListAdapter.getItemCount() - 1);
+                                Log.d("DEBUG", "Error getting documents: ", task.getException());
                             }
                         }
-                    }
-                    else {
-                        Log.d("DEBUG", "Error getting documents: ", task.getException());
-                    }
+                    });
                 }
             });
         }
