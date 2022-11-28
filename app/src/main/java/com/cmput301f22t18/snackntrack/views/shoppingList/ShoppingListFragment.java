@@ -232,14 +232,11 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
 
         // When user clicks the green button, confirms whether or not they would like to move selected ingredients to the storage
         addButton.setOnClickListener(new View.OnClickListener() {
-            Boolean clear = new Boolean(false);
+            ArrayList<Boolean> clear = new ArrayList<Boolean>();
+            boolean yes = true;
             @Override
             public void onClick(View v) {
                 // Display Confirmation
-                new ClearShoppingListFragment(clear).show(
-                        getChildFragmentManager(), ClearShoppingListFragment.TAG);
-
-                if (clear.booleanValue()) {
                     // Get all ingredients currently checked
                     ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
                     // Add these ingredients to the storage, and remove from ShoppingList
@@ -274,8 +271,6 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
                         checkedIngredients.clear();
                         shoppingListAdapter.notifyDataSetChanged();
                     }
-                }
-
             }
         });
 

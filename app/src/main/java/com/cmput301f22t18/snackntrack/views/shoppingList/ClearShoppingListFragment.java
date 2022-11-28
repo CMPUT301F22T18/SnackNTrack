@@ -13,6 +13,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.cmput301f22t18.snackntrack.R;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link DialogFragment} subclass.
  *
@@ -20,14 +22,13 @@ import com.cmput301f22t18.snackntrack.R;
  * @author Charlotte Kalutycz
  */
 public class ClearShoppingListFragment extends DialogFragment {
-    Boolean clear;
+    ArrayList<Boolean> clear;
 
     public ClearShoppingListFragment() {
         // Empty constructor for ClearShoppingListFragment
     }
 
-    public ClearShoppingListFragment(Boolean clear) {
-        // Empty constructor for ClearShoppingListFragment
+    public ClearShoppingListFragment(ArrayList<Boolean> clear) {
         this.clear = clear;
     }
 
@@ -48,7 +49,7 @@ public class ClearShoppingListFragment extends DialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clear = Boolean.TRUE;
+                clear.add(new Boolean(true));
                 dismiss();
             }
         });
@@ -56,6 +57,7 @@ public class ClearShoppingListFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clear.add(new Boolean(false));
                 dismiss();
             }
         });

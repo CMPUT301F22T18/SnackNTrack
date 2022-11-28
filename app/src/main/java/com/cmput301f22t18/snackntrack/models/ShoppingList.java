@@ -148,7 +148,9 @@ public class ShoppingList {
                 // Add all ingredients in the DailyPlan to the neededIngredients ArrayList
                 for (int j = 0; j < ingredientAmount; j++) {
                     if (currentDailyPlan.getDailyPlanIngredients().get(j) != null && (currentDailyPlan.getDailyPlanIngredients().get(j).getDescription() != null && currentDailyPlan.getDailyPlanIngredients().get(j).getDescription() != null)) {
-                        neededIngredients.add(currentDailyPlan.getDailyPlanIngredients().get(j));
+                        if (currentDailyPlan.getDailyPlanIngredients().get(j).getAmount() > 0) {
+                            neededIngredients.add(currentDailyPlan.getDailyPlanIngredients().get(j));
+                        }
                     }
                 }
                 // Check each Recipe in the DailyPlan
@@ -160,7 +162,9 @@ public class ShoppingList {
                         // Add all ingredients in the Recipe to the neededIngredients ArrayList
                         for (int l = 0; l < ingredientAmount; l++) {
                             if (currentRecipe.getRecipeIngredients().get(l) != null && (currentRecipe.getRecipeIngredients().get(l).getDescription() != null && currentRecipe.getRecipeIngredients().get(l).getCategory() != null)) {
-                                neededIngredients.add(currentRecipe.getRecipeIngredients().get(l));
+                                if (currentRecipe.getRecipeIngredients().get(l).getAmount() > 0) {
+                                    neededIngredients.add(currentRecipe.getRecipeIngredients().get(l));
+                                }
                             }
                         }
                     }
