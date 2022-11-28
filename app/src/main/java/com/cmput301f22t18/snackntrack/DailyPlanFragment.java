@@ -43,7 +43,9 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
     private EditText scaleText;
     private Storage storage;
     String temp;
+    private String id;
     private ArrayList<DocumentReference> documentReferencesRecipies;
+    private ArrayList<DocumentReference> documentReferencesIngredients;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,7 +54,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
 
         Bundle dateBundle = getArguments();
         Date date = (Date) dateBundle.getSerializable("Date");
-        String id = (String) dateBundle.getSerializable("id");
+        id = (String) dateBundle.getSerializable("id");
         Log.w("ID: ", date.toString());
 
         // Firebase, should get meal plan list based on date, from user not generate new
@@ -70,7 +72,7 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
         ArrayList<Recipe> recipeList = new ArrayList<>();
 
         documentReferencesRecipies = new ArrayList<>();
-        ArrayList<DocumentReference> documentReferencesIngredients = new ArrayList<>();
+        documentReferencesIngredients = new ArrayList<>();
         if (user != null) {
             String uid = user.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -271,12 +273,27 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
     @Override
     public void onNoteClick(int position) {
         Toast.makeText(this.getContext(), dailyPlan.getDailyPlanRecipes().get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Reference", documentReferencesRecipies.get(position).getPath());
+        bundle.putSerializable("id",id);
+        bundle.putSerializable("type","recipes");
+        DeleteFromMealPlan fragment = new DeleteFromMealPlan();
+        fragment.setArguments(bundle);
+        fragment.show(getChildFragmentManager(), "Add City");
 
     }
 
     @Override
     public void onIngredientNoteClick(int position) {
         Toast.makeText(this.getContext(), dailyPlan.getDailyPlanIngredients().get(position).getDescription(), Toast.LENGTH_SHORT).show();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Reference", documentReferencesIngredients.get(position).getPath());
+        bundle.putSerializable("id",id);
+        bundle.putSerializable("type","ingredients");
+        DeleteFromMealPlan fragment = new DeleteFromMealPlan();
+        fragment.setArguments(bundle);
+        fragment.show(getChildFragmentManager(), "Add City");
 
     }
 }
