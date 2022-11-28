@@ -41,6 +41,11 @@ public class AddIngredientActivity extends AppCompatActivity {
         decreaseAmountButton.setOnClickListener(v->changeAmount(-1));
     }
 
+    /**
+     * This function enable closing keyboards by touching outside of EditText
+     * @param ev Motion event
+     * @return true / false base on the AppCompatActivity dispatchTouchEvent function
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         View v = getCurrentFocus();
@@ -62,6 +67,10 @@ public class AddIngredientActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+    /**
+     * This function hide the virtual keyboard
+     * @param activity the activity invoking this method
+     */
     private void hideKeyboard(AddIngredientActivity activity) {
         if (activity != null && activity.getWindow() != null) {
             activity.getWindow().getDecorView();
@@ -73,6 +82,10 @@ public class AddIngredientActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function change the amount edit text input text by an amount
+     * @param changeAmount -1 for decrease, 1 for increase
+     */
     public void changeAmount(int changeAmount){
         int amount = 0;
         if (amountEditText.getText() != null && !amountEditText.getText().toString().isEmpty()) {
@@ -83,6 +96,9 @@ public class AddIngredientActivity extends AppCompatActivity {
         amountEditText.setText(new_amount);
     }
 
+    /**
+     * This function end the current activity without returning anything
+     */
     public void goBack() {
         finish();
     }
