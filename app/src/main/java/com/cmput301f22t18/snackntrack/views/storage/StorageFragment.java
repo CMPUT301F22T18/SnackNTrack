@@ -1,5 +1,7 @@
 package com.cmput301f22t18.snackntrack.views.storage;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +17,7 @@ import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Storage;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -34,6 +37,7 @@ public class StorageFragment extends Fragment {
     RecyclerView recyclerView;
     StorageAdapter storageAdapter;
     ArrayList<String> ingredientIDs;
+    FloatingActionButton fab;
     String ERROR_TAG = "STORAGE ERROR";
 
     public StorageFragment() {
@@ -56,6 +60,14 @@ public class StorageFragment extends Fragment {
         recyclerView = v.findViewById(R.id.fragment_storage_ingredient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(storageAdapter);
+        fab = v.findViewById(R.id.add_ingredient_fab);
+        fab.setOnClickListener(v1 -> {
+            Intent intent = new Intent();
+            intent.setClass(getContext(), AddIngredientActivity.class);
+            Activity activity = getActivity();
+            if (activity != null)
+                activity.startActivity(intent);
+        });
         setUpStorage();
         return v;
     }

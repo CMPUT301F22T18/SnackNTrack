@@ -77,4 +77,11 @@
     <string name="my_storage_title">My Storage</string>
     <string name="sort_hint">Sort</string>
     <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="_0">0</string>
+    <string name="amount_minus">Minus Amount</string>
+    <string name="plus">Plus Amount</string>
+    <string name="back">Back</string>
+    <string name="add_unit">Add a Unit</string>
+    <string name="add_category">Add a Category</string>
+    <string name="add_location">Add a Location</string>
 </resources>

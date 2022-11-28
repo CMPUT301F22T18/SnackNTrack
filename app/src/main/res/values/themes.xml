@@ -25,5 +25,14 @@
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption.SnackNTrack</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+
+        <!--this is to change the shape of the MDC EditText-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackAndTrack.SmallComponent</item>
+    </style>
+    <style name="ShapeAppearance.SnackAndTrack.SmallComponent"
+        parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+
     </style>
 </resources>
