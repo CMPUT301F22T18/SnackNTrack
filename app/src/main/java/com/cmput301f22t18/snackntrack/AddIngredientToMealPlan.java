@@ -44,7 +44,8 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
     Ingredient selectedIngredient;
     Date date;
     String id;
-    ArrayList<DocumentReference> documentReferencesIngredients;
+    ArrayList<DocumentReference> newIngredient;
+    ArrayList<DocumentReference> documentReferencesIngredients = new ArrayList<>();;
     DocumentReference selectedIngredientReference;
 
 
@@ -63,24 +64,23 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         recyclerView.setAdapter(dailyPlanAdapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(this.getContext()));
-        documentReferencesIngredients = new ArrayList<>();
+        newIngredient = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert(user != null);
         String uid = user.getUid();
         CollectionReference cf = db.collection("storages")
-                .document(uid).collection("ingredients");
+                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("ingredients");
 
         cf.addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.w("AddIngred", "Listen failed.", error);
                 return;
             }
-            storage.clearStorage();
             for (QueryDocumentSnapshot doc : value) {
                 storage.addIngredient(doc.toObject(Ingredient.class));
-                documentReferencesIngredients.add(doc.getReference());
-                Log.w("ref", documentReferencesIngredients.get(0).toString(), error);
+                newIngredient.add(doc.getReference());
+                Log.w("ref", newIngredient.get(0).toString(), error);
             }
             dailyPlanAdapter.notifyDataSetChanged();
         });
@@ -111,7 +111,8 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
     public void onIngredientNoteClick(int position) {
         Toast.makeText(this.getContext(), storage.getStorageList().get(position).getDescription(), Toast.LENGTH_SHORT).show();
         selectedIngredient = storage.getStorageList().get(position);
-        selectedIngredientReference = documentReferencesIngredients.get(position);
+        selectedIngredientReference = newIngredient.get(position);
+        Log.w("NEW INGRED", selectedIngredientReference.getPath());
         DailyPlanActivity dailyPlanActivity = new DailyPlanActivity();
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
@@ -119,15 +120,13 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         dateBundle.putSerializable("id",id);
         dailyPlanActivity.setArguments(dateBundle);
 
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert(user != null);
-        String uid = user.getUid();
-
         DocumentReference cf = db.collection("mealPlans")
-                .document(uid).collection("mealPlanList").document(id);
+                .document("FbBhiUPTcZRvkLDgJzYoI9MHQ2u2").collection("mealPlanList").document(id);
 
-        cf.update("ingredients", FieldValue.arrayUnion("HI"))
+        cf.update("ingredients", FieldValue.arrayUnion(selectedIngredientReference))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -142,6 +141,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
                         Log.d("error", "Data could not be added!" + e.toString());
                     }
                 });
+
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_main, dailyPlanActivity);
