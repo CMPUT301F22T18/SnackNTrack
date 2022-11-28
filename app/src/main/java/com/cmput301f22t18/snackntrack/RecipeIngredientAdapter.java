@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.views.storage.AddEditIngredientFragment;
+//import com.cmput301f22t18.snackntrack.views.storage.AddEditIngredientFragment;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -68,9 +68,10 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
                     });
                 fm.beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, AddEditIngredientFragment.class, bundle)
+                    .add(R.id.fragment_container_view, AddIngredientToRecipeFragment.class, bundle)
                     .addToBackStack("EditIngredient")
                     .commit();
+                //TODO: Remove AddIngredientToRecipeFragment reference; supposed to be AddEditIngredientFragment
 
         };
     }
