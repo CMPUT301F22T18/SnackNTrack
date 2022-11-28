@@ -34,7 +34,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ViewRecipeActivity"
             android:name=".AddEditRecipeActivity"
             android:exported="false">
             <meta-data
