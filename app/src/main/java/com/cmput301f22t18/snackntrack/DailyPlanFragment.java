@@ -218,16 +218,18 @@ public class DailyPlanFragment extends Fragment implements RecipeListAdapter.OnN
                         ArrayList<Ingredient> recipeIngredients;
                         recipeIngredients = recipe.getRecipeIngredients();
 
-                        // for every ingredient in the recipe, update its amount
-                        for (int ingredientIndex = 0; ingredientIndex < recipeIngredients.size(); ingredientIndex++) {
-                            Ingredient ingredient = recipeIngredients.get(ingredientIndex);
-                            int currentAmount = ingredient.getAmount();
-                            ingredient.setAmount((int) Math.ceil(currentAmount * (double)newServings / currentServings));
+                        if (recipeIngredients != null) {
+                            // for every ingredient in the recipe, update its amount
+                            for (int ingredientIndex = 0; ingredientIndex < recipeIngredients.size(); ingredientIndex++) {
+                                Ingredient ingredient = recipeIngredients.get(ingredientIndex);
+                                int currentAmount = ingredient.getAmount();
+                                ingredient.setAmount((int) Math.ceil(currentAmount * (double) newServings / currentServings));
 
-                            Log.d(ingredient.getDescription(), Integer.toString(ingredient.getAmount()));
+                                Log.d(ingredient.getDescription(), Integer.toString(ingredient.getAmount()));
+                            }
+
                         }
                         recipe.setServings(newServings);
-
                         // Store new values in Firebase
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
