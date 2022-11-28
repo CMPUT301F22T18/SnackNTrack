@@ -64,6 +64,8 @@
     <string name="menu_storage">Storage</string>
     <string name="menu_recipes">Recipes</string>
     <string name="menu_mealPlan">Meal Plan</string>
+    <string name="clear_selected">Clear Selected?</string>
+    <string name="shopping_list">Shopping List</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back_button_for_view_recipe">Back button for view recipe</string>
     <string name="recipe">Recipe</string>
@@ -96,4 +98,5 @@
     <string name="delete_unit">Delete Unit</string>
     <string name="delete_label">Delete Label</string>
     <string name="edit_label">Edit Label</string>
+    <string name="default_option">Default</string>
 </resources>

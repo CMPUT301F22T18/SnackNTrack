@@ -74,10 +74,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         sortButton = v.findViewById(R.id.sort_button_recipe_list);
         headerText = v.findViewById(R.id.recipe_list_header_text);
 
-//        // get information for this fragment
-//        if(getArguments() != null) {
-//            recipeList = (RecipeList) getArguments().getSerializable(ARG_TEXT);
-//        }
         recipeList = new RecipeList();
 
         // setting the list for this fragment
@@ -114,34 +110,40 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     public void onNoteClick(int position) {
         Intent intent = new Intent(getActivity(), ViewRecipeActivity.class);
         intent.putExtra("recipe", recipeList.getRecipeList().get(position));
+        intent.putExtra("recipeID", recipeIDs.get(position));
         startActivity(intent);
     }
 
+    /**
+     * This method controls what happens when we click on an item in the pop up menu
+     * @param item an item in the pop up menu
+     * @return true if an item is clicked, false otherwise
+     */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.recipe_list_sort_title) {
-            Toast.makeText(this.getContext(), "Title", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Title", Toast.LENGTH_SHORT).show();
             setUpRecipeList("Title");
             return true;
         }
         else if(id == R.id.recipe_list_sort_time) {
-            Toast.makeText(this.getContext(), "Time", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Time", Toast.LENGTH_SHORT).show();
             setUpRecipeList("Time");
             return true;
         }
         else if(id == R.id.recipe_list_sort_servings) {
-            Toast.makeText(this.getContext(), "Servings", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Servings", Toast.LENGTH_SHORT).show();
             setUpRecipeList("Servings");
             return true;
         }
         else if(id == R.id.recipe_list_sort_category) {
-            Toast.makeText(this.getContext(), "Category", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Category", Toast.LENGTH_SHORT).show();
             setUpRecipeList("Category");
             return true;
         }
         else if(id == R.id.recipe_list_sort_default) {
-            Toast.makeText(this.getContext(), "Default", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getContext(), "Default", Toast.LENGTH_SHORT).show();
             setUpRecipeList("Default");
             return true;
         }
@@ -150,6 +152,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         }
     }
 
+    /**
+     * This method is used to query and update data on this fragment
+     * @param option an option on the pop up menu (for sorting). Use Default case if user have not chosen an sorting option
+     */
     public void setUpRecipeList(String option) {
         String mode;
         if(option.equals("Title")) {
@@ -183,41 +189,30 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
                 query = collectionReference;
             }
 
-            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()) {
-                        for(QueryDocumentSnapshot recipeDocument : task.getResult()) {
-                            // do something
-                            Recipe recipe = recipeDocument.toObject(Recipe.class);
-                            recipe.setRecipeIngredients(new ArrayList<>());
-                            Log.d("recipe name", recipe.getTitle());
-                            String id = recipeDocument.getId();
-                            CollectionReference ingredientsCollectionReference = collectionReference.document(recipeDocument.getId()).collection("ingredients");
-                            ingredientsCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                    assert value != null;
-                                    for(QueryDocumentSnapshot ingredientDocument : value) {
-                                        recipe.addIngredient(ingredientDocument.toObject(Ingredient.class));
-                                    }
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            recipeList.getRecipeList().clear();
+                            recipeIDs.clear();
+                            if(task.isSuccessful()) {
+                                for(QueryDocumentSnapshot recipeDocument : task.getResult()) {
+                                    // do something
+                                    Recipe recipe = recipeDocument.toObject(Recipe.class);
+                                    String id = recipeDocument.getId();
+
+                                    recipeIDs.add(id);
+                                    recipeList.addRecipe(recipe);
+                                    recipeListAdapter.notifyDataSetChanged();
                                 }
-                            });
-                            if(recipeIDs.contains(id)) {
-                                int position = recipeIDs.indexOf(id);
-                                recipeList.getRecipeList().set(position, recipe);
-                                recipeListAdapter.notifyDataSetChanged();
                             }
                             else {
-                                recipeIDs.add(id);
-                                recipeList.addRecipe(recipe);
-                                recipeListAdapter.notifyItemChanged(recipeListAdapter.getItemCount() - 1);
+                                Log.d("DEBUG", "Error getting documents: ", task.getException());
                             }
                         }
-                    }
-                    else {
-                        Log.d("DEBUG", "Error getting documents: ", task.getException());
-                    }
+                    });
                 }
             });
         }
