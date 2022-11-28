@@ -34,6 +34,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -83,8 +84,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
 
         // Controls the floating action button
         fab.setOnClickListener(view -> {
-            //TODO: move to add recipe screen
-            //Toast.makeText(this.getContext(), "fab clicked", Toast.LENGTH_SHORT).show();
+            // Move to Add recipe activity
+            Intent intent = new Intent(getContext(), AddEditRecipeActivity.class);
+            startActivity(intent);
+            recipeListAdapter.notifyDataSetChanged();
         });
 
         // When clicked on the sort button, some choices are shown

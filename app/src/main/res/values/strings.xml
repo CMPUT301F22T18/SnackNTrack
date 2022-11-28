@@ -67,6 +67,14 @@
     <string name="clear_selected">Clear Selected?</string>
     <string name="shopping_list">Shopping List</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_change_image">Add/Change Image</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string-array name="recipe_categories_array">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Other</item>
+    </string-array>
     <string name="back_button_for_view_recipe">Back button for view recipe</string>
     <string name="recipe">Recipe</string>
     <string name="edit_button_for_view_recipe">Edit button for view recipe</string>

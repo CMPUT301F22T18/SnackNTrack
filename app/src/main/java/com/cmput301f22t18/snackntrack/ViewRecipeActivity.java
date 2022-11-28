@@ -3,16 +3,19 @@ package com.cmput301f22t18.snackntrack;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -79,7 +82,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: lead people to edit activity/fragment
+                Intent intent = new Intent(ViewRecipeActivity.this, AddEditRecipeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recipe", (Serializable) recipe);
+                bundle.putSerializable("recipeID", (Serializable) recipeID);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 

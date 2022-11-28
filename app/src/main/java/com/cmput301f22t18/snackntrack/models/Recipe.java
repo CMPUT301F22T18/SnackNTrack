@@ -162,4 +162,13 @@ public class Recipe implements Serializable {
     public void deleteIngredient(Ingredient ingredient) {
         this.recipeIngredients.remove(ingredient);
     }
+
+    /**
+     * This method sets a specific ingredient to the list of ingredients
+     * @param index index of ingredients list
+     * @param ingredient ingredient to replace at specified index
+     */
+    public void setIngredient(int index, Ingredient ingredient) {
+        this.recipeIngredients.set(index, ingredient);
+    }
 }

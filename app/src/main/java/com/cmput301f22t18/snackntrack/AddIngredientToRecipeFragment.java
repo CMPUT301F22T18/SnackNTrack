@@ -39,10 +39,12 @@ public class AddIngredientToRecipeFragment extends Fragment {
 
     Spinner unitSpinner, categorySpinner;
     Button cancelButton, addButton;
+    ImageButton deleteButton;
 
     String description, unit, category;
     int amount;
     Recipe recipe;
+    Ingredient ingredient;
 
     EditText descriptionEditText, amountEditText;
 
@@ -73,6 +75,7 @@ public class AddIngredientToRecipeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         recipe = (Recipe) getArguments().getSerializable("recipe");
+        ingredient = (Ingredient) getArguments().getSerializable("ingredient");
         Log.d("DEBUG", "created");
     }
 
@@ -118,11 +121,23 @@ public class AddIngredientToRecipeFragment extends Fragment {
 
         cancelButton = view.findViewById(R.id.cancel_add_ingredient_button);
         addButton = view.findViewById(R.id.add_ingredient_button);
+        deleteButton = view.findViewById(R.id.recipe_ingredient_delete_button);
+
+        if (ingredient != null) {
+            descriptionEditText.setText(ingredient.getDescription());
+            amountEditText.setText(Integer.toString(ingredient.getAmount()));
+            categorySpinner.setSelection(category_adapter.getPosition(ingredient.getCategory()));
+            unitSpinner.setSelection(unit_adapter.getPosition(ingredient.getCategory()));
+        }
 
         imageButton.setOnClickListener(v -> goBack());
 
         cancelButton.setOnClickListener(v -> goBack());
         addButton.setOnClickListener(v -> addIngredient());
+        deleteButton.setOnClickListener(v -> {
+            recipe.deleteIngredient(ingredient);
+            goBack();
+        });
 
 
     }
