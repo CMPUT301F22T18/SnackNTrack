@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Snack\'N\'Track!</string>
-    <string name="ingredient_description">Ingredient Description</string>
+    <string name="ingredient_description">Description</string>
     <string name="ingredient_location">Location</string>
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
-    <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="ingredient_unit">Unit</string>
     <string name="add_ingredient_title">Add Ingredient</string>
     <string name="description_edit_text_title">Description</string>
     <string name="amount_edit_text_title">Amount</string>
@@ -12,7 +12,7 @@
     <string name="location_spinner_title">Location</string>
     <string name="category_spinner_title">Category</string>
     <string name="best_before_text_view" />
-    <string name="best_before_title">Best Before Date</string>
+    <string name="best_before_title">Best Before:</string>
     <string name="add_text">Add</string>
     <string name="go_back_button">Go Back Button</string>
     <string name="date_picker">Date Picker</string>
@@ -45,7 +45,7 @@
     <string name="recipe_list">Recipe List</string>
     <string name="storage">Storage</string>
     <string name="add_edit_your_location">Add / Edit your </string>
-    <string name="location_label">Location</string>
+    <string name="location">Location</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_button">Cancel</string>
@@ -63,16 +63,27 @@
     <string name="servings">Servings</string>
     <string name="menu_storage">Storage</string>
     <string name="menu_recipes">Recipes</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="menu_mealPlan">Meal Plan</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="comments">Comments</string>
     <string name="add_change_image">Add/Change Image</string>
     <string name="add_ingredient">Add Ingredient</string>
-    <string name="ingredients">Ingredients</string>
     <string-array name="recipe_categories_array">
         <item>Breakfast</item>
         <item>Lunch</item>
         <item>Dinner</item>
         <item>Other</item>
     </string-array>
+    <string name="back_button_for_view_recipe">Back button for view recipe</string>
+    <string name="recipe">Recipe</string>
+    <string name="edit_button_for_view_recipe">Edit button for view recipe</string>
+    <string name="recipe_image">Recipe Image</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="comments">Comments</string>
+    <string name="delete_recipe_button_for_view_recipe">Delete recipe button for view recipe</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="amount">Amount</string>
+    <string name="my_storage_title">My Storage</string>
+    <string name="sort_hint">Sort</string>
+    <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
 </resources>

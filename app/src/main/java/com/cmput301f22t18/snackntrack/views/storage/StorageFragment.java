@@ -3,64 +3,94 @@ package com.cmput301f22t18.snackntrack.views.storage;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Storage;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link StorageFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class StorageFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Storage storage;
+    RecyclerView recyclerView;
+    StorageAdapter storageAdapter;
+    ArrayList<String> ingredientIDs;
+    String ERROR_TAG = "STORAGE ERROR";
 
     public StorageFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StorageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static StorageFragment newInstance(String param1, String param2) {
-        StorageFragment fragment = new StorageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_storage, container, false);
+        View v = inflater.inflate(R.layout.fragment_storage, container, false);
+        storage = new Storage();
+        storageAdapter = new StorageAdapter(storage);
+        recyclerView = v.findViewById(R.id.fragment_storage_ingredient_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(storageAdapter);
+        setUpStorage();
+        return v;
+    }
+
+    public void setUpStorage() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            storage.clearStorage();
+            ingredientIDs = new ArrayList<>();
+            String uid = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference cr = db.collection("storages")
+                    .document(uid).collection("ingredients");
+            cr.addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Log.d(ERROR_TAG, error.getLocalizedMessage());
+                }
+                else if (value != null) {
+                    for (QueryDocumentSnapshot documentSnapshot: value) {
+                        Ingredient ingredient = documentSnapshot.toObject(Ingredient.class);
+                        String id = documentSnapshot.getId();
+                        if (ingredientIDs.contains(id)) {
+                            int position = ingredientIDs.indexOf(id);
+                            storage.setIngredient(position, ingredient);
+                            storageAdapter.notifyItemChanged(position);
+                        }
+                        else {
+                            ingredientIDs.add(id);
+                            storage.addIngredient(ingredient);
+                            storageAdapter.notifyItemChanged(storageAdapter.getItemCount() - 1);
+                        }
+
+                    }
+                }
+            });
+        }
     }
 }

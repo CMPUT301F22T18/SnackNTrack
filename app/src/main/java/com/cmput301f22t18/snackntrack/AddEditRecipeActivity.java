@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
-import com.cmput301f22t18.snackntrack.views.storage.AddEditCustomValueFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -106,7 +105,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != categoryAdapter.getCount() - 1)
                     category = (String) parent.getItemAtPosition(position).toString();
-                else {
+                /*else {
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "category");
                     getSupportFragmentManager()
@@ -115,7 +114,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
                             add(AddEditCustomValueFragment.class, bundle, "Add Category")
                             .commit();
 
-                }
+                }*/ //Does not work due to deletion of AddEditCustomValue...
             }
 
             @Override

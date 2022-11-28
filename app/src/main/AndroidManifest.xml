@@ -37,10 +37,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.storage.StorageActivity"
-            android:exported="true"
-            android:parentActivityName=".views.main.MainMenuActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:name=".ViewRecipeActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
