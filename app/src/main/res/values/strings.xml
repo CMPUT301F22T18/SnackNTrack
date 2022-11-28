@@ -64,6 +64,8 @@
     <string name="menu_storage">Storage</string>
     <string name="menu_recipes">Recipes</string>
     <string name="menu_mealPlan">Meal Plan</string>
+    <string name="clear_selected">Clear Selected?</string>
+    <string name="shopping_list">Shopping List</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_change_image">Add/Change Image</string>
     <string name="add_ingredient">Add Ingredient</string>
@@ -85,5 +87,24 @@
     <string name="my_storage_title">My Storage</string>
     <string name="sort_hint">Sort</string>
     <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="_0">Amount</string>
+    <string name="amount_minus">Minus Amount</string>
+    <string name="plus">Plus Amount</string>
+    <string name="back">Back</string>
+    <string name="add_unit">Add a Unit</string>
+    <string name="add_category">Add a Category</string>
+    <string name="add_location">Add a Location</string>
+    <string name="add_an_ingredient_open_date_picker">Open Date Picker</string>
+    <string name="ingredient_bbf_hint">Best Before Date</string>
+    <string name="add_an_ingredient_description_hint">Description</string>
     <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="pick_a_unit">Pick a Unit</string>
+    <string name="add_a_unit">Add a Unit</string>
+    <string name="edit_unit">Edit Unit</string>
+    <string name="confirm_unit">Confirm Unit</string>
+    <string name="confirm_label">Confirm Label</string>
+    <string name="delete_unit">Delete Unit</string>
+    <string name="delete_label">Delete Label</string>
+    <string name="edit_label">Edit Label</string>
+    <string name="default_option">Default</string>
 </resources>

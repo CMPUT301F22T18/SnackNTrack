@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,6 +38,10 @@ public class DatePickerFragment extends DialogFragment
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
 
+        TextInputEditText bbfEditText = getActivity().findViewById(R.id.add_an_ingredient_bbf_edit_text);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+        String s = dateFormat.format(calendar.getTime());
+        bbfEditText.setText(s);
     }
 }

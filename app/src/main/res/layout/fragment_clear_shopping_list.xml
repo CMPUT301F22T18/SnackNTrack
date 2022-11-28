@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clear_shopping_list_title"
+        android:text="@string/clear_selected"
+        android:gravity="center_horizontal"
+        android:fontFamily="@font/nunito"
+        android:textColor="@color/red_900"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:paddingVertical="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:gravity="center" >
+        <ImageButton
+            android:id="@+id/clear_confirm_button"
+            android:layout_width="112dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="@drawable/custom_yes_button"
+            android:src="@drawable/ic_baseline_check_24"/>
+        <ImageButton
+            android:id="@+id/clear_cancel_button"
+            android:layout_width="112dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="@drawable/custom_no_button"
+            android:src="@drawable/ic_baseline_close_24" />
+    </LinearLayout>
+</LinearLayout>
