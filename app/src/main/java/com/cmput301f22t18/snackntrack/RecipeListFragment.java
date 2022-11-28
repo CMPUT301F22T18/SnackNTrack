@@ -3,9 +3,12 @@ package com.cmput301f22t18.snackntrack;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,13 +18,30 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.RecipeList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * This class is a fragment for the recipe list.
  *
- * @author SCWinter259
+ * @author Casper Nguyen
  */
 public class RecipeListFragment extends Fragment implements RecipeListAdapter.OnNoteListener, PopupMenu.OnMenuItemClickListener {
     private static final String ARG_TEXT = "recipeList";
@@ -32,19 +52,9 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
     FloatingActionButton fab;
     ImageButton sortButton;
     TextView headerText;
+    ArrayList<String> recipeIDs;
 
-    /**
-     * This method create a new instance of the RecipeListFragment
-     * @param recipeList an instance of the RecipeList class
-     * @return a new instance of the RecipeListFragment
-     */
-    public static RecipeListFragment newInstance(RecipeList recipeList) {
-        RecipeListFragment fragment = new RecipeListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TEXT, recipeList);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public RecipeListFragment() {}
 
     /**
      * This method is called when all the views are created
@@ -58,22 +68,22 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
-
-
         // find the views for this fragment
         fab = v.findViewById(R.id.recipe_list_action_button);
         recyclerView = v.findViewById(R.id.recipe_list);
         sortButton = v.findViewById(R.id.sort_button_recipe_list);
         headerText = v.findViewById(R.id.recipe_list_header_text);
 
-        // get information for this fragment
-        if(getArguments() != null) {
-            recipeList = (RecipeList) getArguments().getSerializable(ARG_TEXT);
-        }
+//        // get information for this fragment
+//        if(getArguments() != null) {
+//            recipeList = (RecipeList) getArguments().getSerializable(ARG_TEXT);
+//        }
+        recipeList = new RecipeList();
 
         // setting the list for this fragment
         recipeListAdapter = new RecipeListAdapter(this.getContext(), recipeList.getRecipeList(), this);
         recyclerView.setAdapter(recipeListAdapter);
+        setUpRecipeList("Default");
 
         // Controls the floating action button
         fab.setOnClickListener(view -> {
@@ -85,7 +95,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: let user select their way to sort the list
                 PopupMenu popup = new PopupMenu(RecipeListFragment.this.getContext(), v);
                 popup.setOnMenuItemClickListener(RecipeListFragment.this);
                 popup.inflate(R.menu.recipe_list_sort_menu);
@@ -113,26 +122,104 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         int id = item.getItemId();
         if(id == R.id.recipe_list_sort_title) {
             Toast.makeText(this.getContext(), "Title", Toast.LENGTH_SHORT).show();
+            setUpRecipeList("Title");
             return true;
         }
         else if(id == R.id.recipe_list_sort_time) {
             Toast.makeText(this.getContext(), "Time", Toast.LENGTH_SHORT).show();
+            setUpRecipeList("Time");
             return true;
         }
         else if(id == R.id.recipe_list_sort_servings) {
             Toast.makeText(this.getContext(), "Servings", Toast.LENGTH_SHORT).show();
+            setUpRecipeList("Servings");
             return true;
         }
         else if(id == R.id.recipe_list_sort_category) {
             Toast.makeText(this.getContext(), "Category", Toast.LENGTH_SHORT).show();
+            setUpRecipeList("Category");
             return true;
         }
         else if(id == R.id.recipe_list_sort_default) {
             Toast.makeText(this.getContext(), "Default", Toast.LENGTH_SHORT).show();
+            setUpRecipeList("Default");
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    public void setUpRecipeList(String option) {
+        String mode;
+        if(option.equals("Title")) {
+            mode = "title";
+        }
+        else if(option.equals("Time")) {
+            mode = "prepTime";
+        }
+        else if(option.equals("Servings")) {
+            mode = "servings";
+        }
+        else if(option.equals("Category")) {
+            mode = "category";
+        }
+        else {
+            mode = "default";
+        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null) {
+            recipeList.getRecipeList().clear();
+            recipeIDs = new ArrayList<>();
+            String uid = user.getUid();
+            FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+            CollectionReference collectionReference = fireStore.collection("recipeLists").document(uid).collection("recipes");
+            Query query;
+            if(!mode.equals("default")) {
+                Log.d("debug", mode);
+                query = collectionReference.orderBy(mode);
+            }
+            else {
+                query = collectionReference;
+            }
+
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()) {
+                        for(QueryDocumentSnapshot recipeDocument : task.getResult()) {
+                            // do something
+                            Recipe recipe = recipeDocument.toObject(Recipe.class);
+                            recipe.setRecipeIngredients(new ArrayList<>());
+                            Log.d("recipe name", recipe.getTitle());
+                            String id = recipeDocument.getId();
+                            CollectionReference ingredientsCollectionReference = collectionReference.document(recipeDocument.getId()).collection("ingredients");
+                            ingredientsCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    assert value != null;
+                                    for(QueryDocumentSnapshot ingredientDocument : value) {
+                                        recipe.addIngredient(ingredientDocument.toObject(Ingredient.class));
+                                    }
+                                }
+                            });
+                            if(recipeIDs.contains(id)) {
+                                int position = recipeIDs.indexOf(id);
+                                recipeList.getRecipeList().set(position, recipe);
+                                recipeListAdapter.notifyDataSetChanged();
+                            }
+                            else {
+                                recipeIDs.add(id);
+                                recipeList.addRecipe(recipe);
+                                recipeListAdapter.notifyItemChanged(recipeListAdapter.getItemCount() - 1);
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("DEBUG", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
         }
     }
 }
