@@ -11,6 +11,7 @@
     <color name="gray_200">#F5F3F4</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green_300">#81C784</color>
+    <color name="green_500">#60D394</color>
 
     <!-- Label color. -->
     <color name="blue">#2AB2DD</color>

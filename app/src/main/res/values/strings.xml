@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Snack\'N\'Track!</string>
-    <string name="ingredient_description">Ingredient Description</string>
+    <string name="ingredient_description">Description</string>
     <string name="ingredient_location">Location</string>
     <string name="ingredient_category">Category</string>
     <string name="ingredient_best_before_date">Best Before Date</string>
-    <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="ingredient_unit">Unit</string>
     <string name="add_ingredient_title">Add Ingredient</string>
     <string name="description_edit_text_title">Description</string>
     <string name="amount_edit_text_title">Amount</string>
@@ -12,7 +12,7 @@
     <string name="location_spinner_title">Location</string>
     <string name="category_spinner_title">Category</string>
     <string name="best_before_text_view" />
-    <string name="best_before_title">Best Before Date</string>
+    <string name="best_before_title">Best Before:</string>
     <string name="add_text">Add</string>
     <string name="go_back_button">Go Back Button</string>
     <string name="date_picker">Date Picker</string>
@@ -66,7 +66,6 @@
     <string name="menu_mealPlan">Meal Plan</string>
     <string name="clear_selected">Clear Selected?</string>
     <string name="shopping_list">Shopping List</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back_button_for_view_recipe">Back button for view recipe</string>
     <string name="recipe">Recipe</string>
@@ -80,6 +79,24 @@
     <string name="my_storage_title">My Storage</string>
     <string name="sort_hint">Sort</string>
     <string name="add_an_ingredient">Add an Ingredient</string>
-    <string name="ingredient_unit">Unit</string>
+    <string name="_0">Amount</string>
+    <string name="amount_minus">Minus Amount</string>
+    <string name="plus">Plus Amount</string>
+    <string name="back">Back</string>
+    <string name="add_unit">Add a Unit</string>
+    <string name="add_category">Add a Category</string>
+    <string name="add_location">Add a Location</string>
+    <string name="add_an_ingredient_open_date_picker">Open Date Picker</string>
+    <string name="ingredient_bbf_hint">Best Before Date</string>
+    <string name="add_an_ingredient_description_hint">Description</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="pick_a_unit">Pick a Unit</string>
+    <string name="add_a_unit">Add a Unit</string>
+    <string name="edit_unit">Edit Unit</string>
+    <string name="confirm_unit">Confirm Unit</string>
+    <string name="confirm_label">Confirm Label</string>
+    <string name="delete_unit">Delete Unit</string>
+    <string name="delete_label">Delete Label</string>
+    <string name="edit_label">Edit Label</string>
     <string name="default_option">Default</string>
 </resources>

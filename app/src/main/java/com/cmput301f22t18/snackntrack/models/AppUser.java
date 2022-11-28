@@ -1,31 +1,51 @@
 package com.cmput301f22t18.snackntrack.models;
+
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+
 public class AppUser {
-    String name;
-    String email;
+    ArrayList<String> units;
+    ArrayList<Label> locations;
+    ArrayList<Label> categories;
 
     public AppUser() {
-        name = "";
-        email = "";
+        units = new ArrayList<>();
+        locations = new ArrayList<>();
+        categories = new ArrayList<>();
     }
 
-    public AppUser(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public ArrayList<String> getUnits() {
+        return units;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUnits(ArrayList<String> units) {
+        this.units = units;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public ArrayList<Label> getCategories() {
+        return categories;
     }
 
-    public String getEmail() {
-        return email;
+    public ArrayList<Label> getLocations() {
+        return locations;
     }
 
-    public String getName() {
-        return name;
+    public void setCategories(ArrayList<Label> categories) {
+        this.categories = categories;
+    }
+
+    public void setLocations(ArrayList<Label> locations) {
+        this.locations = locations;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "units=" + units +
+                ", locations=" + locations +
+                ", categories=" + categories +
+                '}';
     }
 }
