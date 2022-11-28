@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  *
  * @author SCWinter259
  */
-public class RecipeListFragment extends Fragment implements RecipeListAdapter.OnNoteListener{
+public class RecipeListFragment extends Fragment implements RecipeListAdapter.OnNoteListener, PopupMenu.OnMenuItemClickListener {
     private static final String ARG_TEXT = "recipeList";
 
     RecyclerView recyclerView;
@@ -84,7 +86,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
             @Override
             public void onClick(View v) {
                 //TODO: let user select their way to sort the list
-                //Toast.makeText(v.getContext(), "sort button clicked", Toast.LENGTH_SHORT).show();
+                PopupMenu popup = new PopupMenu(RecipeListFragment.this.getContext(), v);
+                popup.setOnMenuItemClickListener(RecipeListFragment.this);
+                popup.inflate(R.menu.recipe_list_sort_menu);
+                popup.show();
             }
         });
 
@@ -101,5 +106,33 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.On
         Intent intent = new Intent(getActivity(), ViewRecipeActivity.class);
         intent.putExtra("recipe", recipeList.getRecipeList().get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.recipe_list_sort_title) {
+            Toast.makeText(this.getContext(), "Title", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if(id == R.id.recipe_list_sort_time) {
+            Toast.makeText(this.getContext(), "Time", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if(id == R.id.recipe_list_sort_servings) {
+            Toast.makeText(this.getContext(), "Servings", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if(id == R.id.recipe_list_sort_category) {
+            Toast.makeText(this.getContext(), "Category", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else if(id == R.id.recipe_list_sort_default) {
+            Toast.makeText(this.getContext(), "Default", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
