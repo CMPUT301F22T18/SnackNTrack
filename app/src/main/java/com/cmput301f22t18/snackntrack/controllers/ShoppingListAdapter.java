@@ -63,21 +63,22 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getDescriptionTextView().setText(localShoppingList.getShoppingList().get(position).getDescription());
-        holder.getCategoryTextView().setText(localShoppingList.getShoppingList().get(position).getCategory());
-        String amountUnit = localShoppingList.getShoppingList().get(position).getAmount() + " " +
-                localShoppingList.getShoppingList().get(position).getUnit();
+        int viewPosition = holder.getAbsoluteAdapterPosition();
+        holder.getDescriptionTextView().setText(localShoppingList.getShoppingList().get(viewPosition).getDescription());
+        holder.getCategoryTextView().setText(localShoppingList.getShoppingList().get(viewPosition).getCategory());
+        String amountUnit = localShoppingList.getShoppingList().get(viewPosition).getAmount() + " " +
+                localShoppingList.getShoppingList().get(viewPosition).getUnit();
         holder.getAmountUnitTextView().setText(amountUnit);
         holder.getIngredientCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // If box is checked, add ingredient to checked list
-                    checkedIngredients.add(localShoppingList.getShoppingList().get(position));
+                    checkedIngredients.add(localShoppingList.getShoppingList().get(viewPosition));
                 }
                 else {
                     // If unchecked, remove from the checked list
-                    checkedIngredients.remove(localShoppingList.getShoppingList().get(position));
+                    checkedIngredients.remove(localShoppingList.getShoppingList().get(viewPosition));
                 }
             }
         });
