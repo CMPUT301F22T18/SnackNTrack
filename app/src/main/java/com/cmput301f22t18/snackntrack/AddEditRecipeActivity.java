@@ -58,7 +58,6 @@ public class AddEditRecipeActivity extends AppCompatActivity {
     String title, category, comments, photoURL, recipeID;
     int prepTime, servings;
     ArrayList<Ingredient> ingredients;
-    RecipeList recipeList;
     Recipe recipe;
     RecyclerView recyclerView;
     FrameLayout addImagePerimeter;
@@ -138,7 +137,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         // TODO: Set category to new category made from custom fragment
 
         // If editing, set applicable inputs to match selected recipe
-        if (recipe != null) {
+        if (editing) {
             if (recipe.getPhotoURL() != null) {
                 Glide.with(this).load(photoURL).into(recipeImage);
                 addImageButton.setText("Change the image");
@@ -148,6 +147,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
             servingsEditText.setText(Integer.toString(recipe.getServings()));
             prepTimeEditText.setText(Integer.toString(recipe.getPrepTime()));
             categorySpinner.setSelection(categoryAdapter.getPosition(recipe.getCategory()));
+            ingredients = recipe.getRecipeIngredients();
 
         }
 
@@ -167,6 +167,14 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         addIngredientButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putSerializable("recipe", (Serializable) recipe);
+
+            // The following will work for now as AddEditIngredientActivity is WIP
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack("Add Ingredient To Recipe")
+                    .add(R.id.fragment_container_view, AddIngredientToRecipeFragment.class, bundle)
+                    .commit();
+            ingredientAdapter.notifyDataSetChanged();
 
             // TODO: Send Intent to AddEditIngredientActivity; below can be built upon
             //Intent ingredientIntent = new Intent(this, AddEditIngredientActivity.class);

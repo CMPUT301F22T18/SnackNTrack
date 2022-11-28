@@ -28,10 +28,10 @@ import java.util.Date;
  */
 public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredientAdapter.ViewHolder> {
     private ArrayList<Ingredient> localDataSet;
-    private final OnItemLongClickListener listener;
+    private final OnItemClickListener listener;
 
 
-    public interface OnItemLongClickListener {
+    public interface OnItemClickListener {
         void onClick(Ingredient item);
     }
     /**
@@ -55,6 +55,7 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
             int pos = localDataSet.indexOf(item);
             bundle.putInt("position", pos);
             bundle.putSerializable("recipe", (Serializable) recipe);
+            bundle.putSerializable("ingredient", (Serializable) recipe.getRecipeIngredients().get(pos));
             bundle.putStringArrayList("units", unit_list);
             bundle.putStringArrayList("categories", category_list);
             bundle.putString("function", "Edit");
@@ -135,10 +136,9 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
             amountUnitTextView = view.findViewById(R.id.ingredient_amount_unit_text_view);
         }
 
-        public void bind(final Ingredient item, final OnItemLongClickListener listener) {
-            itemView.setOnLongClickListener(v -> {
+        public void bind(final Ingredient item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(v -> {
                 listener.onClick(item);
-                return true;
             });
         }
 
