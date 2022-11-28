@@ -18,6 +18,7 @@ import com.cmput301f22t18.snackntrack.MealPlan;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.ShoppingListAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.ShoppingList;
 import com.cmput301f22t18.snackntrack.models.Storage;
 
@@ -25,6 +26,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -57,6 +59,11 @@ public class ShoppingListFragment extends Fragment {
     ImageButton sortButton;
     ImageButton addButton;
     TextView headerText;
+    ArrayList<Ingredient> ingredientArrayList;
+    ArrayList<Recipe> recipeArrayList;
+    ArrayList<DocumentReference> ingredientDR;
+    ArrayList<DocumentReference> recipeDR;
+    ArrayList<DocumentReference> dailyPlanDR;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -117,6 +124,9 @@ public class ShoppingListFragment extends Fragment {
         assert(user != null);
         String uid = user.getUid();
 
+        // Create the ShoppingList
+        shoppingList = new ShoppingList();
+
         // Get a copy of the storage
         TAG = "Storage";
         storage = new Storage();
@@ -138,17 +148,6 @@ public class ShoppingListFragment extends Fragment {
         TAG = "MealPlan";
         mealPlan = new MealPlan();
 
-        DailyPlan dailyPlan1 = new DailyPlan();
-        dailyPlan1.addIngredient(new Ingredient("Bread", "Slices", "Grains", 2));
-        DailyPlan dailyPlan2 = new DailyPlan();
-        dailyPlan2.addIngredient(new Ingredient("Cheese", "Grams", "Dairy", 750));
-        mealPlan.addDailyPlan(dailyPlan1);
-        mealPlan.addDailyPlan(dailyPlan2);
-
-        //TODO: get MealPlan from database
-        /*
-        CollectionReference cf2;
-
         cf = db.collection("mealPlans")
                 .document(uid).collection("mealPlanList");
 
@@ -159,16 +158,47 @@ public class ShoppingListFragment extends Fragment {
             }
             for (QueryDocumentSnapshot doc : value) {
                 Log.w("DATE: ", doc.get("date").toString(), error);
-                mealPlan.addDailyPlan(new DailyPlan());
-                cf2 = value.collection("");
+                doc.get("date");
+                ArrayList<DocumentReference> ingredients = (ArrayList<DocumentReference>) doc.get("ingredients");
+                ArrayList<DocumentReference> recipes = (ArrayList<DocumentReference>) doc.get("recipes");
+                ingredientDR.addAll(ingredients);
+                DailyPlan dailyPlan = new DailyPlan();
+                for (DocumentReference ingredient : ingredients) {
+                    ingredient.addSnapshotListener((value2, error2) -> {
+                        Ingredient ingredient2 = value2.toObject(Ingredient.class);
+                        ingredientArrayList.add(ingredient2);
+                        dailyPlan.addIngredient(ingredient2);
+                        if (dailyPlanDR.contains(doc.getReference())) {
+                            int position = dailyPlanDR.indexOf(doc.getReference());
+                            mealPlan.getDailyPlan().get(position).addIngredient(ingredient2);
+                            shoppingList.calculateList(mealPlan, storage);
+                        }
+                        else {
+                            dailyPlanDR.add(doc.getReference());
+                            mealPlan.addDailyPlan(dailyPlan);
+                            shoppingList.calculateList(mealPlan, storage);
+                        }
+                    });
+                }
+                for (DocumentReference recipe : recipes) {
+                    recipe.addSnapshotListener((value2, error2) -> {
+                        Recipe recipe2 = value2.toObject(Recipe.class);
+                        recipeArrayList.add(recipe2);
+                        dailyPlan.addRecipe(recipe2);
+                        if (dailyPlanDR.contains(doc.getReference())) {
+                            int position = dailyPlanDR.indexOf(doc.getReference());
+                            mealPlan.getDailyPlan().get(position).addRecipe(recipe2);
+                            shoppingList.calculateList(mealPlan, storage);
+                        }
+                        else {
+                            dailyPlanDR.add(doc.getReference());
+                            mealPlan.addDailyPlan(dailyPlan);
+                            shoppingList.calculateList(mealPlan, storage);
+                        }
+                    });
+                }
             }
         });
-
-         */
-
-        // Fill shopping list
-        shoppingList = new ShoppingList();
-        shoppingList.calculateList(mealPlan, storage);
 
         // Create instance of the ShoppingListAdapter
         shoppingListAdapter = new ShoppingListAdapter(shoppingList);
@@ -185,49 +215,49 @@ public class ShoppingListFragment extends Fragment {
 
         // When user clicks the green button, confirms whether or not they would like to move selected ingredients to the storage
         addButton.setOnClickListener(new View.OnClickListener() {
+            boolean clear;
             @Override
             public void onClick(View v) {
                 // Display Confirmation
-                ClearShoppingListFragment clearShoppingListFragment = new ClearShoppingListFragment(new ClearShoppingListFragment.CallBack() {
-                    @Override
-                    public void confirmed(boolean clear) {
-                        if (clear) {
-                            // Get all ingredients currently checked
-                            ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
-                            // Add these ingredients to the storage, and remove from ShoppingList
-                            if (checkedIngredients.size() != 0) {
-                                for (int i = 0; i < checkedIngredients.size(); i++) {
-                                    Bundle result = new Bundle();
-                                    result.putSerializable("new_item", checkedIngredients.get(i));
-                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    CollectionReference cr = db.collection("storages")
-                                            .document(user.getUid())
-                                            .collection("ingredients");
-                                    Query query = cr
-                                            .whereEqualTo("description", checkedIngredients.get(i).getDescription())
-                                            .whereEqualTo("amount", checkedIngredients.get(i).getAmount())
-                                            .whereEqualTo("category", checkedIngredients.get(i).getCategory())
-                                            .whereEqualTo("unit", checkedIngredients.get(i).getUnit());
-                                    Ingredient finalIngredient = checkedIngredients.get(i);
-                                    query.get().addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d("DEBUG", document.getId() + " => " + document.getData());
-                                                cr.document(document.getId()).set(finalIngredient);
-                                            }
-                                        } else {
-                                            Log.d("DEBUG", "Error getting documents: ", task.getException());
-                                        }
-                                    });
-                                    shoppingList.removeIngredient(checkedIngredients.get(i));
+                new ClearShoppingListFragment().show(
+                        getChildFragmentManager(), ClearShoppingListFragment.TAG);
+
+                if (clear) {
+                    // Get all ingredients currently checked
+                    ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
+                    // Add these ingredients to the storage, and remove from ShoppingList
+                    if (checkedIngredients.size() != 0) {
+                        for (int i = 0; i < checkedIngredients.size(); i++) {
+                            Bundle result = new Bundle();
+                            result.putSerializable("new_item", checkedIngredients.get(i));
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            CollectionReference cr = db.collection("storages")
+                                    .document(user.getUid())
+                                    .collection("ingredients");
+                            Query query = cr
+                                    .whereEqualTo("description", checkedIngredients.get(i).getDescription())
+                                    .whereEqualTo("amount", checkedIngredients.get(i).getAmount())
+                                    .whereEqualTo("category", checkedIngredients.get(i).getCategory())
+                                    .whereEqualTo("unit", checkedIngredients.get(i).getUnit());
+                            Ingredient finalIngredient = checkedIngredients.get(i);
+                            query.get().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("DEBUG", document.getId() + " => " + document.getData());
+                                        cr.document(document.getId()).set(finalIngredient);
+                                    }
+                                } else {
+                                    Log.d("DEBUG", "Error getting documents: ", task.getException());
                                 }
-                                // Now that all ingredients have been added to the storage, clear checkedIngredients
-                                checkedIngredients.clear();
-                            }
+                            });
+                            shoppingList.removeIngredient(checkedIngredients.get(i));
                         }
+                        // Now that all ingredients have been added to the storage, clear checkedIngredients
+                        checkedIngredients.clear();
+                        shoppingListAdapter.notifyDataSetChanged();
                     }
-                });
+                }
 
             }
         });

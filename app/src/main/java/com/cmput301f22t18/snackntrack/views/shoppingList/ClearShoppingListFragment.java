@@ -21,21 +21,8 @@ import com.cmput301f22t18.snackntrack.R;
  */
 public class ClearShoppingListFragment extends DialogFragment {
 
-    /**
-     * Interface used to return user's choice to clear
-     */
-    public interface CallBack {
-        public void confirmed(boolean clear);
-    }
-
-    public CallBack callBack;
-
-    /**
-     * This is a constructor for the ClearShoppingListFragment class
-     * @param callBack call back to shopping list fragment
-     */
-    public ClearShoppingListFragment(CallBack callBack) {
-        this.callBack = callBack;
+    public ClearShoppingListFragment() {
+        // Empty constructor for ClearShoppingListFragment
     }
 
     /**
@@ -55,7 +42,6 @@ public class ClearShoppingListFragment extends DialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.confirmed(true);
                 dismiss();
             }
         });
@@ -63,7 +49,6 @@ public class ClearShoppingListFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.confirmed(false);
                 dismiss();
             }
         });
@@ -71,4 +56,7 @@ public class ClearShoppingListFragment extends DialogFragment {
         builder.setView(v);
         return builder.create();
     }
+
+
+    public static String TAG = "ClearShoppingListFragment";
 }

@@ -13,11 +13,12 @@
         android:textColor="@color/red_900"
         android:textStyle="bold"
         android:textSize="24sp"
-        android:paddingVertical="20dp"/>
+        android:paddingVertical="10dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingVertical="10dp"
         android:gravity="center" >
         <ImageButton
             android:id="@+id/clear_confirm_button"
