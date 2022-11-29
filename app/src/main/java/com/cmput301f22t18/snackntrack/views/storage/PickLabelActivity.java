@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.LabelAdapter;
@@ -27,12 +28,14 @@ public class PickLabelActivity extends AppCompatActivity {
     ArrayList<Label> locations, categories;
     RecyclerView recyclerView;
     ImageButton confirmButton, backButton;
+    TextView titleTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_label);
         String labelType = this.getIntent().getStringExtra("labelType");
+        setTitle(labelType);
 
         recyclerView = findViewById(R.id.pick_a_label_list);
         confirmButton = findViewById(R.id.pick_a_label_confirm_button);
@@ -54,6 +57,10 @@ public class PickLabelActivity extends AppCompatActivity {
         backButton.setOnClickListener(v->finish());
     }
 
+    /**
+     * This function return the label that the user picks
+     * @param labelType the type of label
+     */
     private void pickLabel(String labelType) {
         int checkPosition = labelAdapter.getCheckPosition();
         if (checkPosition != -1) {
@@ -72,6 +79,20 @@ public class PickLabelActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function set the title of the activity
+     * @param labelType the type of label the user wants to pick
+     */
+    private void setTitle(String labelType) {
+        titleTextView = findViewById(R.id.pick_a_label_title);
+        String labelCapitalized = labelType.substring(0, 1).toUpperCase() + labelType.substring(1);
+        String title = "Pick a " + labelCapitalized;
+        titleTextView.setText(title);
+    }
+
+    /**
+     * This function setup the labels from the database
+     */
     @SuppressLint("NotifyDataSetChanged")
     private void setupLabels() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,7 +114,6 @@ public class PickLabelActivity extends AppCompatActivity {
                         units.addAll(appUser.getUnits());
                         locations.addAll(appUser.getLocations());
                         categories.addAll(appUser.getCategories());
-                        //Log.d("INFO", appUser.toString());
                         labelAdapter.notifyDataSetChanged();
                     }
                 }
