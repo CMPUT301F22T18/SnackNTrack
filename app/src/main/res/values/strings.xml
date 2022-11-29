@@ -1,3 +1,110 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Snack\'N\'Track!</string>
+    <string name="ingredient_description">Description</string>
+    <string name="ingredient_location">Location</string>
+    <string name="ingredient_category">Category</string>
+    <string name="ingredient_best_before_date">Best Before Date</string>
+    <string name="ingredient_unit">Unit</string>
+    <string name="add_ingredient_title">Add Ingredient</string>
+    <string name="description_edit_text_title">Description</string>
+    <string name="amount_edit_text_title">Amount</string>
+    <string name="unit_edit_text_title">Unit</string>
+    <string name="location_spinner_title">Location</string>
+    <string name="category_spinner_title">Category</string>
+    <string name="best_before_text_view" />
+    <string name="best_before_title">Best Before:</string>
+    <string name="add_text">Add</string>
+    <string name="go_back_button">Go Back Button</string>
+    <string name="date_picker">Date Picker</string>
+    <string-array name="units_array">
+        <item>kilogram</item>
+        <item>litre</item>
+        <item>shaker</item>
+        <item>pack</item>
+        <item>box</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="ingredient_categories_array">
+        <item>Spice</item>
+        <item>Dairy</item>
+        <item>Bakery</item>
+        <item>Meat</item>
+        <item>Vegetable</item>
+        <item>Fruit</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="ingredient_locations_array">
+        <item>Cupboard</item>
+        <item>Counter-top</item>
+        <item>Fridge</item>
+        <item>Pantry</item>
+        <item>Others</item>
+    </string-array>
+    <string name="add_a_recipe">add a recipe</string>
+    <string name="recipe_image_view">Recipe Image View</string>
+    <string name="recipe_list">Recipe List</string>
+    <string name="storage">Storage</string>
+    <string name="add_edit_your_location">Add / Edit your </string>
+    <string name="location">Location</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="login">Log in</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="getting_started">Get Started</string>
+    <string name="my_recipes">My Recipes</string>
+    <string name="sort_button_for_recipe_list">Sort button for recipe list</string>
+    <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="preptime">PrepTime</string>
+    <string name="servings">Servings</string>
+    <string name="menu_storage">Storage</string>
+    <string name="menu_recipes">Recipes</string>
+    <string name="menu_mealPlan">Meal Plan</string>
+    <string name="clear_selected">Clear Selected?</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_change_image">Add/Change Image</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string-array name="recipe_categories_array">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Other</item>
+    </string-array>
+    <string name="back_button_for_view_recipe">Back button for view recipe</string>
+    <string name="recipe">Recipe</string>
+    <string name="edit_button_for_view_recipe">Edit button for view recipe</string>
+    <string name="recipe_image">Recipe Image</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="comments">Comments</string>
+    <string name="delete_recipe_button_for_view_recipe">Delete recipe button for view recipe</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="amount">Amount</string>
+    <string name="my_storage_title">My Storage</string>
+    <string name="sort_hint">Sort</string>
+    <string name="add_an_ingredient">Add an Ingredient</string>
+    <string name="_0">Amount</string>
+    <string name="amount_minus">Minus Amount</string>
+    <string name="plus">Plus Amount</string>
+    <string name="back">Back</string>
+    <string name="add_unit">Add a Unit</string>
+    <string name="add_category">Add a Category</string>
+    <string name="add_location">Add a Location</string>
+    <string name="add_an_ingredient_open_date_picker">Open Date Picker</string>
+    <string name="ingredient_bbf_hint">Best Before Date</string>
+    <string name="add_an_ingredient_description_hint">Description</string>
+    <string name="ingredient_amount_unit">Amount Unit</string>
+    <string name="pick_a_unit">Pick a Unit</string>
+    <string name="add_a_unit">Add a Unit</string>
+    <string name="edit_unit">Edit Unit</string>
+    <string name="confirm_unit">Confirm Unit</string>
+    <string name="confirm_label">Confirm Label</string>
+    <string name="delete_unit">Delete Unit</string>
+    <string name="delete_label">Delete Label</string>
+    <string name="edit_label">Edit Label</string>
+    <string name="default_option">Default</string>
 </resources>

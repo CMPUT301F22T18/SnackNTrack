@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/storage"
+        android:title="@string/menu_storage"
+        android:icon="@drawable/ic_baseline_inventory_24"/>
+    <item
+        android:id="@+id/recipes"
+        android:title="@string/menu_recipes"
+        android:icon="@drawable/ic_baseline_receipt_24"/>
+    <item
+        android:id="@+id/mealPlan"
+        android:title="@string/menu_mealPlan"
+        android:icon="@drawable/ic_baseline_calendar_month_24"/>
+    <item
+        android:id="@+id/shoppingList"
+        android:title="@string/shopping_list"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"/>
+</menu>
