@@ -37,6 +37,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/custom_image_button"
                 android:src="@drawable/ic_baseline_sort_24"
@@ -46,7 +47,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shopping_list"
             android:layout_width="match_parent"
-            android:layout_height="480dp"
+            android:layout_height="464dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
         </androidx.recyclerview.widget.RecyclerView>
 
