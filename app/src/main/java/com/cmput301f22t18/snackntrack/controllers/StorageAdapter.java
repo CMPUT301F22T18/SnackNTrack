@@ -1,9 +1,13 @@
 package com.cmput301f22t18.snackntrack.controllers;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Storage;
+import com.cmput301f22t18.snackntrack.views.storage.AddIngredientActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +40,7 @@ import java.util.Locale;
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private final ArrayList<Ingredient> localDataSet;
     private final Context context;
-
+    private final Storage storage;
     /**
      * Initialize the dataset of the Adapter.
      *
@@ -45,6 +50,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
     public StorageAdapter(Context context, Storage storage) {
         localDataSet = storage.getStorageList();
         this.context = context;
+        this.storage = storage;
     }
 
     /**
@@ -141,7 +147,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
         holder.getAmountTextView().setText(
                 String.format(Locale.CANADA, "%d", ingredient.getAmount()));
         holder.getUnitTextView().setText(ingredient.getUnit());
-        Date bbf = ingredient.getBestBeforeDate();
+        Date bbf = ingredient.getBestBeforeDateDate();
 
         // Check for best before
         if (bbf != null) {
@@ -156,17 +162,28 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
                             R.color.red_500, null)
             );
         }
-
+        MaterialCardView materialCardView = (MaterialCardView) holder.getView();
         // Missing information, highlight by Red bother
         if (locationText == null || bbf == null) {
-            MaterialCardView materialCardView = (MaterialCardView) holder.getView();
+
             materialCardView.setStrokeColor(ResourcesCompat.getColor(context.getResources(),
                     R.color.red_500, null));
         }
+
+        materialCardView.setOnClickListener(v->listener(holder));
     }
 
 
-
+    public void listener(@NonNull ViewHolder holder) {
+        Ingredient ingredient = localDataSet.get(holder.getAbsoluteAdapterPosition());
+        Log.d("INFO", ingredient.toString());
+        Intent intent = new Intent();
+        String id = storage.getIds().get(holder.getAbsoluteAdapterPosition());
+        intent.setClass(context, AddIngredientActivity.class);
+        intent.putExtra("ingredient", ingredient);
+        intent.putExtra("id", id);
+        context.startActivity(intent);
+    }
 
 
     /**

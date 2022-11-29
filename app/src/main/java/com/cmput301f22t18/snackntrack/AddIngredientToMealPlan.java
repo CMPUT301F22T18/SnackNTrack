@@ -101,7 +101,7 @@ public class AddIngredientToMealPlan extends Fragment implements DailyPlanAdapte
         // Set bundle
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
-        dateBundle.putSerializable("Ingredient",selectedIngredient);
+        dateBundle.putParcelable("Ingredient",selectedIngredient);
         dateBundle.putSerializable("id",id);
         dailyPlanFragment.setArguments(dateBundle);
 

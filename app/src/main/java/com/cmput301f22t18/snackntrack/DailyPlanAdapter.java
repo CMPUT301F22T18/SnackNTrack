@@ -108,7 +108,7 @@ public class DailyPlanAdapter extends RecyclerView.Adapter<DailyPlanAdapter.View
         holder.unitTextView.setText(ingredientList.get(position).getUnit());
         Date bbf = ingredientList.
                 get(position).
-                getBestBeforeDate();
+                getBestBeforeDateDate();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M d, y", Locale.CANADA);
         String dateText = "Best Before: " + simpleDateFormat.format(bbf);
         holder.

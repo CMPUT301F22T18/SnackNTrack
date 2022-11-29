@@ -56,6 +56,7 @@ public class StorageFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_storage, container, false);
         storage = new Storage();
+        ingredientIDs = new ArrayList<>();
         storageAdapter = new StorageAdapter(this.getContext(), storage);
         recyclerView = v.findViewById(R.id.fragment_storage_ingredient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -96,6 +97,7 @@ public class StorageFragment extends Fragment {
                         }
                         else {
                             ingredientIDs.add(id);
+                            storage.addId(id);
                             storage.addIngredient(ingredient);
                             storageAdapter
                                     .notifyItemChanged(storageAdapter.getItemCount() - 1);
