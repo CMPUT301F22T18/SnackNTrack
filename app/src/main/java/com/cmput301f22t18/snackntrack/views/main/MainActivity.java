@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.Arrays;
 
@@ -41,11 +43,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        FirebaseAuth.getInstance().signOut();
-    }
 
     @Override
     protected void onResume() {
@@ -104,7 +101,14 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Log.d(TAG_ERROR, "Failed with: ", task.getException());
                                 }});
-
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        DocumentReference dr = db.collection("users").document(uid);
+                        AppUser appUser = new AppUser();
+                        appUser.initializeNewLabels();
+                        dr.set(appUser, SetOptions.merge()).addOnCompleteListener(
+                                        (task) -> Log.d("INFO", "New user create"))
+                                .addOnFailureListener(
+                                        (error) -> Log.e("ERROR", error.getLocalizedMessage()));
                         launchMenu();
                     }
 

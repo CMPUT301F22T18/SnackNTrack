@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +24,7 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("rawtypes")
 public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
     private final ArrayList localDataSet;
     private int checkPosition = -1;
@@ -76,15 +77,20 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
         if (!labelType.equals("unit")) {
             Drawable unwrappedDrawable = ResourcesCompat.getDrawable(context.getResources(),
                     R.drawable.custom_label, null);
-            Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-            Label currentLabel = (Label) localDataSet.get(position);
-            wrappedDrawable.setTint(Color.parseColor(currentLabel.getColor()));
-            holder.getLabelTextView().setPadding(16, 8, 16, 8);
-            holder.getLabelTextView().setBackground(wrappedDrawable);
-            if (labelType.equals("location")) {
-                int white = ResourcesCompat.getColor(
-                        context.getResources(), R.color.white, null);
-                holder.getLabelTextView().setTextColor(white);
+            if (unwrappedDrawable != null) {
+                Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+                Label currentLabel = (Label) localDataSet.get(position);
+                wrappedDrawable.setTint(Color.parseColor(currentLabel.getColor()));
+                int background = Color.parseColor(currentLabel.getColor());
+                int foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f)
+                    foreground = ResourcesCompat.getColor(context.getResources(),
+                            R.color.white, null);
+                holder.getLabelTextView().setTextColor(foreground);
+                holder.getLabelTextView().setPadding(16, 8, 16, 8);
+                holder.getLabelTextView().setBackground(wrappedDrawable);
             }
         }
         holder.getUnitRadioButton().setOnClickListener(v->{

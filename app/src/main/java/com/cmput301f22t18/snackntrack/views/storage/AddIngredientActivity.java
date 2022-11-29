@@ -16,13 +16,18 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
+import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Label;
+import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -42,12 +48,142 @@ public class AddIngredientActivity extends AppCompatActivity {
     TextInputEditText descriptionEditText, amountEditText, bbfEditText;
     ActivityResultLauncher<Intent> mGetContent;
     TextView unitTextView, categoryTextView, locationTextView;
+    TextView titleTextView;
+    Ingredient ingredient;
+    String id;
+
+    FirebaseUser user;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ingredient);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        setUI();
+
+        Intent intent = this.getIntent();
+        if (intent.hasExtra("ingredient")) {
+            ingredient = intent.getParcelableExtra("ingredient");
+            id = intent.getStringExtra("id");
+            Log.d("INFO", ingredient.toString());
+            setTitle();
+            fillDetails();
+        }
+
+        // Get the PickLabelActivity Result
+        mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent i = result.getData();
+                        if (i != null) {
+                            if (i.hasExtra("unit")) {
+                                unitTextView.setVisibility(View.VISIBLE);
+                                unitTextView.setText(result.getData()
+                                        .getExtras().getString("unit"));
+                            }
+                            else if (i.hasExtra("location")) {
+                                Label location = (Label) i
+                                        .getExtras().getSerializable("location");
+                                setLabel(locationTextView, location);
+
+
+                            }
+                            else if (i.hasExtra("category")) {
+                                Label category = (Label)i.getExtras().getSerializable("category");
+                                setLabel(categoryTextView, category);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void setLabel(TextView textView, Label label){
+        textView.setText(label.getName());
+        Drawable drawable = colorLabel(label);
+        int background = Color.parseColor(label.getColor());
+        int foreground = ResourcesCompat.getColor(this.getResources(),
+                R.color.black, null);
+        double contrast = ColorUtils.calculateContrast(foreground, background);
+        if (contrast < 6.0f)
+            foreground = ResourcesCompat.getColor(this.getResources(),
+                    R.color.white, null);
+        textView.setBackground(drawable);
+        textView.setTextColor(foreground);
+        textView.setVisibility(View.VISIBLE);
+    }
+
+    private void changeLabelColor(TextView labelTextView, String text, AppUser appUser,
+                                 String type) {
+        ArrayList<Label> labelArrayList;
+        if (type.equals("location")) {
+            labelArrayList = appUser.getLocations();
+        }
+        else {
+            labelArrayList = appUser.getCategories();
+        }
+        Label desiredLabel = labelArrayList.stream()
+                .filter(location -> text.equals(location.getName()))
+                .findAny()
+                .orElse(null);
+        if (desiredLabel != null) {
+            Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
+                    this.getResources(),
+                    R.drawable.custom_label, null);
+            if (unwrappedDrawable != null) {
+                Drawable wrappedDrawable = DrawableCompat
+                        .wrap(unwrappedDrawable);
+                int background = Color.parseColor(desiredLabel.getColor());
+                int foreground = ResourcesCompat.getColor(this.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f) foreground = ResourcesCompat.getColor(this.getResources(),
+                        R.color.white, null);
+                labelTextView.setTextColor(foreground);
+                wrappedDrawable.setTint(background);
+                labelTextView.setBackground(wrappedDrawable);
+                labelTextView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void fillDetails() {
+        descriptionEditText.setText(ingredient.getDescription());
+        amountEditText.setText(String.format(Locale.CANADA, "%d", ingredient.getAmount()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+        if (ingredient.getBestBeforeDate() != null)
+            bbfEditText.setText(simpleDateFormat.format(ingredient.getBestBeforeDateDate()));
+        unitTextView.setText(ingredient.getUnit());
+        unitTextView.setVisibility(View.VISIBLE);
+        categoryTextView.setText(ingredient.getCategory());
+        if (ingredient.getLocation() != null)
+            locationTextView.setText(ingredient.getLocation());
+
+
+        // Set label color
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid).get().addOnCompleteListener(
+                    task -> {
+                        if (task.isSuccessful()) {
+                            AppUser appUser = task.getResult().toObject(AppUser.class);
+                            changeLabelColor(categoryTextView,
+                                    ingredient.getCategory(),appUser, "category");
+                            if (ingredient.getLocation() != null) {
+                                changeLabelColor(locationTextView, ingredient.getLocation(),
+                                        appUser, "location");
+                            }
+                        }
+                    }
+            );
+        }
+    }
+
+
+    private void getImageButton() {
         // Get the image buttons
         backButton = findViewById(R.id.add_ingredient_back_button);
         increaseAmountButton = findViewById(R.id.add_an_ingredient_increase_amount_button);
@@ -57,67 +193,57 @@ public class AddIngredientActivity extends AppCompatActivity {
         pickUnitButton = findViewById(R.id.add_an_ingredient_pick_unit_button);
         pickCategoryButton = findViewById(R.id.add_an_ingredient_pick_category_button);
         pickLocationButton = findViewById(R.id.add_an_ingredient_pick_location_button);
+        confirmButton = findViewById(R.id.add_an_ingredient_confirm_button);
+        setOnClickListener();
+    }
 
-        // Get the edit texts
-        descriptionEditText = findViewById(R.id.add_an_ingredient_description_edit_text);
-        amountEditText = findViewById(R.id.add_an_ingredient_amount_edit_text);
-        bbfEditText = findViewById(R.id.add_an_ingredient_bbf_edit_text);
+    private void setInitialVisibility() {
+        unitTextView.setVisibility(View.GONE);
+        categoryTextView.setVisibility(View.GONE);
+        locationTextView.setVisibility(View.GONE);
+    }
 
-        // Setup Edit Texts
-        descriptionEditText.setFocusableInTouchMode(true);
-        amountEditText.setFocusableInTouchMode(true);
-        bbfEditText.setFocusableInTouchMode(false);
-        bbfEditText.setFocusable(false);
-
+    private void setOnClickListener() {
         // Set up image buttons
         backButton.setOnClickListener(v->goBack());
         increaseAmountButton.setOnClickListener(v->changeAmount(1));
         decreaseAmountButton.setOnClickListener(v->changeAmount(-1));
         calendarButton.setOnClickListener(v->openDatePicker());
-
-        unitTextView = findViewById(R.id.add_an_ingredient_unit_text_view);
-        unitTextView.setVisibility(View.GONE);
-        categoryTextView = findViewById(R.id.add_an_ingredient_category_text_view);
-        categoryTextView.setVisibility(View.GONE);
-        locationTextView = findViewById(R.id.add_an_ingredient_location_text_view);
-        locationTextView.setVisibility(View.GONE);
-
-        mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent i = result.getData();
-                        if (i != null) {
-                            if (i.hasExtra("unit")) {
-                                unitTextView.setVisibility(View.VISIBLE);
-                                unitTextView.setText(result.getData().getExtras().getString("unit"));
-                            }
-                            else if (i.hasExtra("location")) {
-                                Label location = (Label)i.getExtras().getSerializable("location");
-                                locationTextView.setText(location.getName());
-                                Drawable drawable = colorLabel(location);
-                                locationTextView.setBackground(drawable);
-                                locationTextView.setVisibility(View.VISIBLE);
-                            }
-                            else if (i.hasExtra("category")) {
-                                Label category = (Label)i.getExtras().getSerializable("category");
-                                categoryTextView.setText(category.getName());
-                                Drawable drawable = colorLabel(category);
-                                categoryTextView.setBackground(drawable);
-                                int black = ResourcesCompat.getColor(
-                                        this.getResources(), R.color.black, null);
-                                categoryTextView.setTextColor(black);
-                                categoryTextView.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                });
-
         pickUnitButton.setOnClickListener(v->openPickerActivity("unit"));
         pickCategoryButton.setOnClickListener(v->openPickerActivity("category"));
         pickLocationButton.setOnClickListener(v->openPickerActivity("location"));
-
-        confirmButton = findViewById(R.id.add_an_ingredient_confirm_button);
         confirmButton.setOnClickListener(v->addIngredient());
+    }
+
+    private void setFocusable() {
+        // Setup Edit Texts
+        descriptionEditText.setFocusableInTouchMode(true);
+        amountEditText.setFocusableInTouchMode(true);
+        bbfEditText.setFocusableInTouchMode(false);
+        bbfEditText.setFocusable(false);
+    }
+
+    private void getEditText() {
+        // Get the edit texts
+        descriptionEditText = findViewById(R.id.add_an_ingredient_description_edit_text);
+        amountEditText = findViewById(R.id.add_an_ingredient_amount_edit_text);
+        bbfEditText = findViewById(R.id.add_an_ingredient_bbf_edit_text);
+        unitTextView = findViewById(R.id.add_an_ingredient_unit_text_view);
+        categoryTextView = findViewById(R.id.add_an_ingredient_category_text_view);
+        locationTextView = findViewById(R.id.add_an_ingredient_location_text_view);
+        setInitialVisibility();
+        setFocusable();
+    }
+
+    private void setUI() {
+        getImageButton();
+        getEditText();
+    }
+
+    public void setTitle() {
+        titleTextView = findViewById(R.id.add_an_ingredient_title);
+        String title = "Edit Ingredient";
+        titleTextView.setText(title);
     }
 
     /**
@@ -129,7 +255,8 @@ public class AddIngredientActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         View v = getCurrentFocus();
 
-        if (v != null && (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
+        if (v != null && (ev.getAction() == MotionEvent.ACTION_UP ||
+                ev.getAction() == MotionEvent.ACTION_MOVE) &&
                 v instanceof TextInputEditText &&
                 !v.getClass().getName().startsWith("android.webkit.")) {
             int[] sourceCoordinates = new int[2];
@@ -153,9 +280,12 @@ public class AddIngredientActivity extends AppCompatActivity {
     private void hideKeyboard(AddIngredientActivity activity) {
         if (activity != null && activity.getWindow() != null) {
             activity.getWindow().getDecorView();
-            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) activity
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
-                imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(
+                        activity.getWindow().getDecorView()
+                        .getWindowToken(), 0);
 
             }
         }
@@ -262,13 +392,20 @@ public class AddIngredientActivity extends AppCompatActivity {
         }
         else {
             Ingredient i = new Ingredient(description, location, unit, category, amount, bbf);
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String uid = user.getUid();
-                db.collection("storages").document(uid).collection("ingredients")
-                        .add(i);
-                finish();
+                if (ingredient == null) {
+                    db.collection("storages")
+                            .document(uid)
+                            .collection("ingredients")
+                            .add(i);
+                    finish();
+                }
+                else {
+                    db.collection("storages").document(uid)
+                            .collection("ingredients").document(id).set(i);
+                    finish();
+                }
             }
         }
     }

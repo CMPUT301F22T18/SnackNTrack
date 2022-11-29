@@ -1,10 +1,11 @@
 package com.cmput301f22t18.snackntrack.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * @version 1
  * @since 1
  */
-public class Ingredient implements Serializable {
+public class Ingredient implements Parcelable {
     private String description, location, unit, category;
     private int amount;
     private Timestamp bestBeforeDate;
@@ -41,6 +42,17 @@ public class Ingredient implements Serializable {
         this.category = category;
         this.amount = amount;
         this.bestBeforeDate = new Timestamp(bbf);
+    }
+
+    public Ingredient(String description, String location,
+                      String unit, String category,
+                      int amount, Timestamp bbf) {
+        this.description = description;
+        this.location = location;
+        this.unit = unit;
+        this.category = category;
+        this.amount = amount;
+        this.bestBeforeDate = bbf;
     }
 
     public Ingredient(Map<String, Object> map) {
@@ -69,6 +81,27 @@ public class Ingredient implements Serializable {
         this.amount = amount;
     }
 
+    protected Ingredient(Parcel in) {
+        description = in.readString();
+        location = in.readString();
+        unit = in.readString();
+        category = in.readString();
+        amount = in.readInt();
+        bestBeforeDate = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
+
     /**
      * Get the description of the ingredient
      * @return the description
@@ -90,9 +123,13 @@ public class Ingredient implements Serializable {
      * Get the Best Before Date of the ingredient
      * @return the best before date
      */
-    public Date getBestBeforeDate() {
+    public Date getBestBeforeDateDate() {
         if (bestBeforeDate == null) return null;
         return bestBeforeDate.toDate();
+    }
+
+    public Timestamp getBestBeforeDate () {
+        return bestBeforeDate;
     }
 
     /**
@@ -155,10 +192,14 @@ public class Ingredient implements Serializable {
      * Set the best before date of the ingredient
      * @param bestBeforeDate the best before date of the ingredient
      */
-    public void setBestBeforeDate(Date bestBeforeDate) {
+    public void setBestBeforeDateDate(Date bestBeforeDate) {
         if (bestBeforeDate != null)
             this.bestBeforeDate = new Timestamp(bestBeforeDate);
         else this.bestBeforeDate = null;
+    }
+
+    public void setBestBeforeDate(Timestamp t) {
+        this.bestBeforeDate = t;
     }
 
     /**
@@ -183,5 +224,20 @@ public class Ingredient implements Serializable {
                 "Category: " + category + '\n' +
                 "Amount: " + amount + '\n' +
                 "Best Before: " + bestBeforeDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
+        dest.writeString(location);
+        dest.writeString(unit);
+        dest.writeString(category);
+        dest.writeInt(amount);
+        dest.writeParcelable(bestBeforeDate, flags);
     }
 }

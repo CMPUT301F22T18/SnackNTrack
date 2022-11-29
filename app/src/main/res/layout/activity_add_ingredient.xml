@@ -19,10 +19,11 @@
         app:layout_constraintVertical_chainStyle="packed">
 
         <TextView
+            android:id="@+id/add_an_ingredient_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/add_an_ingredient"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3.SnackNTrack"
+            android:textAppearance="?attr/textAppearanceHeadline3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -74,7 +74,7 @@ public class IngredientTest {
      */
     @Test
     public void testGetBestBeforeDate() {
-        assertEquals(0, ingredient.getBestBeforeDate().compareTo(new Date(2022-1900, 12, 31)));
+        assertEquals(0, ingredient.getBestBeforeDateDate().compareTo(new Date(2022-1900, 12, 31)));
     }
 
     /**
@@ -133,7 +133,7 @@ public class IngredientTest {
     @Test
     public void testSetBestBeforeDate() {
         Date newBestBeforeDate = new Date(2022-1900, 11, 30);
-        ingredient.setBestBeforeDate(newBestBeforeDate);
-        assertEquals(0, ingredient.getBestBeforeDate().compareTo(newBestBeforeDate));
+        ingredient.setBestBeforeDateDate(newBestBeforeDate);
+        assertEquals(0, ingredient.getBestBeforeDateDate().compareTo(newBestBeforeDate));
     }
 }

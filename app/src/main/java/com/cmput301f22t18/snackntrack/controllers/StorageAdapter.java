@@ -1,17 +1,34 @@
 package com.cmput301f22t18.snackntrack.controllers;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Storage;
+import com.cmput301f22t18.snackntrack.views.storage.AddIngredientActivity;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,15 +40,18 @@ import java.util.Locale;
  */
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private final ArrayList<Ingredient> localDataSet;
-
+    private final Context context;
+    private final Storage storage;
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param storage The Storage containing the data to be populated
      * by RecyclerView.
      */
-    public StorageAdapter(Storage storage) {
+    public StorageAdapter(Context context, Storage storage) {
         localDataSet = storage.getStorageList();
+        this.context = context;
+        this.storage = storage;
     }
 
     /**
@@ -50,30 +70,128 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
     }
 
     /**
+     * This function set the color for the label on the card view
+     * @param holder the View Holder (the Card View)
+     * @param text the Text to be set
+     * @param appUser the Class that stores arrays of labels
+     * @param type the type of label to be replaced
+     */
+    public void changeLabelColor(@NonNull ViewHolder holder,
+                                 String text, AppUser appUser,
+                                  String type) {
+        ArrayList<Label> labelArrayList;
+
+        TextView labelTextView;
+        if (type.equals("location")) {
+            labelArrayList = appUser.getLocations();
+            labelTextView = holder.getLocationTextView();
+        }
+        else {
+            labelArrayList = appUser.getCategories();
+            labelTextView = holder.getCategoryTextView();
+        }
+        Label desiredLabel = labelArrayList.stream()
+                .filter(location -> text.equals(location.getName()))
+                .findAny()
+                .orElse(null);
+        if (desiredLabel != null) {
+            Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
+                    context.getResources(),
+                    R.drawable.custom_label, null);
+            if (unwrappedDrawable != null) {
+                Drawable wrappedDrawable = DrawableCompat
+                        .wrap(unwrappedDrawable);
+                int background = Color.parseColor(desiredLabel.getColor());
+                int foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f)
+                    foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.white, null);
+                wrappedDrawable.setTint(background);
+                labelTextView.setTextColor(foreground);
+                labelTextView.setBackground(wrappedDrawable);
+                labelTextView.setVisibility(View.VISIBLE);
+                labelTextView.setText(text);
+            }
+        }
+    }
+
+    /**
      * Bind the View Holder to the Adapter
      * @param holder the View Holder
      * @param position the position in the List
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getDescriptionTextView().setText(localDataSet.get(position).getDescription());
-        holder.getLocationTextView().setText(localDataSet.get(position).getLocation());
-        holder.getCategoryTextView().setText(localDataSet.get(position).getCategory());
-        holder.getAmountTextView().setText(String.format(Locale.CANADA, "%d",
-                localDataSet.get(position).getAmount()));
-        holder.getUnitTextView().setText(localDataSet.get(position).getUnit());
-        Date bbf = localDataSet.
-                get(position).
-                getBestBeforeDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
-        String dateText = "Best Before: " + simpleDateFormat.format(bbf);
-        holder.
-                getBestBeforeDateTextView().
-                setText(dateText);
+        // Get the ingredient
+        Ingredient ingredient = localDataSet.get(position);
+
+        // Set up labels by reading from Firebase
+        String locationText = ingredient.getLocation();
+        String categoryText = ingredient.getCategory();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid).get().addOnCompleteListener(
+                    task -> {
+                        if (task.isSuccessful()) {
+                            AppUser appUser = task.getResult().toObject(AppUser.class);
+                            if (appUser != null) {
+                                if (locationText != null) {
+                                    changeLabelColor(holder,
+                                            locationText, appUser,"location");
+                                }
+                                changeLabelColor(holder, categoryText, appUser, "category");
+                            }
+
+                        }
+                    }
+            );
+        }
+        // Setting other text view
+        holder.getDescriptionTextView().setText(ingredient.getDescription());
+        holder.getAmountTextView().setText(
+                String.format(Locale.CANADA, "%d", ingredient.getAmount()));
+        holder.getUnitTextView().setText(ingredient.getUnit());
+        Date bbf = ingredient.getBestBeforeDateDate();
+
+        // Check for best before
+        if (bbf != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y",
+                    Locale.CANADA);
+            String dateText = "Best Before: " + simpleDateFormat.format(bbf);
+            holder.getBestBeforeDateTextView().setText(dateText);
+        }
+        else {
+            holder.getBestBeforeDateTextView().setTextColor(
+                    ResourcesCompat.getColor(context.getResources(),
+                            R.color.red_500, null)
+            );
+        }
+        MaterialCardView materialCardView = (MaterialCardView) holder.getView();
+        // Missing information, highlight by Red bother
+        if (locationText == null || bbf == null) {
+
+            materialCardView.setStrokeColor(ResourcesCompat.getColor(context.getResources(),
+                    R.color.red_500, null));
+        }
+
+        materialCardView.setOnClickListener(v->listener(holder));
     }
 
 
-
+    public void listener(@NonNull ViewHolder holder) {
+        Ingredient ingredient = localDataSet.get(holder.getAbsoluteAdapterPosition());
+        Log.d("INFO", ingredient.toString());
+        Intent intent = new Intent();
+        String id = storage.getIds().get(holder.getAbsoluteAdapterPosition());
+        intent.setClass(context, AddIngredientActivity.class);
+        intent.putExtra("ingredient", ingredient);
+        intent.putExtra("id", id);
+        context.startActivity(intent);
+    }
 
 
     /**
@@ -154,6 +272,10 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
          */
         public TextView getBestBeforeDateTextView() {
             return bestBeforeDateTextView;
+        }
+
+        public View getView() {
+            return this.itemView;
         }
     }
 }

@@ -18,6 +18,7 @@ import java.util.Hashtable;
  */
 public class Storage implements Serializable {
     private final ArrayList<Ingredient> storage; // Ingredient Storage
+    private final ArrayList<String> ids;
     // Comparators
     private final IngredientDescriptionComparator idc = new IngredientDescriptionComparator();
     private final IngredientLocationComparator ilc = new IngredientLocationComparator();
@@ -35,6 +36,15 @@ public class Storage implements Serializable {
      */
     public Storage() {
         storage = new ArrayList<>();
+        ids = new ArrayList<>();
+    }
+
+    public ArrayList<String> getIds() {
+        return ids;
+    }
+
+    public void addId(String id) {
+        this.ids.add(id);
     }
 
     /**
@@ -90,8 +100,7 @@ public class Storage implements Serializable {
      * @param key the attribute of ingredient class to compare
      */
     public void sort(String key) {
-        ArrayList<Ingredient> newStorage = storage;
-        newStorage.sort(comparators.get(key));
+        storage.sort(comparators.get(key));
     }
 
     public ArrayList<Ingredient> getStorageList() {

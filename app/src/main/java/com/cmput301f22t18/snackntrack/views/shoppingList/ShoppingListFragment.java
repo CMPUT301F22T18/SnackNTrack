@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack.views.shoppingList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -52,6 +53,7 @@ import java.util.Date;
  * @see ShoppingList
  * @see ShoppingListAdapter
  */
+@SuppressWarnings("unchecked")
 public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
     private static final String ARG_TEXT = "ShoppingList";
     private String TAG;
@@ -84,6 +86,7 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
      * This method creates a new instance of the ShoppingListFragment
      * @return a new instance of ShoppingListFragment
      */
+    @SuppressLint("NotifyDataSetChanged")
     public static ShoppingListFragment newInstance(String param1, String param2) {
         ShoppingListFragment fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
@@ -243,7 +246,7 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
                     if (checkedIngredients.size() != 0) {
                         for (int i = 0; i < checkedIngredients.size(); i++) {
                             Bundle result = new Bundle();
-                            result.putSerializable("new_item", checkedIngredients.get(i));
+                            result.putParcelable("new_item", checkedIngredients.get(i));
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             CollectionReference cr = db.collection("storages")
@@ -276,6 +279,7 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
 
         return v;
     }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

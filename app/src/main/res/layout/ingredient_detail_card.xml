@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="10dp"
     app:cardCornerRadius="16dp"
     android:layout_margin="8dp"
     app:cardMaxElevation="12dp"
-    app:cardBackgroundColor="@color/white"
     app:cardPreventCornerOverlap="true"
     app:contentPadding="16dp">
     <LinearLayout
@@ -59,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_label"
-                    android:text="@string/location"
+                    android:visibility="gone"
                     android:paddingVertical="4dp"
                     android:paddingHorizontal="8dp"
                     android:layout_marginEnd="8dp"
@@ -70,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_label"
-                    android:text="@string/category"
+                    android:visibility="invisible"
                     android:paddingVertical="4dp"
                     android:paddingHorizontal="8dp"
                     android:layout_marginStart="8dp"
@@ -86,4 +85,4 @@
             </TextView>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
