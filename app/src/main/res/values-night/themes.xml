@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.SnackNTrack" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -7,5 +7,27 @@
         <item name="colorOnPrimary">@color/red_300</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3.SnackNTrack</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.MaterialComponents.Headline4.SnackNTrack</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.MaterialComponents.Headline5.SnackNTrack</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.MaterialComponents.Body1.SnackNTrack</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.MaterialComponents.Body2.SnackNTrack</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption.SnackNTrack</item>
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+
+        <item name="floatingActionButtonStyle">@style/Widget.SnackNTrack.FloatingActionButton</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SnackNTrack.SmallComponent</item>
+        <item name="materialCardViewStyle">@style/Widget.SnackNTrack.CardView</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.SnackNTrack.DatePicker</item>
+        <item name="bottomNavigationStyle">@style/Widget.SnackNTrack.BottomNavigationView</item>
+        <item name="itemActiveIndicatorStyle">@style/SnackNTrack.Custom.Indicator</item>
     </style>
 </resources>

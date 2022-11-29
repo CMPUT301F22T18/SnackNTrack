@@ -38,7 +38,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_storage_ingredient_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintHeight_percent="0.7"
         app:layout_constraintTop_toBottomOf="@id/fragment_storage_title_bar"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,17 +1,28 @@
 package com.cmput301f22t18.snackntrack.controllers;
 
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Storage;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +34,7 @@ import java.util.Locale;
  */
 public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHolder> {
     private final ArrayList<Ingredient> localDataSet;
+    private final Context context;
 
     /**
      * Initialize the dataset of the Adapter.
@@ -30,8 +42,9 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
      * @param storage The Storage containing the data to be populated
      * by RecyclerView.
      */
-    public StorageAdapter(Storage storage) {
+    public StorageAdapter(Context context, Storage storage) {
         localDataSet = storage.getStorageList();
+        this.context = context;
     }
 
     /**
@@ -56,20 +69,95 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getDescriptionTextView().setText(localDataSet.get(position).getDescription());
-        holder.getLocationTextView().setText(localDataSet.get(position).getLocation());
-        holder.getCategoryTextView().setText(localDataSet.get(position).getCategory());
+        Ingredient ingredient = localDataSet.get(position);
+        String locationText = ingredient.getLocation();
+        String categoryText = ingredient.getCategory();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid).get().addOnCompleteListener(
+                    task -> {
+                        if (task.isSuccessful()) {
+                            AppUser appUser = task.getResult().toObject(AppUser.class);
+                            if (appUser != null) {
+                                if (locationText != null) {
+                                    Label desiredLocation = appUser.getLocations().stream()
+                                            .filter(location -> locationText.equals(location.getName()))
+                                            .findAny()
+                                            .orElse(null);
+                                    if (desiredLocation != null) {
+                                        Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
+                                                context.getResources(),
+                                                R.drawable.custom_label, null);
+                                        if (unwrappedDrawable != null) {
+                                            Drawable wrappedDrawable = DrawableCompat
+                                                    .wrap(unwrappedDrawable);
+                                            wrappedDrawable.setTint(Color
+                                                    .parseColor(desiredLocation.getColor()));
+                                            holder.getLocationTextView()
+                                                    .setBackground(wrappedDrawable);
+                                            holder.getLocationTextView()
+                                                    .setVisibility(View.VISIBLE);
+                                            holder.getLocationTextView().setText(locationText);
+                                        }
+                                    }
+                                }
+                                Label desiredCategory = appUser.getCategories().stream()
+                                        .filter(category -> categoryText.equals(category.getName()))
+                                        .findAny()
+                                        .orElse(null);
+
+                                if (desiredCategory != null) {
+                                    Drawable unwrappedDrawable = ResourcesCompat
+                                            .getDrawable(context.getResources(),
+                                            R.drawable.custom_label, null);
+                                    if (unwrappedDrawable != null) {
+                                        Drawable wrappedDrawable = DrawableCompat
+                                                .wrap(unwrappedDrawable);
+                                        wrappedDrawable.setTint(Color
+                                                .parseColor(desiredCategory.getColor()));
+                                        holder.getCategoryTextView().setBackground(wrappedDrawable);
+                                        holder.getCategoryTextView().setTextColor(
+                                                ResourcesCompat.getColor(context.getResources(),
+                                                        R.color.black, null)
+                                        );
+                                        holder.getCategoryTextView().setVisibility(View.VISIBLE);
+                                        holder.getCategoryTextView().setText(categoryText);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+            );
+        }
+        holder.getDescriptionTextView().setText(ingredient.getDescription());
         holder.getAmountTextView().setText(String.format(Locale.CANADA, "%d",
                 localDataSet.get(position).getAmount()));
-        holder.getUnitTextView().setText(localDataSet.get(position).getUnit());
+        holder.getUnitTextView().setText(ingredient.getUnit());
         Date bbf = localDataSet.
                 get(position).
                 getBestBeforeDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
-        String dateText = "Best Before: " + simpleDateFormat.format(bbf);
-        holder.
-                getBestBeforeDateTextView().
-                setText(dateText);
+        if (bbf != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+            String dateText = "Best Before: " + simpleDateFormat.format(bbf);
+            holder.
+                    getBestBeforeDateTextView().
+                    setText(dateText);
+        }
+        else {
+            holder.getBestBeforeDateTextView().setTextColor(
+                    ResourcesCompat.getColor(context.getResources(),
+                            R.color.red_500, null)
+            );
+        }
+
+        if (locationText == null || bbf == null) {
+            MaterialCardView materialCardView = (MaterialCardView) holder.getView();
+            materialCardView.setStrokeColor(ResourcesCompat.getColor(context.getResources(),
+                    R.color.red_500, null));
+        }
     }
 
 
@@ -154,6 +242,10 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
          */
         public TextView getBestBeforeDateTextView() {
             return bestBeforeDateTextView;
+        }
+
+        public View getView() {
+            return this.itemView;
         }
     }
 }

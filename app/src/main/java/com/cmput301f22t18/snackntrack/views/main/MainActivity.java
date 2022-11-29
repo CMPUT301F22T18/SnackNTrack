@@ -43,11 +43,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        FirebaseAuth.getInstance().signOut();
-    }
 
     @Override
     protected void onResume() {
@@ -58,18 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchMenu() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String uid = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference dr = db.collection("users").document(uid);
-            AppUser appUser = new AppUser();
-            appUser.initializeNewLabels();
-            dr.set(appUser, SetOptions.merge()).addOnCompleteListener(
-                    (task) -> Log.d("INFO", "New user create"))
-                    .addOnFailureListener(
-                            (error) -> Log.e("ERROR", error.getLocalizedMessage()));
-        }
         Intent i = new Intent();
         i.setAction(Intent.ACTION_MAIN);
         i.setClass(getApplicationContext(), MainMenuActivity.class);
@@ -118,7 +101,14 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Log.d(TAG_ERROR, "Failed with: ", task.getException());
                                 }});
-
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        DocumentReference dr = db.collection("users").document(uid);
+                        AppUser appUser = new AppUser();
+                        appUser.initializeNewLabels();
+                        dr.set(appUser, SetOptions.merge()).addOnCompleteListener(
+                                        (task) -> Log.d("INFO", "New user create"))
+                                .addOnFailureListener(
+                                        (error) -> Log.e("ERROR", error.getLocalizedMessage()));
                         launchMenu();
                     }
 
