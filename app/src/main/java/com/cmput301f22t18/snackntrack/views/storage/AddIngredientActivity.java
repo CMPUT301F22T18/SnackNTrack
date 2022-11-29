@@ -404,9 +404,8 @@ public class AddIngredientActivity extends AppCompatActivity {
                 else {
                     db.collection("storages").document(uid)
                             .collection("ingredients").document(id).set(i)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful())
-                                Log.d("INFO", "Edit successfully");
+                            .addOnSuccessListener(task -> {
+                                Log.i("INFO", "Edited successfully");
                             });
                     finish();
                 }
