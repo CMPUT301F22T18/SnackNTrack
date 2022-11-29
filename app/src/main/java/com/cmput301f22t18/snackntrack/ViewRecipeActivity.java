@@ -83,10 +83,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewRecipeActivity.this, AddEditRecipeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("recipe", (Serializable) recipe);
-                bundle.putSerializable("recipeID", (Serializable) recipeID);
-                intent.putExtras(bundle);
+                intent.putExtra("recipe", recipe);
+                intent.putExtra("recipeID", recipeID);
                 startActivity(intent);
             }
         });

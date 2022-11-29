@@ -51,7 +51,7 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
         localDataSet = recipe.getRecipeIngredients();
         listener = item -> {
             Bundle bundle = new Bundle();
-            bundle.putSerializable("item", (Serializable) item);
+            bundle.putParcelable("item", item);
             int pos = localDataSet.indexOf(item);
             bundle.putInt("position", pos);
             bundle.putParcelable("recipe", recipe);
@@ -62,7 +62,7 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
 
             fm.setFragmentResultListener("editIngredient", owner,
                     (requestKey, result) -> {
-                        Ingredient new_item = (Ingredient) result.getSerializable("new_item");
+                        Ingredient new_item = (Ingredient) result.getParcelable("new_item");
                         recipe.setIngredient(pos, new_item);
                         localDataSet.set(pos, new_item);
                         notifyItemChanged(pos);
