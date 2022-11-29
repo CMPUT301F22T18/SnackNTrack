@@ -44,7 +44,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_recipe);
 
         // get the extra from RecipeListFragment
-        recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+        recipe = getIntent().getParcelableExtra("recipe");
         recipeID = (String) getIntent().getSerializableExtra("recipeID");
 
         // find the views

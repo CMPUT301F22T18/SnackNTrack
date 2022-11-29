@@ -54,8 +54,8 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
             bundle.putSerializable("item", (Serializable) item);
             int pos = localDataSet.indexOf(item);
             bundle.putInt("position", pos);
-            bundle.putSerializable("recipe", (Serializable) recipe);
-            bundle.putSerializable("ingredient", (Serializable) recipe.getRecipeIngredients().get(pos));
+            bundle.putParcelable("recipe", recipe);
+            bundle.putParcelable("ingredient", recipe.getRecipeIngredients().get(pos));
             bundle.putStringArrayList("units", unit_list);
             bundle.putStringArrayList("categories", category_list);
             bundle.putString("function", "Edit");

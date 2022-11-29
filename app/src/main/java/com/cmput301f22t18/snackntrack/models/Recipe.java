@@ -1,5 +1,8 @@
 package com.cmput301f22t18.snackntrack.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Casper Nguyen
  */
-public class Recipe implements Serializable {
+public class Recipe implements Parcelable {
     private String title;
     private int prepTime;
     private String comments;
@@ -44,6 +47,28 @@ public class Recipe implements Serializable {
         this.recipeIngredients = recipeIngredients;
         this.photoURL = photoURL;
     }
+
+    protected Recipe(Parcel in) {
+        title = in.readString();
+        prepTime = in.readInt();
+        comments = in.readString();
+        servings = in.readInt();
+        category = in.readString();
+        recipeIngredients = in.createTypedArrayList(Ingredient.CREATOR);
+        photoURL = in.readString();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     /**
      * Setter for title attribute
@@ -170,5 +195,21 @@ public class Recipe implements Serializable {
      */
     public void setIngredient(int index, Ingredient ingredient) {
         this.recipeIngredients.set(index, ingredient);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeInt(prepTime);
+        dest.writeString(comments);
+        dest.writeInt(servings);
+        dest.writeString(category);
+        dest.writeTypedList(recipeIngredients);
+        dest.writeString(photoURL);
     }
 }
