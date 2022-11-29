@@ -403,10 +403,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                 }
                 else {
                     db.collection("storages").document(uid)
-                            .collection("ingredients").document(id).set(i)
-                            .addOnSuccessListener(task -> {
-                                Log.i("INFO", "Edited successfully");
-                            });
+                            .collection("ingredients").document(id).set(i);
                     finish();
                 }
             }
