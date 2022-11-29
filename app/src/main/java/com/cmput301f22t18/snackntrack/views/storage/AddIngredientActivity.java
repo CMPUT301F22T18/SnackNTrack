@@ -406,7 +406,7 @@ public class AddIngredientActivity extends AppCompatActivity {
                             .collection("ingredients").document(id).set(i)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful())
-                                Log.d("INFO", "Edit " + "successfully");
+                                Log.d("INFO", "Edit successfully");
                             });
                     finish();
                 }
