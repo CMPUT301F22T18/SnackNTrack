@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.cmput301f22t18.snackntrack.MealPlan;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.controllers.ShoppingListAdapter;
+import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.cmput301f22t18.snackntrack.models.ShoppingList;
@@ -215,9 +217,10 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
 
         // Create instance of the ShoppingListAdapter
         shoppingListAdapter = new ShoppingListAdapter(shoppingList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(shoppingListAdapter);
-        shoppingList.sort(("Description"));
         shoppingListAdapter.notifyDataSetChanged();
+
 
         // When the sort button is clicked, user can choose from description or category
         sortButton.setOnClickListener(new View.OnClickListener() {
@@ -241,6 +244,32 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
                     ArrayList<Ingredient> checkedIngredients = shoppingListAdapter.getCheckedIngredients();
                     // Add these ingredients to the storage, and remove from ShoppingList
                     if (checkedIngredients.size() != 0) {
+                        for (int i = 0; i < checkedIngredients.size(); i++) {
+                            Bundle result = new Bundle();
+                            result.putSerializable("new_item", checkedIngredients.get(i));
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            CollectionReference cr = db.collection("storages")
+                                    .document(user.getUid())
+                                    .collection("ingredients");
+                            Query query = cr
+                                    .whereEqualTo("description", checkedIngredients.get(i).getDescription())
+                                    .whereEqualTo("amount", checkedIngredients.get(i).getAmount())
+                                    .whereEqualTo("category", checkedIngredients.get(i).getCategory())
+                                    .whereEqualTo("unit", checkedIngredients.get(i).getUnit());
+                            Ingredient finalIngredient = checkedIngredients.get(i);
+                            query.get().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("DEBUG", document.getId() + " => " + document.getData());
+                                        cr.document(document.getId()).set(finalIngredient);
+                                    }
+                                } else {
+                                    Log.d("DEBUG", "Error getting documents: ", task.getException());
+                                }
+                            });
+                            shoppingList.removeIngredient(checkedIngredients.get(i));
+                        }
                         for (int i = 0; i < checkedIngredients.size(); i++) {
                             Bundle result = new Bundle();
                             result.putSerializable("new_item", checkedIngredients.get(i));
