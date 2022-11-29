@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -15,12 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.models.Label;
+import com.cmput301f22t18.snackntrack.views.common.AddUnitDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -30,11 +38,14 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
     private int checkPosition = -1;
     private final Context context;
     private final String labelType;
+    private final FragmentManager fragmentManager;
 
-    public LabelAdapter(ArrayList data, Context context, String labelType) {
+    public LabelAdapter(ArrayList data, Context context, String labelType,
+        FragmentManager fragmentManager) {
         localDataSet = data;
         this.context = context;
         this.labelType = labelType;
+        this.fragmentManager = fragmentManager;
     }
     /**
      * Set the view holder for the recyler view
@@ -97,6 +108,38 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
             checkPosition = holder.getAbsoluteAdapterPosition();
             notifyDataSetChanged();
         });
+
+
+        if (labelType.equals("unit")) {
+            ImageButton editButton = holder.getEditLabelButton();
+            editButton.setOnClickListener(v->openAddUnitDialog(
+                    (String)localDataSet.get(position)
+            ));
+            ImageButton deleteButton = holder.getDeleteLabelButton();
+            deleteButton.setOnClickListener(v->deleteUnit(
+                    (String)localDataSet.get(position)
+            ));
+
+        }
+    }
+
+    private void deleteUnit(String unit) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid)
+                    .update("units", FieldValue.arrayRemove(unit));
+        }
+
+    }
+
+    private void openAddUnitDialog(String unit) {
+        Bundle args = new Bundle();
+        args.putString("unit", unit);
+        AddUnitDialog addUnitDialog = new AddUnitDialog();
+        addUnitDialog.setArguments(args);
+        addUnitDialog.show(fragmentManager, AddUnitDialog.TAG);
     }
 
     @Override
@@ -111,10 +154,13 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final RadioButton unitRadioButton;
         private final TextView labelTextView;
+        private final ImageButton editLabelButton, deleteLabelButton;
         public ViewHolder(View view) {
             super(view);
             unitRadioButton = view.findViewById(R.id.unit_name_radio_button);
             labelTextView = view.findViewById(R.id.label_text_view);
+            editLabelButton = view.findViewById(R.id.edit_unit_button);
+            deleteLabelButton = view.findViewById(R.id.delete_unit_button);
 
         }
 
@@ -128,6 +174,14 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
 
         public View getView() {
             return this.itemView;
+        }
+
+        public ImageButton getEditLabelButton() {
+            return editLabelButton;
+        }
+
+        public ImageButton getDeleteLabelButton() {
+            return deleteLabelButton;
         }
     }
 }
