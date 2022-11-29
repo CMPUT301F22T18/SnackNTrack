@@ -54,9 +54,7 @@ public class DeleteIngredientConfirmationDialog extends DialogFragment {
 
                 });
         view.findViewById(R.id.delete_an_ingredient_cancel_button)
-                .setOnClickListener(v -> {
-                    dismiss();
-                });
+                .setOnClickListener(v -> dismiss());
         return view;
     }
 

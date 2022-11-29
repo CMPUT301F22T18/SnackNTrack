@@ -18,14 +18,11 @@ import android.view.ViewGroup;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
-import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 

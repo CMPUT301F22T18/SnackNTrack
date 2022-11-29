@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Log.d(TAG_ERROR, "Failed with: ", task.getException());
                                 }});
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DocumentReference dr = db.collection("users").document(uid);
                         AppUser appUser = new AppUser();
                         appUser.initializeNewLabels();
