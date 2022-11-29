@@ -1,5 +1,6 @@
 package com.cmput301f22t18.snackntrack.views.storage;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,14 +20,12 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
 import com.cmput301f22t18.snackntrack.R;
-import com.cmput301f22t18.snackntrack.RecipeListFragment;
 import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,6 +45,8 @@ public class StorageFragment extends Fragment implements PopupMenu.OnMenuItemCli
     FloatingActionButton fab;
     String ERROR_TAG = "STORAGE ERROR";
     ActivityResultLauncher<Intent> mGetContent;
+    FirebaseUser user;
+    FirebaseFirestore db;
 
     public StorageFragment() {
         // Required empty public constructor
@@ -71,7 +72,8 @@ public class StorageFragment extends Fragment implements PopupMenu.OnMenuItemCli
                         }
                     }
                 });
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -92,7 +94,25 @@ public class StorageFragment extends Fragment implements PopupMenu.OnMenuItemCli
             intent.setClass(getContext(), AddIngredientActivity.class);
             startActivity(intent);
         });
-        setUpStorage("default");
+
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("storages").document(uid).get().addOnSuccessListener(
+                    task->{
+                        String option = (String) task.get("option");
+                        if (option != null) {
+                            setUpStorage(option);
+                        }
+                        else {
+                            db.collection("storages").document(uid)
+                                    .update("option", "default");
+                            option = "default";
+                            setUpStorage(option);
+                        }
+                    }
+            );
+        }
+//        setUpStorage("default");
         sortButton = v.findViewById(R.id.storage_sort_button);
         sortButton.setOnClickListener(this::displaySortingOptions);
         return v;
@@ -138,42 +158,94 @@ public class StorageFragment extends Fragment implements PopupMenu.OnMenuItemCli
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setUpStorage(String option) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (user != null) {
             storage.clearStorage();
             ingredientIDs = new ArrayList<>();
             String uid = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Query cr = db.collection("storages")
-                    .document(uid).collection("ingredients");
-            if (!option.equals("default")) {
-                cr = cr.orderBy(option);
-            }
-            cr.addSnapshotListener((value, error) -> {
-                if (error != null) {
-                    Log.d(ERROR_TAG, error.getLocalizedMessage());
-                }
-                else if (value != null) {
-                    for (QueryDocumentSnapshot documentSnapshot: value) {
-                        Ingredient ingredient = documentSnapshot.toObject(Ingredient.class);
-                        String id = documentSnapshot.getId();
-                        if (ingredientIDs.contains(id)) {
-                            int position = ingredientIDs.indexOf(id);
-                            storage.setIngredient(position, ingredient);
-                            storageAdapter.notifyItemChanged(position);
+            db.collection("storages").document(uid).get().addOnSuccessListener(
+                    task->{
+                        String oldOption = (String) task.get("option");
+                        if (oldOption == null)
+                        {
+                            db.collection("storages")
+                                    .document(uid).update("option", "default");
+                            oldOption = "default";
+                        }
+                        Query query = db.collection("storages")
+                                .document(uid)
+                                .collection("ingredients");
+                        if (!oldOption.equals("default")) query = query.orderBy(oldOption);
+                        if (!oldOption.equals(option)) {
+                            db.collection("storages").document(uid)
+                                    .update("option", option).addOnSuccessListener(
+                                            task2-> {
+                                                Query q = db.collection("storages")
+                                                        .document(uid)
+                                                        .collection("ingredients");
+                                                if (!option.equals("default")) {
+                                                           q=q.orderBy(option);
+                                                }
+                                                q.addSnapshotListener((value,error)->{
+                                                    if (error != null) {
+                                                        Log.d(ERROR_TAG, error.getLocalizedMessage());
+                                                    } else if (value != null) {
+                                                        for (QueryDocumentSnapshot documentSnapshot : value) {
+                                                            Ingredient ingredient = documentSnapshot
+                                                                    .toObject(Ingredient.class);
+                                                            String id = documentSnapshot.getId();
+                                                            if (ingredientIDs.contains(id)) {
+                                                                int position = ingredientIDs.indexOf(id);
+                                                                storage.setIngredient(position, ingredient);
+                                                                storageAdapter.notifyItemChanged(position);
+                                                            } else {
+                                                                ingredientIDs.add(id);
+                                                                storage.addId(id);
+                                                                storage.addIngredient(ingredient);
+                                                                storageAdapter
+                                                                        .notifyItemChanged(
+                                                                                storageAdapter.getItemCount() - 1);
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                    );
+
                         }
                         else {
-                            ingredientIDs.add(id);
-                            storage.addId(id);
-                            storage.addIngredient(ingredient);
-                            storageAdapter
-                                    .notifyItemChanged(storageAdapter.getItemCount() - 1);
+                            query.addSnapshotListener((value, error) -> {
+                                if (error != null) {
+                                    Log.d(ERROR_TAG, error.getLocalizedMessage());
+                                } else if (value != null) {
+                                    for (QueryDocumentSnapshot documentSnapshot : value) {
+                                        Ingredient ingredient = documentSnapshot
+                                                .toObject(Ingredient.class);
+                                        String id = documentSnapshot.getId();
+                                        if (ingredientIDs.contains(id)) {
+                                            int position = ingredientIDs.indexOf(id);
+                                            storage.setIngredient(position, ingredient);
+                                            storageAdapter.notifyItemChanged(position);
+                                        } else {
+                                            ingredientIDs.add(id);
+                                            storage.addId(id);
+                                            storage.addIngredient(ingredient);
+                                            storageAdapter
+                                                    .notifyItemChanged(
+                                                            storageAdapter.getItemCount() - 1);
+                                        }
+
+                                    }
+                                }
+                            });
                         }
 
                     }
-                }
-            });
+            );
+
         }
     }
 }
