@@ -109,4 +109,9 @@
     <string name="default_option">Default</string>
     <string name="delete_ingredient">Delete the ingredient?</string>
     <string name="confirm_delete" />
+    <string name="storage_sort_default">Default</string>
+    <string name="storage_sort_date">Date</string>
+    <string name="storage_sort_location">Location</string>
+    <string name="storage_sort_category">Category</string>
+    <string name="storage_sort_description">Description</string>
 </resources>
