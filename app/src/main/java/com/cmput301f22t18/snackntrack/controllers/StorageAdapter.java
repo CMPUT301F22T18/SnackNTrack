@@ -63,13 +63,57 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
     }
 
     /**
+     * This function set the color for the label on the card view
+     * @param holder the View Holder (the Card View)
+     * @param text the Text to be set
+     * @param appUser the Class that stores arrays of labels
+     * @param type the type of label to be replaced
+     */
+    public void changeLabelColor(@NonNull ViewHolder holder,
+                                 String text, AppUser appUser,
+                                  String type) {
+        ArrayList<Label> labelArrayList;
+
+        TextView labelTextView;
+        if (type.equals("location")) {
+            labelArrayList = appUser.getLocations();
+            labelTextView = holder.getLocationTextView();
+        }
+        else {
+            labelArrayList = appUser.getCategories();
+            labelTextView = holder.getCategoryTextView();
+        }
+        Label desiredLabel = labelArrayList.stream()
+                .filter(location -> text.equals(location.getName()))
+                .findAny()
+                .orElse(null);
+        if (desiredLabel != null) {
+            Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
+                    context.getResources(),
+                    R.drawable.custom_label, null);
+            if (unwrappedDrawable != null) {
+                Drawable wrappedDrawable = DrawableCompat
+                        .wrap(unwrappedDrawable);
+                wrappedDrawable.setTint(Color
+                        .parseColor(desiredLabel.getColor()));
+                labelTextView.setBackground(wrappedDrawable);
+                labelTextView.setVisibility(View.VISIBLE);
+                labelTextView.setText(text);
+            }
+        }
+    }
+
+    /**
      * Bind the View Holder to the Adapter
      * @param holder the View Holder
      * @param position the position in the List
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Get the ingredient
         Ingredient ingredient = localDataSet.get(position);
+
+        // Set up labels by reading from Firebase
         String locationText = ingredient.getLocation();
         String categoryText = ingredient.getCategory();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -82,69 +126,29 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
                             AppUser appUser = task.getResult().toObject(AppUser.class);
                             if (appUser != null) {
                                 if (locationText != null) {
-                                    Label desiredLocation = appUser.getLocations().stream()
-                                            .filter(location -> locationText.equals(location.getName()))
-                                            .findAny()
-                                            .orElse(null);
-                                    if (desiredLocation != null) {
-                                        Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
-                                                context.getResources(),
-                                                R.drawable.custom_label, null);
-                                        if (unwrappedDrawable != null) {
-                                            Drawable wrappedDrawable = DrawableCompat
-                                                    .wrap(unwrappedDrawable);
-                                            wrappedDrawable.setTint(Color
-                                                    .parseColor(desiredLocation.getColor()));
-                                            holder.getLocationTextView()
-                                                    .setBackground(wrappedDrawable);
-                                            holder.getLocationTextView()
-                                                    .setVisibility(View.VISIBLE);
-                                            holder.getLocationTextView().setText(locationText);
-                                        }
-                                    }
+                                    changeLabelColor(holder,
+                                            locationText, appUser,"location");
                                 }
-                                Label desiredCategory = appUser.getCategories().stream()
-                                        .filter(category -> categoryText.equals(category.getName()))
-                                        .findAny()
-                                        .orElse(null);
-
-                                if (desiredCategory != null) {
-                                    Drawable unwrappedDrawable = ResourcesCompat
-                                            .getDrawable(context.getResources(),
-                                            R.drawable.custom_label, null);
-                                    if (unwrappedDrawable != null) {
-                                        Drawable wrappedDrawable = DrawableCompat
-                                                .wrap(unwrappedDrawable);
-                                        wrappedDrawable.setTint(Color
-                                                .parseColor(desiredCategory.getColor()));
-                                        holder.getCategoryTextView().setBackground(wrappedDrawable);
-                                        holder.getCategoryTextView().setTextColor(
-                                                ResourcesCompat.getColor(context.getResources(),
-                                                        R.color.black, null)
-                                        );
-                                        holder.getCategoryTextView().setVisibility(View.VISIBLE);
-                                        holder.getCategoryTextView().setText(categoryText);
-                                    }
-                                }
+                                changeLabelColor(holder, categoryText, appUser, "category");
                             }
 
                         }
                     }
             );
         }
+        // Setting other text view
         holder.getDescriptionTextView().setText(ingredient.getDescription());
-        holder.getAmountTextView().setText(String.format(Locale.CANADA, "%d",
-                localDataSet.get(position).getAmount()));
+        holder.getAmountTextView().setText(
+                String.format(Locale.CANADA, "%d", ingredient.getAmount()));
         holder.getUnitTextView().setText(ingredient.getUnit());
-        Date bbf = localDataSet.
-                get(position).
-                getBestBeforeDate();
+        Date bbf = ingredient.getBestBeforeDate();
+
+        // Check for best before
         if (bbf != null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y", Locale.CANADA);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, y",
+                    Locale.CANADA);
             String dateText = "Best Before: " + simpleDateFormat.format(bbf);
-            holder.
-                    getBestBeforeDateTextView().
-                    setText(dateText);
+            holder.getBestBeforeDateTextView().setText(dateText);
         }
         else {
             holder.getBestBeforeDateTextView().setTextColor(
@@ -153,6 +157,7 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             );
         }
 
+        // Missing information, highlight by Red bother
         if (locationText == null || bbf == null) {
             MaterialCardView materialCardView = (MaterialCardView) holder.getView();
             materialCardView.setStrokeColor(ResourcesCompat.getColor(context.getResources(),
