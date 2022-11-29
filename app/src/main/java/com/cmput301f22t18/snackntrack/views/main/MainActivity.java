@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchMenu() {
+
         Intent i = new Intent();
         i.setAction(Intent.ACTION_MAIN);
         i.setClass(getApplicationContext(), MainMenuActivity.class);

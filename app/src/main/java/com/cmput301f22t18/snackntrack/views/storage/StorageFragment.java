@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
+import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Storage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +42,7 @@ public class StorageFragment extends Fragment {
     ArrayList<String> ingredientIDs;
     FloatingActionButton fab;
     String ERROR_TAG = "STORAGE ERROR";
+    ActivityResultLauncher<Intent> mGetContent;
 
     public StorageFragment() {
         // Required empty public constructor
@@ -47,6 +51,23 @@ public class StorageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent i = result.getData();
+                        if (i != null) {
+                            if (i.hasExtra("action") &&
+                                    i.getStringExtra("action").equals("delete")) {
+                                String id = i.getStringExtra("id");
+                                int index = storage.getIds().indexOf(id);
+                                storage.getIds().remove(id);
+                                storage.getStorageList().remove(index);
+                                storageAdapter.notifyItemChanged(index);
+                            }
+                        }
+                    }
+                });
 
     }
 
@@ -57,19 +78,19 @@ public class StorageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_storage, container, false);
         storage = new Storage();
         ingredientIDs = new ArrayList<>();
-        storageAdapter = new StorageAdapter(this.getContext(), storage);
+        storageAdapter = new StorageAdapter(this.getContext(), storage, mGetContent);
         recyclerView = v.findViewById(R.id.fragment_storage_ingredient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(storageAdapter);
         fab = v.findViewById(R.id.add_ingredient_fab);
+
         fab.setOnClickListener(v1 -> {
             Intent intent = new Intent();
             intent.setClass(getContext(), AddIngredientActivity.class);
-            Activity activity = getActivity();
-            if (activity != null)
-                activity.startActivity(intent);
+            startActivity(intent);
         });
         setUpStorage();
+
         return v;
     }
 

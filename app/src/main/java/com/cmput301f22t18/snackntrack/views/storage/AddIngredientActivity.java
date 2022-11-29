@@ -2,6 +2,7 @@ package com.cmput301f22t18.snackntrack.views.storage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Label;
 import com.cmput301f22t18.snackntrack.models.Recipe;
+import com.cmput301f22t18.snackntrack.views.common.DeleteIngredientConfirmationDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +46,7 @@ import java.util.TimeZone;
 public class AddIngredientActivity extends AppCompatActivity {
     ImageButton backButton, increaseAmountButton, decreaseAmountButton, calendarButton;
     ImageButton pickUnitButton, pickLocationButton, pickCategoryButton;
-    ImageButton confirmButton;
+    ImageButton confirmButton, deleteButton;
     TextInputEditText descriptionEditText, amountEditText, bbfEditText;
     ActivityResultLauncher<Intent> mGetContent;
     TextView unitTextView, categoryTextView, locationTextView;
@@ -69,7 +71,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         if (intent.hasExtra("ingredient")) {
             ingredient = intent.getParcelableExtra("ingredient");
             id = intent.getStringExtra("id");
-            Log.d("INFO", ingredient.toString());
+            deleteButton.setVisibility(View.VISIBLE);
             setTitle();
             fillDetails();
         }
@@ -194,6 +196,8 @@ public class AddIngredientActivity extends AppCompatActivity {
         pickCategoryButton = findViewById(R.id.add_an_ingredient_pick_category_button);
         pickLocationButton = findViewById(R.id.add_an_ingredient_pick_location_button);
         confirmButton = findViewById(R.id.add_an_ingredient_confirm_button);
+        deleteButton = findViewById(R.id.add_an_ingredient_delete_button);
+        deleteButton.setVisibility(View.GONE);
         setOnClickListener();
     }
 
@@ -213,6 +217,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         pickCategoryButton.setOnClickListener(v->openPickerActivity("category"));
         pickLocationButton.setOnClickListener(v->openPickerActivity("location"));
         confirmButton.setOnClickListener(v->addIngredient());
+        deleteButton.setOnClickListener(v->displayDeleteConfirmDialog());
     }
 
     private void setFocusable() {
@@ -350,6 +355,17 @@ public class AddIngredientActivity extends AppCompatActivity {
             return wrappedDrawable;
         }
         return null;
+    }
+
+    private void displayDeleteConfirmDialog() {
+        Bundle args = new Bundle();
+        args.putString("id", id);
+        DeleteIngredientConfirmationDialog confirmationDialog =
+                new DeleteIngredientConfirmationDialog();
+        confirmationDialog.setArguments(args);
+        confirmationDialog.show(getSupportFragmentManager(),
+                DeleteIngredientConfirmationDialog.TAG);
+
     }
 
     /**

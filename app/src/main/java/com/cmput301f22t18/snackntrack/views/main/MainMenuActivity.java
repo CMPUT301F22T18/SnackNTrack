@@ -1,9 +1,13 @@
 package com.cmput301f22t18.snackntrack.views.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,6 +46,7 @@ public class MainMenuActivity extends AppCompatActivity {
         mealPlanFragment = new MealPlanFragment();
         recipeListFragment = new RecipeListFragment();
         shoppingListFragment = new ShoppingListFragment();
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
