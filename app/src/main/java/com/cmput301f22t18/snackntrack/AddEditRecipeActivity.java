@@ -93,7 +93,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
 
         // Get recipe from list fragment or view activity
         Intent intent = getIntent();
-        recipe = (Recipe) intent.getSerializableExtra("recipe");
+        recipe = (Recipe) intent.getParcelableExtra("recipe");
         recipeID = (String) intent.getSerializableExtra("recipeID");
         editing = true;
 
@@ -166,7 +166,7 @@ public class AddEditRecipeActivity extends AppCompatActivity {
         // Button operations
         addIngredientButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putSerializable("recipe", (Serializable) recipe);
+            bundle.putParcelable("recipe", recipe);
 
             // The following will work for now as AddEditIngredientActivity is WIP
             getSupportFragmentManager()

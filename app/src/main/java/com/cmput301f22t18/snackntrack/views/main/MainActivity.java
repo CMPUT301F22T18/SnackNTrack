@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchMenu() {
+
         Intent i = new Intent();
         i.setAction(Intent.ACTION_MAIN);
         i.setClass(getApplicationContext(), MainMenuActivity.class);
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Log.d(TAG_ERROR, "Failed with: ", task.getException());
                                 }});
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DocumentReference dr = db.collection("users").document(uid);
                         AppUser appUser = new AppUser();
                         appUser.initializeNewLabels();

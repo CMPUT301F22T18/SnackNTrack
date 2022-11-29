@@ -104,7 +104,7 @@ public class AddRecipeToMealPlan extends Fragment implements RecipeListAdapter.O
         // Create bundle
         Bundle dateBundle = new Bundle();
         dateBundle.putSerializable("Date",date);
-        dateBundle.putSerializable("Recipe",selectedRecipe);
+        dateBundle.putParcelable("Recipe",selectedRecipe);
         dateBundle.putSerializable("id",id);
         dailyPlanFragment.setArguments(dateBundle);
 

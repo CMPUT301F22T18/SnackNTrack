@@ -74,8 +74,8 @@ public class AddIngredientToRecipeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
-        recipe = (Recipe) getArguments().getSerializable("recipe");
-        ingredient = (Ingredient) getArguments().getSerializable("ingredient");
+        recipe = (Recipe) getArguments().getParcelable("recipe");
+        ingredient = (Ingredient) getArguments().getParcelable("ingredient");
         Log.d("DEBUG", "created");
     }
 

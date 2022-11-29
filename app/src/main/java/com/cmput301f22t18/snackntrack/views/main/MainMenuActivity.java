@@ -1,7 +1,7 @@
 package com.cmput301f22t18.snackntrack.views.main;
 
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -10,19 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f22t18.snackntrack.MealPlanFragment;
 import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.RecipeListFragment;
-import com.cmput301f22t18.snackntrack.models.Ingredient;
-import com.cmput301f22t18.snackntrack.models.Recipe;
-import com.cmput301f22t18.snackntrack.models.RecipeList;
 import com.cmput301f22t18.snackntrack.views.shoppingList.ShoppingListFragment;
 import com.cmput301f22t18.snackntrack.views.storage.StorageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -42,6 +35,7 @@ public class MainMenuActivity extends AppCompatActivity {
         mealPlanFragment = new MealPlanFragment();
         recipeListFragment = new RecipeListFragment();
         shoppingListFragment = new ShoppingListFragment();
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
