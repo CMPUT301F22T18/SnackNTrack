@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/storage_sort_default"
+        android:title="@string/storage_sort_default" />
+
+    <item android:id="@+id/storage_sort_description"
+        android:title="@string/storage_sort_description" />
+
+    <item android:id="@+id/storage_sort_date"
+        android:title="@string/storage_sort_date"/>
+
+    <item android:id="@+id/storage_sort_location"
+        android:title="@string/storage_sort_location"/>
+
+    <item android:id="@+id/storage_sort_category"
+        android:title="@string/storage_sort_category"/>
+</menu>
