@@ -86,6 +86,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         FirebaseAuth.getInstance().signOut();
+        finish();
     }
 
     @Override
