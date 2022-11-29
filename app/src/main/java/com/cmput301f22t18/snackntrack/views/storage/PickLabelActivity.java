@@ -14,6 +14,7 @@ import com.cmput301f22t18.snackntrack.R;
 import com.cmput301f22t18.snackntrack.controllers.LabelAdapter;
 import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Label;
+import com.cmput301f22t18.snackntrack.views.common.AddUnitDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,7 +28,7 @@ public class PickLabelActivity extends AppCompatActivity {
     ArrayList<String> units;
     ArrayList<Label> locations, categories;
     RecyclerView recyclerView;
-    ImageButton confirmButton, backButton;
+    ImageButton confirmButton, backButton, addLabelButton;
     TextView titleTextView;
 
     @Override
@@ -40,21 +41,32 @@ public class PickLabelActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.pick_a_label_list);
         confirmButton = findViewById(R.id.pick_a_label_confirm_button);
         backButton = findViewById(R.id.pick_a_label_back_button);
+        addLabelButton = findViewById(R.id.pick_a_label_add_button);
+        if (labelType.equals("unit"))
+            addLabelButton.setOnClickListener(v->openAddUnitDialog());
 
         appUser = new AppUser();
         units = new ArrayList<>();
         locations = new ArrayList<>();
         categories = new ArrayList<>();
         if (labelType.equals("unit"))
-            labelAdapter = new LabelAdapter(units, this, labelType);
+            labelAdapter = new LabelAdapter(units, this, labelType,
+                    getSupportFragmentManager());
         else if (labelType.equals("location"))
-            labelAdapter = new LabelAdapter(locations, this, labelType);
-        else labelAdapter = new LabelAdapter(categories, this, labelType);
+            labelAdapter = new LabelAdapter(locations, this, labelType,
+                    getSupportFragmentManager());
+        else labelAdapter = new LabelAdapter(categories, this, labelType,
+                    getSupportFragmentManager());
         recyclerView.setAdapter(labelAdapter);
         setupLabels();
 
         confirmButton.setOnClickListener(v->pickLabel(labelType));
         backButton.setOnClickListener(v->finish());
+    }
+
+    private void openAddUnitDialog() {
+        AddUnitDialog addUnitDialog = new AddUnitDialog();
+        addUnitDialog.show(getSupportFragmentManager(), AddUnitDialog.TAG);
     }
 
     /**

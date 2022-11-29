@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -219,7 +220,7 @@ public class ShoppingListFragment extends Fragment implements PopupMenu.OnMenuIt
         // Create instance of the ShoppingListAdapter
         shoppingListAdapter = new ShoppingListAdapter(shoppingList);
         recyclerView.setAdapter(shoppingListAdapter);
-        shoppingList.sort(("Description"));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         shoppingListAdapter.notifyDataSetChanged();
 
         // When the sort button is clicked, user can choose from description or category
