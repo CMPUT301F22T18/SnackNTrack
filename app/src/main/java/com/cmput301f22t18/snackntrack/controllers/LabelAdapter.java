@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,13 +81,16 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHolder>{
                 Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
                 Label currentLabel = (Label) localDataSet.get(position);
                 wrappedDrawable.setTint(Color.parseColor(currentLabel.getColor()));
+                int background = Color.parseColor(currentLabel.getColor());
+                int foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f)
+                    foreground = ResourcesCompat.getColor(context.getResources(),
+                            R.color.white, null);
+                holder.getLabelTextView().setTextColor(foreground);
                 holder.getLabelTextView().setPadding(16, 8, 16, 8);
                 holder.getLabelTextView().setBackground(wrappedDrawable);
-            }
-            if (labelType.equals("location")) {
-                int white = ResourcesCompat.getColor(
-                        context.getResources(), R.color.white, null);
-                holder.getLabelTextView().setTextColor(white);
             }
         }
         holder.getUnitRadioButton().setOnClickListener(v->{

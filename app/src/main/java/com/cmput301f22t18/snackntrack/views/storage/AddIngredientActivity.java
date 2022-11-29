@@ -16,13 +16,18 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.cmput301f22t18.snackntrack.R;
+import com.cmput301f22t18.snackntrack.controllers.StorageAdapter;
+import com.cmput301f22t18.snackntrack.models.AppUser;
 import com.cmput301f22t18.snackntrack.models.Ingredient;
 import com.cmput301f22t18.snackntrack.models.Label;
+import com.cmput301f22t18.snackntrack.models.Recipe;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -46,10 +52,17 @@ public class AddIngredientActivity extends AppCompatActivity {
     Ingredient ingredient;
     String id;
 
+    FirebaseUser user;
+    FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ingredient);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
         setUI();
 
         Intent intent = this.getIntent();
@@ -75,24 +88,66 @@ public class AddIngredientActivity extends AppCompatActivity {
                             else if (i.hasExtra("location")) {
                                 Label location = (Label) i
                                         .getExtras().getSerializable("location");
-                                locationTextView.setText(location.getName());
-                                Drawable drawable = colorLabel(location);
-                                locationTextView.setBackground(drawable);
-                                locationTextView.setVisibility(View.VISIBLE);
+                                setLabel(locationTextView, location);
+
+
                             }
                             else if (i.hasExtra("category")) {
                                 Label category = (Label)i.getExtras().getSerializable("category");
-                                categoryTextView.setText(category.getName());
-                                Drawable drawable = colorLabel(category);
-                                categoryTextView.setBackground(drawable);
-                                int black = ResourcesCompat.getColor(
-                                        this.getResources(), R.color.black, null);
-                                categoryTextView.setTextColor(black);
-                                categoryTextView.setVisibility(View.VISIBLE);
+                                setLabel(categoryTextView, category);
                             }
                         }
                     }
                 });
+    }
+
+    private void setLabel(TextView textView, Label label){
+        textView.setText(label.getName());
+        Drawable drawable = colorLabel(label);
+        int background = Color.parseColor(label.getColor());
+        int foreground = ResourcesCompat.getColor(this.getResources(),
+                R.color.black, null);
+        double contrast = ColorUtils.calculateContrast(foreground, background);
+        if (contrast < 6.0f)
+            foreground = ResourcesCompat.getColor(this.getResources(),
+                    R.color.white, null);
+        textView.setBackground(drawable);
+        textView.setTextColor(foreground);
+        textView.setVisibility(View.VISIBLE);
+    }
+
+    private void changeLabelColor(TextView labelTextView, String text, AppUser appUser,
+                                 String type) {
+        ArrayList<Label> labelArrayList;
+        if (type.equals("location")) {
+            labelArrayList = appUser.getLocations();
+        }
+        else {
+            labelArrayList = appUser.getCategories();
+        }
+        Label desiredLabel = labelArrayList.stream()
+                .filter(location -> text.equals(location.getName()))
+                .findAny()
+                .orElse(null);
+        if (desiredLabel != null) {
+            Drawable unwrappedDrawable = ResourcesCompat.getDrawable(
+                    this.getResources(),
+                    R.drawable.custom_label, null);
+            if (unwrappedDrawable != null) {
+                Drawable wrappedDrawable = DrawableCompat
+                        .wrap(unwrappedDrawable);
+                int background = Color.parseColor(desiredLabel.getColor());
+                int foreground = ResourcesCompat.getColor(this.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f) foreground = ResourcesCompat.getColor(this.getResources(),
+                        R.color.white, null);
+                labelTextView.setTextColor(foreground);
+                wrappedDrawable.setTint(background);
+                labelTextView.setBackground(wrappedDrawable);
+                labelTextView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void fillDetails() {
@@ -104,11 +159,26 @@ public class AddIngredientActivity extends AppCompatActivity {
         unitTextView.setText(ingredient.getUnit());
         unitTextView.setVisibility(View.VISIBLE);
         categoryTextView.setText(ingredient.getCategory());
-        categoryTextView.setVisibility(View.VISIBLE);
         if (ingredient.getLocation() != null)
-        {
             locationTextView.setText(ingredient.getLocation());
-            locationTextView.setVisibility(View.VISIBLE);
+
+
+        // Set label color
+        if (user != null) {
+            String uid = user.getUid();
+            db.collection("users").document(uid).get().addOnCompleteListener(
+                    task -> {
+                        if (task.isSuccessful()) {
+                            AppUser appUser = task.getResult().toObject(AppUser.class);
+                            changeLabelColor(categoryTextView,
+                                    ingredient.getCategory(),appUser, "category");
+                            if (ingredient.getLocation() != null) {
+                                changeLabelColor(locationTextView, ingredient.getLocation(),
+                                        appUser, "location");
+                            }
+                        }
+                    }
+            );
         }
     }
 
@@ -322,9 +392,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         }
         else {
             Ingredient i = new Ingredient(description, location, unit, category, amount, bbf);
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String uid = user.getUid();
                 if (ingredient == null) {
                     db.collection("storages")

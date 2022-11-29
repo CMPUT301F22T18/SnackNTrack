@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,8 +101,15 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.ViewHold
             if (unwrappedDrawable != null) {
                 Drawable wrappedDrawable = DrawableCompat
                         .wrap(unwrappedDrawable);
-                wrappedDrawable.setTint(Color
-                        .parseColor(desiredLabel.getColor()));
+                int background = Color.parseColor(desiredLabel.getColor());
+                int foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.black, null);
+                double contrast = ColorUtils.calculateContrast(foreground, background);
+                if (contrast < 6.0f)
+                    foreground = ResourcesCompat.getColor(context.getResources(),
+                        R.color.white, null);
+                wrappedDrawable.setTint(background);
+                labelTextView.setTextColor(foreground);
                 labelTextView.setBackground(wrappedDrawable);
                 labelTextView.setVisibility(View.VISIBLE);
                 labelTextView.setText(text);
